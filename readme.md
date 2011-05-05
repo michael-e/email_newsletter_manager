@@ -10,6 +10,8 @@ Still in development...
 - How will the senders be configured in EN2?
 - logging to DB only or additional file?
 - link to the log file in the backend (field)
+- log email content? (probably not)
+- not EN, but related: data backup/logging for opt-outs
 
 
 ## Concept
