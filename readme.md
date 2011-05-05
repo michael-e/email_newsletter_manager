@@ -4,7 +4,7 @@ Still in development...
 
 
 
-Recipient Groups are defined in the ETM:
+	Recipient Groups are defined in the ETM:
 
 	Englishmen: {//members[nation/@handle='great-britain']/name} <{//members[nation/@handle='great-britain']/name}>;
 	Dutchmen: {//members[nation/@handle='netherlands']/name} <{//members[nation/@handle='netherlands']/name}>;
@@ -45,11 +45,11 @@ What does this mean?
 
 - EN2 has to get the full recipient list from the ETM, then save it to the DB
 - EN2 has to get the rendered output (HTML and/or PLAIN) from the ETM (then save it to the DB?)
-- It has to build "slices" and send those slices using a background process
-- the background process uses the Core Email API
+- EN2 has to pass the task to a background process
+- the background process has to build "recipients slices" and send those slices using the Core Email API
 - this means that ETM will __not__ send any emails!
-- It has to write logs to the DB and/or files
-- it has to update the "status" field in the DB (same as EN1)
+- EN2 has to write logs to the DB and/or files
+- EN2 has to update the "status" field in the DB (same as EN1)
 
 
 DB content:
