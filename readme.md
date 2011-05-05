@@ -3,6 +3,17 @@
 Still in development...
 
 
+## 2do
+
+- ? make the recipients input field in the ETM a textarea (see configuration example below)
+- Multiple Templates per EN2 field? (e.g. send different email to site admin)
+- How will the senders be configured in EN2?
+- logging to DB only or additional file?
+- link to the log file in the backend (field)
+
+
+## Concept
+
 
 	Recipient Groups are defined in the ETM:
 
@@ -36,11 +47,6 @@ Still in development...
 	           <- 1 throttling (number/period)
 
 
-Questions:
-
-- Multiple Templates per EN2 field? (e.g. send different email to site admin)
-- How will the senders be configured in EN2?
-
 What does this mean?
 
 - EN2 has to get the full recipient list from the ETM, then save it to the DB
@@ -53,7 +59,7 @@ What does this mean?
 - EN2 has to update the "status" field in the DB (same as EN1)
 
 
-DB content:
+## DB content
 
 - author_id
 - author_ip_address
@@ -68,14 +74,11 @@ DB content:
 - rec_errors
 - log_file (i.e. name/path)
 
-Log file:
+## Log file content
 
 - ? subject (string, XPath/params)
 - ? content_html (XSLT)
 - ? content_text (XSLT)
 - errors (verbose)
 
-Questions:
-
-- link to the log file in the backend = security risk?
 
