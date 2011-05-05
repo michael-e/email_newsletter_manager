@@ -6,34 +6,34 @@ Still in development...
 
 Recipient Groups are defined in the ETM:
 
-Englishmen: {//members[nation/@handle='great-britain']/name} <{//members[nation/@handle='great-britain']/name}>;
-Dutchmen: {//members[nation/@handle='netherlands']/name} <{//members[nation/@handle='netherlands']/name}>;
-Krauts: {//members[nation/@handle='germany']/name} <{//members[nation/@handle='germany']/name}>;
-Special: {//members[nation/@handle='germany']/name} <{//members[nation/@handle='germany']/name}>,
-         michael-e,
-         <{//authors/email}>
-;
+	Englishmen: {//members[nation/@handle='great-britain']/name} <{//members[nation/@handle='great-britain']/name}>;
+	Dutchmen: {//members[nation/@handle='netherlands']/name} <{//members[nation/@handle='netherlands']/name}>;
+	Krauts: {//members[nation/@handle='germany']/name} <{//members[nation/@handle='germany']/name}>;
+	Special: {//members[nation/@handle='germany']/name} <{//members[nation/@handle='germany']/name}>,
+	         michael-e,
+	         <{//authors/email}>
+	;
 
 
-Email Template  <- 1 Subject
-                <- 1 HTML text
-                <- 1 PLAIN text
-                <- n recipient groups
-                <- 1 reply-to-email (may be overwritten by EN)
-                <- 1 reply-to-name  (may be overwritten by EN)
+	Email Template  <- 1 Subject
+	                <- 1 HTML text
+	                <- 1 PLAIN text
+	                <- n recipient groups
+	                <- 1 reply-to-email (may be overwritten by EN)
+	                <- 1 reply-to-name  (may be overwritten by EN)
 
 
-EN2 Field  <- 1 Email Template <- n recipient groups (incl. PREVIEW)
-           <- n senders <- name (displayed in the field if multiple senders)
-                        <- smtp-host
-                        <- smtp-port
-                        <- smtp-username
-                        <- smtp-password
-                        <- from-email
-                        <- from-name
-                        <- reply-to-email
-                        <- reply-to-name
-           <- 1 throttling (number/period)
+	EN2 Field  <- 1 Email Template <- n recipient groups (incl. PREVIEW)
+	           <- n senders <- name (displayed in the field if multiple senders)
+	                        <- smtp-host
+	                        <- smtp-port
+	                        <- smtp-username
+	                        <- smtp-password
+	                        <- from-email
+	                        <- from-name
+	                        <- reply-to-email
+	                        <- reply-to-name
+	           <- 1 throttling (number/period)
 
 
 Questions:
