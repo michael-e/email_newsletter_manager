@@ -16,9 +16,9 @@ Still in development...
 
 
 	Email Template  <- 1 Subject
-	                <- 1 HTML text
-	                <- 1 PLAIN text
-	                <- n recipient groups
+	                <- 1 HTML layout (XSLT)
+	                <- 1 PLAIN layout (XSLT)
+	                <- n recipient groups <- m recipients each
 	                <- 1 reply-to-email (may be overwritten by EN)
 	                <- 1 reply-to-name  (may be overwritten by EN)
 
