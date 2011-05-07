@@ -40,6 +40,7 @@ Still in development...
 	           <- n senders <- name (displayed in the field if multiple senders)
 	                        <- smtp-host
 	                        <- smtp-port
+	                        <- requires_authentication
 	                        <- smtp-username
 	                        <- smtp-password
 	                        <- from-email
