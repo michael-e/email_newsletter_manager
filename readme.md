@@ -8,7 +8,9 @@ Still in development...
 - ? make the recipients input field in the ETM a textarea (see configuration example below)
 - Multiple Templates per EN2 field? (e.g. send different email to site admin)
 - Does ETM allow datasource filtering for recipients **at all**? (e.g. `$country`)
+- Related: Should ETM support groups???
 - How will the senders be configured in EN2?
+- Where will sender credentials be saved? (config file or DB?)
 - logging to DB only or additional file?
 - link to the log file in the backend (field)
 - log email content? (probably not)
