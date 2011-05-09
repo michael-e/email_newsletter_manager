@@ -6,21 +6,62 @@ Still in development...
 ## 2do
 
 - ? make the recipients input field in the ETM a textarea (see configuration example below)
+
 - Multiple Templates per EN2 field? (e.g. send different email to site admin)
-- Does ETM allow datasource filtering for recipients **at all**? (e.g. `$country`)
-- Related: Should ETM support groups???
-- How will the senders be configured in EN2?
+- Does ETM allow datasource filtering for recipients **at all**? (e.g. `$country`) – NO
+- Related: Should ETM support groups??? – NO
 - Where will sender credentials be saved? (config file or DB?)
 - logging to DB only or additional file?
 - link to the log file in the backend (field)
 - log email content? (probably not)
-- not EN, but related: data backup/logging for opt-outs
+- not EN, but related: data backup/logging extension for opt-outs
 
 
 ## Concept
 
+Backend pages:
 
-	Recipient Groups are defined in the ETM:
+- Email Templates (ETM)
+- Email Senders (EN2)
+	- A sender is similar to the "default sender" on the prefs page, with a unique name.
+- Email Recipients (EN2)
+	- 1 or multiple DSs.
+	- 1 or multiple param/value pairs.
+	- Params will be used to filter the DSs.
+
+EN2 field:
+
+- in the section editor you select what will later be visible in the entry editor (=entry edit page):
+	- select 1 or multiple senders
+	- select 1 or multiple recipient groups
+	- ETM template (layouts + subject)
+- on the entry edit page you select what ahould be used for this newsletter:
+	- select 1 sender
+	- select 1 or multiple recipient groups
+
+EN2 API:
+
+- select sender
+- select recipient group(s)
+- select ETM template
+- send
+
+EN2 inner workings:
+
+- ETM will __not__ send any emails!
+- EN2 "send" method
+	- has to build the full recipient list (all recipient groups) using pagination, then save it to the DB
+	- has to write the sender to the DB
+	- has to pass the task to a background process
+- the background process 
+	- has to build "recipients slices"
+	- has to get the rendered output (HTML and/or PLAIN) for each email from the ETM
+	- has to send the emails using the Core Email API
+	- has to write logs to the DB and/or files
+	- has to update the "status" field in the DB (same as EN1)
+
+
+**Recipient Groups are NOT defined in the ETM**! So the follwing is left here just for reference:
 
 	Englishmen: {//members[nation/@handle='great-britain']/name} <{//members[nation/@handle='great-britain']/name}>;
 	Dutchmen: {//members[nation/@handle='netherlands']/name} <{//members[nation/@handle='netherlands']/name}>;
@@ -51,18 +92,6 @@ Still in development...
 	                        <- reply-to-email
 	                        <- reply-to-name
 	           <- 1 throttling (number/period)
-
-
-What does this mean?
-
-- EN2 has to get the full recipient list from the ETM, then save it to the DB
-- EN2 has to pass the task to a background process
-- the background process has to build "recipients slices"
-- the background process has to get the rendered output (HTML and/or PLAIN) for each email from the ETM
-- the background process has to send the emails using the Core Email API
-- this means that ETM will __not__ send any emails!
-- EN2 has to write logs to the DB and/or files
-- EN2 has to update the "status" field in the DB (same as EN1)
 
 
 ## DB content
