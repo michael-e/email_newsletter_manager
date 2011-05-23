@@ -37,7 +37,7 @@ class extension_email_newsletters extends extension{
 		if($etm instanceof Extension){
 			Symphony::Database()->query(
 				'CREATE TABLE IF NOT EXISTS
-				`sym_email_newsletters_recipientgroups` (
+				`tbl_email_newsletters_recipientgroups` (
 					`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 					`name` varchar(255) NOT NULL,
 					`recipients` text,
@@ -50,7 +50,7 @@ class extension_email_newsletters extends extension{
 			);
 			Symphony::Database()->query(
 				'CREATE TABLE IF NOT EXISTS
-				`sym_email_newsletters_recipientgroups_params` (
+				`tbl_email_newsletters_recipientgroups_params` (
 					`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 					`recipientgroup_id` int(10) unsigned NOT NULL,
 					`name` varchar(255) NOT NULL,
@@ -64,7 +64,7 @@ class extension_email_newsletters extends extension{
 			);
 			Symphony::Database()->query(
 				'CREATE TABLE IF NOT EXISTS
-				`sym_email_newsletters_senders` (
+				`tbl_email_newsletters_senders` (
 					`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 					`name` varchar(255)  NOT NULL,
 					`email` varchar(255)  NOT NULL,
@@ -82,5 +82,12 @@ class extension_email_newsletters extends extension{
 		else{
 			throw new Exception(__('The Email Template Manager is required for this extension to work.'));
 		}
+	}
+	
+	public function uninstall(){
+		Symphony::Database()->query('DROP TABLE `tbl_email_newsletters_recipientgroups`');
+		Symphony::Database()->query('DROP TABLE `tbl_email_newsletters_recipientgroups_params`');
+		Symphony::Database()->query('DROP TABLE `tbl_email_newsletters_senders`');
+		return true;
 	}
 }
