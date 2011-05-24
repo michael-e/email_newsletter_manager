@@ -131,8 +131,8 @@
 				<label>Required URL Parameter
 					<i>Optional</i>
 					<input type="text" name="fields[required_url_param]" />
-					<p class="help">An empty result will be returned when this parameter does not have a value. Do not wrap the parameter with curly-braces.</p>
 				</label>
+				<p class="help">An empty result will be returned when this parameter does not have a value. Do not wrap the parameter with curly-braces.</p>
 			</div>
 		</fieldset>
 		<fieldset class="settings contextual static_recipients">
@@ -145,15 +145,17 @@
 			</div>
 		</fieldset>
 		<fieldset class="settings contextual sections Sections">
-			<legend>Select Fields</legend>
+			<legend>Fields</legend>
 			<p class="help"></p>
 			<div>
 				<xsl:for-each select="/data/sections/entry">
 					<div class="contextual {id}">
 						<div class="group">
 							<div>
-								<label>Email
-									<select name="fields[email]">
+								<label>Name
+								<i>Optional</i>
+									<select name="fields[name]">
+										<option value="0"></option>
 										<xsl:for-each select="field/elements">
 											<option value="{item}"><xsl:value-of select="item"/></option>
 										</xsl:for-each>
@@ -161,10 +163,8 @@
 								</label>
 							</div>
 							<div>
-								<label>Name
-								<i>Optional</i>
-									<select name="fields[name]">
-										<option value="0"></option>
+								<label>Email
+									<select name="fields[email]">
 										<xsl:for-each select="field/elements">
 											<option value="{item}"><xsl:value-of select="item"/></option>
 										</xsl:for-each>
