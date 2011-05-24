@@ -106,7 +106,9 @@ Class contentExtensionemail_newslettersrecipientgroups extends ExtensionPage{
 			}
 			Symphony::Database()->delete('tbl_email_newsletters_recipientgroups_params', '`recipientgroup_id` = "' . $id . '"');
 			foreach((array)$fields['params'] as $param){
-				Symphony::Database()->insert(array('name'=>$param['name'], 'value'=>$param['value'], 'recipientgroup_id'=>$id, 'id'=>$param['id']), 'tbl_email_newsletters_recipientgroups_params', true);
+				if(!empty($param['name']) && !empty($param['value'])){
+					Symphony::Database()->insert(array('name'=>$param['name'], 'value'=>$param['value'], 'recipientgroup_id'=>$id, 'id'=>$param['id']), 'tbl_email_newsletters_recipientgroups_params', true);
+				}
 			}
 			redirect(SYMPHONY_URL . '/extension/email_newsletters/recipientgroups/edit/' . $id . '/saved');
 			return true;

@@ -9,7 +9,7 @@
 
 <xsl:template match="/">
 	<h2>
-		<span>Email Senders</span>
+		<span>Newsletter Senders</span>
 		<a href="{concat($root, '/symphony/extension/email_newsletters/senders/new')}" class="create button">Create New</a>
 	</h2>
 	<form method="post" action="{$current-url}">

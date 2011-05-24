@@ -21,12 +21,12 @@ class extension_email_newsletters extends extension{
 		return array(
 			array(
 				'location'  => __('Blueprints'),
-				'name'      => __('Email Recipients'),
+				'name'      => __('Newsletter Recipients'),
 				'link'      => '/recipientgroups/'
 			),
 			array(
 				'location'  => __('Blueprints'),
-				'name'      => __('Email Senders'),
+				'name'      => __('Newsletter Senders'),
 				'link'      => '/senders/'
 			)			
 		);
