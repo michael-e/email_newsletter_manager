@@ -2,7 +2,7 @@
 <xsl:stylesheet version="1.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-<xsl:output method="xml"
+<xsl:output method="html"
 	omit-xml-declaration="yes"
 	encoding="UTF-8"
 	indent="yes" />
@@ -14,36 +14,167 @@
 	<form method="POST">
 		<fieldset class="settings">
 			<legend>Essentials</legend>
-			<div>
-				<xsl:if test="/data/errors/name">
-					<xsl:attribute name="class">
-						<xsl:text>invalid</xsl:text>
-					</xsl:attribute>
-				</xsl:if>
-				<label>
-					Name
-					<input type="text" name="fields[name]">
-						<xsl:attribute name="value">
-							<xsl:if test="/data/fields">
-								<xsl:value-of select="/data/fields/name"/>
-							</xsl:if>
-							<xsl:if test="not(/data/fields) and /data/recipientgroup/entry/name">
-								<xsl:value-of select="/data/recipientgroup/entry/name"/>
-							</xsl:if>
+			<div class="group">
+				<div>
+					<xsl:if test="/data/errors/name">
+						<xsl:attribute name="class">
+							<xsl:text>invalid</xsl:text>
 						</xsl:attribute>
-					</input>
-				</label>
-				<xsl:if test="/data/errors/name">
-					<p><xsl:value-of select="/data/errors/name"/></p>
-				</xsl:if>
+					</xsl:if>
+					<label>
+						Name
+						<input type="text" name="fields[name]">
+							<xsl:attribute name="value">
+								<xsl:if test="/data/fields">
+									<xsl:value-of select="/data/fields/name"/>
+								</xsl:if>
+								<xsl:if test="not(/data/fields) and /data/recipientgroup/entry/name">
+									<xsl:value-of select="/data/recipientgroup/entry/name"/>
+								</xsl:if>
+							</xsl:attribute>
+						</input>
+					</label>
+					<xsl:if test="/data/errors/name">
+						<p><xsl:value-of select="/data/errors/name"/></p>
+					</xsl:if>
+				</div>
+				<div>
+					<label>Source
+						<select id="context" name="fields[source]">
+							<optgroup label="Sections">
+								<xsl:for-each select="/data/sections/entry">
+									<option value="{id}"><xsl:value-of select="name"/></option>
+								</xsl:for-each>
+							</optgroup>
+							<optgroup label="System">
+								<option value="authors">Authors</option>
+							</optgroup>
+							<optgroup label="Static">
+								<option value="static_recipients">Static Recipients</option>
+							</optgroup>
+						</select>
+					</label>
+				</div>
 			</div>
 		</fieldset>
-		<fieldset class="settings recipients-select">
+		<fieldset class="settings contextual sections Sections authors System">
+			<legend>Filter Results</legend>
+			<p class="help">Use <code>{$param}</code> syntax to filter by page parameters.</p>
+			<div>
+				<div class="contextual authors">
+					<p class="label">Filter Authors by</p>
+					<ol class="filters-duplicator">
+						<li class="unique template" data-type="id">
+							<h4>ID</h4>
+							<label>Value
+								<input name="fields[filter][author][id]" type="text" />
+							</label>
+						</li>
+						<li class="unique template" data-type="username">
+							<h4>Username</h4>
+							<label>Value
+								<input name="fields[filter][author][username]" type="text" />
+							</label>
+						</li>
+						<li class="unique template" data-type="first_name">
+							<h4>First Name</h4>
+							<label>Value
+								<input name="fields[filter][author][first_name]" type="text" />
+							</label>
+						</li>
+						<li class="unique template" data-type="last_name">
+							<h4>Last Name</h4>
+							<label>Value
+								<input name="fields[filter][author][last_name]" type="text" />
+							</label>
+						</li>
+						<li class="unique template" data-type="email">
+							<h4>Email</h4>
+							<label>Value
+								<input name="fields[filter][author][email]" type="text" />
+							</label>
+						</li>
+						<li class="unique template" data-type="user_type">
+							<h4>User Type</h4>
+							<label>Value
+								<input name="fields[filter][author][user_type]" type="text" />
+							</label>
+						</li>
+					</ol>
+				</div>
+				<xsl:for-each select="/data/sections/entry">
+					<div class="contextual {id}">
+						<p class="label">Filter <xsl:value-of select="name"/> by</p>
+						<ol class="filters-duplicator">
+							<li class="unique template" data-type="id">
+								<h4>System ID</h4>
+								<label>Value
+									<input name="fields[filter][7][id]" type="text" />
+								</label>
+							</li>
+							<li class="unique template" data-type="system:date">
+								<h4>System Date</h4>
+								<label>Value
+									<input name="fields[filter][7][system:date]" type="text" />
+								</label>
+							</li>
+							<xsl:for-each select="field">
+								<li class="unique template" data-type="{element-name}">
+									<xsl:copy-of select="filter_html/node()"/>
+								</li>
+							</xsl:for-each>
+						</ol>
+					</div>
+				</xsl:for-each>
+			</div>
+			<div>
+				<label>Required URL Parameter
+					<i>Optional</i>
+					<input type="text" name="fields[required_url_param]" />
+					<p class="help">An empty result will be returned when this parameter does not have a value. Do not wrap the parameter with curly-braces.</p>
+				</label>
+			</div>
+		</fieldset>
+		<fieldset class="settings contextual static_recipients">
 			<legend>Recipients</legend>
-			<p class="label">Get recipients from</p>
-			<ol id="duplicator" class="duplicator collapsible">
-				<xsl:call-template name="duplicator"/>
-			</ol>
+			<p class="help">Enter your recipients in the following format: <code>Name &lt;email&gt;</code> or <code>&quot;Name&quot; &lt;email&gt;</code>.</p>
+			<div>
+				<label>Recipients
+					<textarea class="code" name="fields[static_recipients]" rows="12" cols="50"></textarea>
+				</label>
+			</div>
+		</fieldset>
+		<fieldset class="settings contextual sections Sections">
+			<legend>Select Fields</legend>
+			<p class="help"></p>
+			<div>
+				<xsl:for-each select="/data/sections/entry">
+					<div class="contextual {id}">
+						<div class="group">
+							<div>
+								<label>Email
+									<select name="fields[email]">
+										<xsl:for-each select="field/elements">
+											<option value="{item}"><xsl:value-of select="item"/></option>
+										</xsl:for-each>
+									</select>
+								</label>
+							</div>
+							<div>
+								<label>Name
+								<i>Optional</i>
+									<select name="fields[name]">
+										<option value="0"></option>
+										<xsl:for-each select="field/elements">
+											<option value="{item}"><xsl:value-of select="item"/></option>
+										</xsl:for-each>
+									</select>
+								</label>
+							</div>
+						</div>
+					</div>
+				</xsl:for-each>
+			</div>
 		</fieldset>
 		<div class="actions">
 			<input type="submit" accesskey="s" name="action[save]">
@@ -59,103 +190,10 @@
 			</xsl:if>
 		</div>
 	</form>
-</xsl:template>
+	<xsl:value-of select="'&lt;!--'" disable-output-escaping="yes"/>
+	<xsl:copy-of select="/node()" />
+	<xsl:value-of select="'--&gt;'" disable-output-escaping="yes"/>
 
-<xsl:template name="duplicator">
-	<li class="template field-section" data-type="section">
-		<h4>Section</h4>
-		<div class="content">
-			<div>
-				<label class="meta">
-					Section
-					<select id="context" name="fields[recipients][-1][section]">
-						<optgroup label="Sections">
-							<option value="7">Recipients</option>
-						</optgroup>
-						<optgroup label="System">
-							<option value="system:authors">Authors</option>
-						</optgroup>
-					</select>
-				</label>
-			</div>
-			<div class="group">
-				<div>
-					<label class="meta">
-						Email field
-						<select name="fields[recipients][-1][email]" class="filtered">
-							<optgroup label="Authors">
-								<option value="system:id">System ID</option>
-								<option value="username">Username</option>
-								<option value="first-name">First Name</option>
-								<option value="last-name">Last Name</option>
-								<option value="email">Email</option>
-								<option value="status">Status</option>
-							</optgroup>
-							<optgroup label="Recipients">
-								<option value="system:id">System ID</option>
-								<option value="system:date">System Date</option>
-								<option value="email">email</option>
-							</optgroup>
-						</select>
-					</label>
-				</div>
-				<div>
-					<label class="meta">
-						Name field
-						<i>Optional</i>
-						<select name="fields[recipients][-1][name]" class="filtered">
-							<optgroup label="Authors">
-								<option value="system:id">System ID</option>
-								<option value="username">Username</option>
-								<option value="first-name">First Name</option>
-								<option value="last-name">Last Name</option>
-								<option value="email">Email</option>
-								<option value="status">Status</option>
-							</optgroup>
-							<optgroup label="Recipients">
-								<option value="system:id">System ID</option>
-								<option value="system:date">System Date</option>
-								<option value="email">email</option>
-							</optgroup>
-						</select>
-					</label>
-				</div>
-			</div>
-			<div>
-				<div class="contextual 7">
-					<p class="label">Filter Recipients by</p>
-					<ol class="filters-duplicator">
-						<li class="unique template" data-type="id">
-							<h4>System ID</h4>
-							<label>Value
-								<input name="fields[filter][7][id]" type="text" />
-							</label>
-						</li>
-						<li class="unique template" data-type="system:date">
-							<h4>System Date</h4>
-							<label>Value
-								<input name="fields[filter][7][system:date]" type="text" />
-							</label>
-						</li>
-						<li class="unique template" data-type="email">
-							<h4>email <i>Text Input</i></h4>
-							<label>Value
-								<input name="fields[filter][7][14]" type="text" />
-							</label>
-						</li>
-					</ol>
-				</div>
-			</div>
-			<div>
-				<label>
-					Required parameters
-					<i>Optional</i>
-					<input type="text" name="fields[name]"></input>
-				</label>
-				<p class="help">An empty result will be returned when this parameter does not have a value. Do not wrap the parameter with curly-braces.</p>
-			</div>
-		</div>
-	</li>
 </xsl:template>
 
 </xsl:stylesheet>

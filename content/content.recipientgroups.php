@@ -43,6 +43,30 @@ Class contentExtensionemail_newslettersrecipientgroups extends ExtensionPage{
 		$this->setPageType('form');
 		$this->addScriptToHead(URL . '/extensions/email_newsletters/assets/admin.js', 140);
 		$this->addStylesheetToHead(URL . '/extensions/email_newsletters/assets/admin.css', 'screen', 103);
+		
+		$section_xml = new XMLElement('sections');
+		$sectionManager = new SectionManager($this);
+		$sections = $sectionManager->fetch();
+		foreach($sections as $section){
+			$entry = new XMLElement('entry');
+			General::array_to_xml($entry, $section->get());
+			foreach($section->fetchFields() as $field){
+				$field_xml = new XMLElement('field');
+				General::array_to_xml($field_xml,$field->get()); 
+				
+				$filter_html = new XMLElement('filter_html');
+				$field->displayDatasourceFilterPanel($filter_html);
+				$field_xml->appendChild($filter_html);
+				
+				$field_elements = new XMLElement('elements');
+				General::array_to_xml($field_elements, $field->fetchIncludableElements());
+				$field_xml->appendChild($field_elements);
+				$entry->appendChild($field_xml);
+			}			
+			$section_xml->appendChild($entry);
+		}
+		$this->_XML->appendChild($section_xml);
+		
 		$recipientgroup = new XMLElement('recipientgroup');
 
 		if($this->_context[2] == 'saved' || $this->_context[3] == 'saved'){
@@ -64,10 +88,6 @@ Class contentExtensionemail_newslettersrecipientgroups extends ExtensionPage{
 			if(!empty($group)){
 				$entry = new XMLElement('entry');
 				General::array_to_xml($entry, $group[0]);
-				$params = Symphony::Database()->fetch('SELECT * FROM `tbl_email_newsletters_recipientgroups_params` WHERE `recipientgroup_id` = "' . Symphony::Database()->cleanValue($this->_context[1]) . '"');
-				$parameters = new XMLElement('params');
-				General::array_to_xml($parameters, $params);
-				$entry->appendChild($parameters);
 				$recipientgroup->appendChild($entry);
 				$this->_XML->appendChild($recipientgroup);
 			}
@@ -95,7 +115,7 @@ Class contentExtensionemail_newslettersrecipientgroups extends ExtensionPage{
 				return true;
 			}
 		}
-		if(!empty($fields['name']) && !empty($fields['recipients'])){
+		if(!empty($fields['name'])){
 			if($new){
 				Symphony::Database()->insert(array('name'=>$fields['name'], 'recipients'=>$fields['recipients'], 'id'=>$this->_context[1]), 'tbl_email_newsletters_recipientgroups', true);
 				$id = Symphony::Database()->getInsertId();
@@ -115,9 +135,6 @@ Class contentExtensionemail_newslettersrecipientgroups extends ExtensionPage{
 		}
 		if(empty($fields['name'])){
 			$errors->appendChild(new XMLElement('name', __('This field can not be empty.')));
-		}
-		if(empty($fields['recipients'])){
-			$errors->appendChild(new XMLElement('recipients', __('This field can not be empty.')));
 		}
 		$this->_XML->appendChild($errors);
 	}
