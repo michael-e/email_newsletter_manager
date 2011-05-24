@@ -146,6 +146,14 @@
 					</ol>
 				</div>
 			</div>
+			<div>
+				<label>
+					Required parameters
+					<i>Optional</i>
+					<input type="text" name="fields[name]"></input>
+				</label>
+				<p class="help">An empty result will be returned when this parameter does not have a value. Do not wrap the parameter with curly-braces.</p>
+			</div>
 		</div>
 	</li>
 </xsl:template>
