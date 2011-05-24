@@ -37,41 +37,10 @@
 					<p><xsl:value-of select="/data/errors/name"/></p>
 				</xsl:if>
 			</div>
-			<div>
-				<xsl:if test="/data/errors/recipients">
-					<xsl:attribute name="class">
-						<xsl:text>invalid</xsl:text>
-					</xsl:attribute>
-				</xsl:if>
-				<label>
-					Recipients
-					<input type="text" name="fields[recipients]">
-						<xsl:attribute name="value">
-							<xsl:if test="/data/fields">
-								<xsl:value-of select="/data/fields/recipients"/>
-							</xsl:if>
-							<xsl:if test="not(/data/fields) and /data/recipientgroup/entry/recipients">
-								<xsl:value-of select="/data/recipientgroup/entry/recipients"/>
-							</xsl:if>
-						</xsl:attribute>
-					</input>
-				</label>
-				<xsl:if test="not(/data/errors/recipients)">
-					<p class="help">Select multiple recipients by seperating them with commas. This is also possible dynamically: {/data/authors/name} &lt;{/data/authors/email}&gt; will return: name &lt;email@domain.com&gt;, name2 &lt;email2@domain.com&gt;</p>
-				</xsl:if>
-				<xsl:if test="/data/errors/recipients">
-					<p><xsl:value-of select="/data/errors/recipients"/></p>
-				</xsl:if>
-			</div>
 		</fieldset>
-		<fieldset class="settings params-select">
-			<legend>Parameters</legend>
-			<p class="help">
-				To make it easier to define your recipient groups, you can set parameters to filter your recipients datasource on.
-				The EN will use this parameter only when it loads this group, so it is possible to use the same datasource for more than one group.
-				Do not forget to filter your datasource on the parameter.
-			</p>
-			<p class="label">Params</p>
+		<fieldset class="settings recipients-select">
+			<legend>Recipients</legend>
+			<p class="label">Get recipients from</p>
 			<ol id="duplicator" class="duplicator collapsible">
 				<xsl:call-template name="duplicator"/>
 			</ol>
@@ -80,8 +49,8 @@
 			<input type="submit" accesskey="s" name="action[save]">
 				<xsl:attribute name="value">
 					<xsl:choose>
-						<xsl:when test="/data/senders/entry/name">Save Changes</xsl:when>
-						<xsl:otherwise>Create Sender</xsl:otherwise>
+						<xsl:when test="/data/recipientgroup/entry/name">Save Changes</xsl:when>
+						<xsl:otherwise>Create Recipient Group</xsl:otherwise>
 					</xsl:choose>
 				</xsl:attribute>
 			</input>
@@ -93,49 +62,92 @@
 </xsl:template>
 
 <xsl:template name="duplicator">
-	<xsl:apply-templates select="/data/recipientgroup/entry/params/item" />
-	<li class="template field-param" data-type="param">
-		<h4>Parameter</h4>
-		<div class="content group">
+	<li class="template field-section" data-type="section">
+		<h4>Section</h4>
+		<div class="content">
 			<div>
 				<label class="meta">
-					Name
-					<input type="text" name="fields[params][-1][name]"></input>
+					Section
+					<select id="context" name="fields[recipients][-1][section]">
+						<optgroup label="Sections">
+							<option value="7">Recipients</option>
+						</optgroup>
+						<optgroup label="System">
+							<option value="system:authors">Authors</option>
+						</optgroup>
+					</select>
 				</label>
-				<p class="help">You can use the param by this name in the datasource editor.</p>
+			</div>
+			<div class="group">
+				<div>
+					<label class="meta">
+						Email field
+						<select name="fields[recipients][-1][email]" class="filtered">
+							<optgroup label="Authors">
+								<option value="system:id">System ID</option>
+								<option value="username">Username</option>
+								<option value="first-name">First Name</option>
+								<option value="last-name">Last Name</option>
+								<option value="email">Email</option>
+								<option value="status">Status</option>
+							</optgroup>
+							<optgroup label="Recipients">
+								<option value="system:id">System ID</option>
+								<option value="system:date">System Date</option>
+								<option value="email">email</option>
+							</optgroup>
+						</select>
+					</label>
+				</div>
+				<div>
+					<label class="meta">
+						Name field
+						<i>Optional</i>
+						<select name="fields[recipients][-1][name]" class="filtered">
+							<optgroup label="Authors">
+								<option value="system:id">System ID</option>
+								<option value="username">Username</option>
+								<option value="first-name">First Name</option>
+								<option value="last-name">Last Name</option>
+								<option value="email">Email</option>
+								<option value="status">Status</option>
+							</optgroup>
+							<optgroup label="Recipients">
+								<option value="system:id">System ID</option>
+								<option value="system:date">System Date</option>
+								<option value="email">email</option>
+							</optgroup>
+						</select>
+					</label>
+				</div>
 			</div>
 			<div>
-				<label>
-					Value
-					<input type="text" name="fields[params][-1][value]"></input>
-				</label>
-				<p class="help">The parameter value can <strong>not</strong> be dynamic.</p>
+				<div class="contextual 7">
+					<p class="label">Filter Recipients by</p>
+					<ol class="filters-duplicator">
+						<li class="unique template" data-type="id">
+							<h4>System ID</h4>
+							<label>Value
+								<input name="fields[filter][7][id]" type="text" />
+							</label>
+						</li>
+						<li class="unique template" data-type="system:date">
+							<h4>System Date</h4>
+							<label>Value
+								<input name="fields[filter][7][system:date]" type="text" />
+							</label>
+						</li>
+						<li class="unique template" data-type="email">
+							<h4>email <i>Text Input</i></h4>
+							<label>Value
+								<input name="fields[filter][7][14]" type="text" />
+							</label>
+						</li>
+					</ol>
+				</div>
 			</div>
 		</div>
 	</li>
-</xsl:template>
-
-<xsl:template match="params/item">
-	<li class="field-param" data-type="param">
-	<h4>Parameter</h4>
-	<div class="content group">
-		<div>
-			<label class="meta">
-				Name
-				<input type="text" name="fields[params][-1][name]" value="{name}"></input>
-			</label>
-			<p class="help">You can use the param by this name in the datasource editor.</p>
-		</div>
-		<div>
-			<label>
-				Value
-				<input type="text" name="fields[params][-1][value]" value="{value}"></input>
-			</label>
-			<p class="help">The parameter value can <strong>not</strong> be dynamic.</p>
-			<input type="hidden" name="fields[params][-1][id]" value="{id}" />
-		</div>
-	</div>
-</li>
 </xsl:template>
 
 </xsl:stylesheet>
