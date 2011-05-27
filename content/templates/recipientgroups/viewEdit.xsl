@@ -8,8 +8,14 @@
 	indent="yes" />
 
 <xsl:template match="/">
-	<h2>	
-		<span><xsl:choose><xsl:when test="/data/recipientgroup/entry/name"><xsl:value-of select="/data/recipientgroup/entry/name" /></xsl:when><xsl:otherwise>New Recipient Group</xsl:otherwise></xsl:choose></span>
+	<h2>
+		<xsl:choose>
+			<xsl:when test="/data/recipientgroup/entry/name">
+				<span><xsl:value-of select="/data/recipientgroup/entry/name" /></span>
+				<a href="#" class="button">Preview Recipients</a>
+			</xsl:when>
+			<xsl:otherwise><span>New Recipient Group</span></xsl:otherwise>
+		</xsl:choose>
 	</h2>
 	<form method="POST">
 		<fieldset class="settings">
@@ -146,15 +152,24 @@
 		</fieldset>
 		<fieldset class="settings contextual sections Sections">
 			<legend>Fields</legend>
-			<p class="help"></p>
+			<p class="help">From the section, select the fields that are storing your Name and Email information.</p>
 			<div>
 				<xsl:for-each select="/data/sections/entry">
 					<div class="contextual {id}">
+						<div>
+							<label>Email
+								<select name="fields[email]">
+									<xsl:for-each select="field/elements">
+										<option value="{item}"><xsl:value-of select="item"/></option>
+									</xsl:for-each>
+								</select>
+							</label>
+						</div>
 						<div class="group">
 							<div>
-								<label>Name
+								<label>Name Field(s)
 								<i>Optional</i>
-									<select name="fields[name]">
+									<select name="fields[name-fields][]" multiple="yes">
 										<option value="0"></option>
 										<xsl:for-each select="field/elements">
 											<option value="{item}"><xsl:value-of select="item"/></option>
@@ -163,12 +178,10 @@
 								</label>
 							</div>
 							<div>
-								<label>Email
-									<select name="fields[email]">
-										<xsl:for-each select="field/elements">
-											<option value="{item}"><xsl:value-of select="item"/></option>
-										</xsl:for-each>
-									</select>
+								<label>
+									Name XSLT
+									<i>optional</i>
+									<textarea name="fields[name-xslt]" rows="10" style="height:9.166em"></textarea>
 								</label>
 							</div>
 						</div>
