@@ -17,7 +17,8 @@
 			<thead>
 				<tr>
 					<th scope="col">Name</th>
-					<th scope="col">Params</th>
+					<th scope="col">Recipients</th>
+					<th scope="col">Preview</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -41,17 +42,21 @@
 			<input type="submit" value="Apply" name="action[apply]" />
 		</div>
 	</form>
+	<xsl:copy-of select="/"/>
 </xsl:template>
 
 <xsl:template match="recipientgroups/entry">
 	<tr>
 		<td>
-			<a href="{concat($root, '/symphony/extension/email_newsletters/recipientgroups/edit/', id)}"><xsl:value-of select="name"/></a>
-			<input name="items[{id}]" type="checkbox" />
+			<a href="{concat($root, '/symphony/extension/email_newsletters/recipientgroups/edit/', handle)}"><xsl:value-of select="name"/></a>
+			<input name="items[{handle}]" type="checkbox" />
 		</td>
 		<td>
-			<xsl:if test="not(params)"><xsl:text>0</xsl:text></xsl:if>
-			<xsl:value-of select="params"/>
+			<xsl:if test="not(count)"><xsl:text>0</xsl:text></xsl:if>
+			<xsl:value-of select="count"/>
+		</td>
+		<td>
+			<a href="{concat($root, '/symphony/extension/email_newsletters/recipientgroups/preview/', handle)}">Preview</a>
 		</td>
 	</tr>
 </xsl:template>

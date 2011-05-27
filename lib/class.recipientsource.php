@@ -13,12 +13,12 @@ Class RecipientSource extends DataSource{
 	public $dsParamREDIRECTONEMPTY = 'no';
 	
 	protected $_count = null;
-	protected $_param_pool = null;
+	protected $_param_pool = array();
 	
 	protected $_XSLTProc;
-
-	public function __construct(&$parent, $env=NULL, $process_params=true, $param_pool = NULL){
-		parent::__construct($parent, $env, $process_params);
+	
+	public function __construct(&$parent, $env = array(), $process_params=true, $param_pool = array()){
+		parent::__construct($parent, (array)$env, $process_params);
 		$this->_dependencies = array();
 		$this->_param_pool = $param_pool;
 		$this->_XSLTProc = new XsltProcess();
@@ -40,9 +40,9 @@ Class RecipientSource extends DataSource{
 		$this->dsParamSTARTPAGE = $page;
 		$xml = $this->grab();
 		try{
-			$generated-xml = $xml->generate();
-			$name = trim($this->_XSLTProc->process($generated-xml, $this->nameXslt, $this->param_pool));
-			$email = trim($this->_XSLTProc->process($generated-xml, $this->emailXslt, $this->param_pool));
+			$generated_xml = $xml->generate();
+			$name = trim($this->_XSLTProc->process($generated_xml, $this->nameXslt, $this->param_pool));
+			$email = trim($this->_XSLTProc->process($generated_xml, $this->emailXslt, $this->param_pool));
 			require_once(TOOLKIT . '/util.validators.php');
 			if(!General::validateString($email, $validators['email'])){
 				throw new Exception();

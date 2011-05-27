@@ -8,6 +8,7 @@ if(!class_exists('ExtensionPage')){
 }
 
 require_once(TOOLKIT . '/class.xsltprocess.php');
+require_once(ENDIR . '/lib/class.recipientgroupmanager.php');
 
 Class contentExtensionemail_newslettersrecipientgroups extends ExtensionPage{
 
@@ -21,11 +22,14 @@ Class contentExtensionemail_newslettersrecipientgroups extends ExtensionPage{
 	function __viewIndex(){
 		$this->setPageType('index');
 		$this->setTitle(__("Symphony - Email Recipients"));
-		$results = Symphony::Database()->fetch('SELECT DISTINCT groups.name, groups.id, count(params.name) as params from `tbl_email_newsletters_recipientgroups` AS groups LEFT JOIN `tbl_email_newsletters_recipientgroups_params` as params ON groups.id = params.recipientgroup_id GROUP BY groups.id ORDER BY groups.name ASC');
+		$recipientgroupManager = new RecipientgroupManager($this);
+		$groups = $recipientgroupManager->listAll();
 		$senders = new XMLElement('recipientgroups');
-		foreach($results as $result){
+		foreach($groups as $group){
 			$entry = new XMLElement('entry');
-			General::array_to_xml($entry, $result);
+			General::array_to_xml($entry, $group);
+			$count = new XMLElement('count', $recipientgroupManager->create($group['handle'])->getCount());
+			$entry->appendChild($count);
 			$senders->appendChild($entry);
 		}
 		$this->_XML->appendChild($senders);
@@ -84,10 +88,11 @@ Class contentExtensionemail_newslettersrecipientgroups extends ExtensionPage{
 		}
 
 		if($new == false){
-			$group = Symphony::Database()->fetch('SELECT * FROM `tbl_email_newsletters_recipientgroups` WHERE `id` = "' . Symphony::Database()->cleanValue($this->_context[1]) . '"');
+			$groupManager = new RecipientgroupManager($this);
+			$group = $groupManager->about($this->_context[1]);
 			if(!empty($group)){
 				$entry = new XMLElement('entry');
-				General::array_to_xml($entry, $group[0]);
+				General::array_to_xml($entry, $group);
 				$recipientgroup->appendChild($entry);
 				$this->_XML->appendChild($recipientgroup);
 			}

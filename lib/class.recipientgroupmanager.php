@@ -2,18 +2,19 @@
 
 require_once(TOOLKIT . '/class.manager.php');
 
-Class RecipientGroup extends Manager{
+Class RecipientgroupManager extends Manager{
 
 	public function __getHandleFromFilename($filename){
-		return sscanf($filename, 'group.%[^.php].php');
+		$result = sscanf($filename, 'group.%[^.php].php');
+		return $result[0];
 	}
 
 	public function __getClassName($handle){
-		return sprintf('recipientGroup%s', $handle);
+		return sprintf('recipientgroup%s', ucfirst($handle));
 	}
 	
 	public function __getClassPath($handle){
-		if(is_file(WORKSPACE . "newsletter-recipients/group.$handle.php")) return WORKSPACE . '/newsletter-';
+		if(is_file(WORKSPACE . "/newsletter-recipients/group.$handle.php")) return WORKSPACE . '/newsletter-recipients';
 		else{
 			$extensions = Symphony::ExtensionManager()->listInstalledHandles();
 
@@ -89,7 +90,20 @@ Class RecipientGroup extends Manager{
 		return $result;
 	}
 
-	public function &create($handle, Array $env = null, $process_params=true){
+	public function &create($handle){
+		$env =  array(
+			'today' => DateTimeObj::get('Y-m-d'),
+			'current-time' => DateTimeObj::get('H:i'),
+			'this-year' => DateTimeObj::get('Y'),
+			'this-month' => DateTimeObj::get('m'),
+			'this-day' => DateTimeObj::get('d'),
+			'timezone' => DateTimeObj::get('P'),
+			'website-name' => Symphony::Configuration()->get('sitename', 'general'),
+			'root' => URL,
+			'workspace' => URL . '/workspace',
+			'upload-limit' => min($upload_size_php, $upload_size_sym),
+			'symphony-version' => Symphony::Configuration()->get('version', 'symphony'),
+		);
 
 		$classname = $this->__getClassName($handle);
 		$path = $this->__getDriverPath($handle);
