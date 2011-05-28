@@ -39,10 +39,10 @@
 								<textarea class="code" name="fields[name-xslt]" rows="10" style="height:9.166em">
 									<xsl:text>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;xsl:stylesheet version="1.0"
-xmlns:xsl="http://www.w3.org/1999/XSL/Transform"&gt;
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"&gt;
 
 &lt;xsl:template match="/"&gt;
-	&lt;xsl:value-of select="/"/&gt;
+	&lt;xsl:value-of select="."/&gt;
 &lt;/xsl:template&gt;
 
 &lt;/xsl:stylesheet&gt;</xsl:text>
