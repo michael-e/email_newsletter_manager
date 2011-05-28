@@ -23,7 +23,7 @@
 		</xsl:choose>
 	</h2>
 	<form method="POST">
-		<xsl:call-template name="debug" />
+		<!-- <xsl:call-template name="debug" /> -->
 		<xsl:call-template name="essentials" />
 		<xsl:call-template name="filters" />
 		<xsl:call-template name="static-recipients" />
@@ -45,7 +45,7 @@
 </xsl:template>
 
 <xsl:template name="debug">
-	<textarea rows="50" class="code">
+	<textarea rows="30" class="code">
 		<xsl:copy-of select="/" />
 	</textarea>
 </xsl:template>
