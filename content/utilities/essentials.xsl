@@ -13,7 +13,7 @@
 					</xsl:attribute>
 				</xsl:if>
 				<label>
-					Name
+					<xsl:text>Name</xsl:text>
 					<input type="text" name="fields[name]">
 						<xsl:attribute name="value">
 							<xsl:if test="/data/fields">
@@ -30,7 +30,8 @@
 				</xsl:if>
 			</div>
 			<div>
-				<label>Source
+				<label>
+					<xsl:text>Source</xsl:text>
 					<select id="context" name="fields[source]">
 						<optgroup label="Sections">
 							<xsl:for-each select="/data/sections/entry">
