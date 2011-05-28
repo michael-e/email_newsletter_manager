@@ -29,7 +29,7 @@
 				<xsl:if test="not(/data/senders/entry)">
 					<tr>
 						<td class="inactive" colspan="4">
-							None found
+							<xsl:text>None found</xsl:text>
 						</td>
 					</tr>
 				</xsl:if>
@@ -62,7 +62,7 @@
 				<xsl:attribute name="class">
 					<xsl:text>inactive</xsl:text>
 				</xsl:attribute>
-				Use Default
+				<xsl:text>Use Default</xsl:text>
 			</xsl:if>
 		</td>
 		<td>
@@ -73,7 +73,7 @@
 				<xsl:attribute name="class">
 					<xsl:text>inactive</xsl:text>
 				</xsl:attribute>
-				Use Default
+				<xsl:text>Use Default</xsl:text>
 			</xsl:if>
 		</td>
 	</tr>

@@ -10,7 +10,8 @@
 			<xsl:for-each select="/data/sections/entry">
 				<div class="contextual {id}">
 					<div>
-						<label>Email
+						<label>
+							<xsl:text>Email</xsl:text>
 							<select name="fields[email]">
 								<xsl:for-each select="field/elements">
 									<option value="{item}"><xsl:value-of select="item"/></option>
@@ -20,7 +21,8 @@
 					</div>
 					<div class="group">
 						<div>
-							<label>Name Field(s)
+							<label>
+							<xsl:text>Name Field(s)</xsl:text>
 							<i>Optional</i>
 								<select name="fields[name-fields][]" multiple="yes">
 									<option value="0"></option>
@@ -32,7 +34,7 @@
 						</div>
 						<div>
 							<label>
-								Name XSLT
+								<xsl:text>Name XSLT</xsl:text>
 								<i>optional</i>
 								<textarea class="code" name="fields[name-xslt]" rows="10" style="height:9.166em">
 									<xsl:text>&lt;?xml version="1.0" encoding="UTF-8"?&gt;

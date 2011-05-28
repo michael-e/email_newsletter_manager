@@ -22,7 +22,7 @@
 						</xsl:attribute>
 					</xsl:if>
 					<label>
-						Name
+						<xsl:text>Name</xsl:text>
 						<input type="text" name="fields[name]">
 							<xsl:attribute name="value">
 								<xsl:if test="/data/fields">
@@ -45,7 +45,7 @@
 						</xsl:attribute>
 					</xsl:if>
 					<label>
-						Email
+						<xsl:text>Email</xsl:text>
 						<input type="text" name="fields[email]">
 							<xsl:attribute name="value">
 								<xsl:if test="/data/fields">
@@ -65,7 +65,8 @@
 			<div class="group">
 				<div>
 					<label>
-						Reply-To Name <i>optional</i>
+						<xsl:text>Reply-To Name </xsl:text>
+						<i>optional</i>
 						<input type="text" name="fields[reply-to-name]">
 							<xsl:attribute name="value">
 								<xsl:if test="/data/fields">
@@ -81,7 +82,8 @@
 				</div>
 				<div>
 					<label>
-						Reply-To Email <i>optional</i>
+						<xsl:text>Reply-To Email </xsl:text>
+						<i>optional</i>
 						<input type="text" name="fields[reply-to-email]">
 							<xsl:attribute name="value">
 								<xsl:if test="/data/fields">

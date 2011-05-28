@@ -28,7 +28,7 @@
 				<xsl:if test="not(/data/recipientgroups/entry)">
 					<tr>
 						<td class="inactive" colspan="3">
-							None found
+							<xsl:text>None found</xsl:text>
 						</td>
 					</tr>
 				</xsl:if>

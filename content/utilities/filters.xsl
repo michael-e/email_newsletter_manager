@@ -12,37 +12,43 @@
 				<ol class="filters-duplicator">
 					<li class="unique template" data-type="id">
 						<h4>ID</h4>
-						<label>Value
+						<label>
+							<xsl:text>Value</xsl:text>
 							<input name="fields[filter][author][id]" type="text" />
 						</label>
 					</li>
 					<li class="unique template" data-type="username">
 						<h4>Username</h4>
-						<label>Value
+						<label>
+							<xsl:text>Value</xsl:text>
 							<input name="fields[filter][author][username]" type="text" />
 						</label>
 					</li>
 					<li class="unique template" data-type="first_name">
 						<h4>First Name</h4>
-						<label>Value
+						<label>
+							<xsl:text>Value</xsl:text>
 							<input name="fields[filter][author][first_name]" type="text" />
 						</label>
 					</li>
 					<li class="unique template" data-type="last_name">
 						<h4>Last Name</h4>
-						<label>Value
+						<label>
+							<xsl:text>Value</xsl:text>
 							<input name="fields[filter][author][last_name]" type="text" />
 						</label>
 					</li>
 					<li class="unique template" data-type="email">
 						<h4>Email</h4>
-						<label>Value
+						<label>
+							<xsl:text>Value</xsl:text>
 							<input name="fields[filter][author][email]" type="text" />
 						</label>
 					</li>
 					<li class="unique template" data-type="user_type">
 						<h4>User Type</h4>
-						<label>Value
+						<label>
+							<xsl:text>Value</xsl:text>
 							<input name="fields[filter][author][user_type]" type="text" />
 						</label>
 					</li>
@@ -54,13 +60,15 @@
 					<ol class="filters-duplicator">
 						<li class="unique template" data-type="id">
 							<h4>System ID</h4>
-							<label>Value
+							<label>
+								<xsl:text>Value</xsl:text>
 								<input name="fields[filter][7][id]" type="text" />
 							</label>
 						</li>
 						<li class="unique template" data-type="system:date">
 							<h4>System Date</h4>
-							<label>Value
+							<label>
+								<xsl:text>Value</xsl:text>
 								<input name="fields[filter][7][system:date]" type="text" />
 							</label>
 						</li>
@@ -74,7 +82,8 @@
 			</xsl:for-each>
 		</div>
 		<div>
-			<label>Required URL Parameter
+			<label>
+				<xsl:text>Required URL Parameter</xsl:text>
 				<i>Optional</i>
 				<input type="text" name="fields[required_url_param]" />
 			</label>
