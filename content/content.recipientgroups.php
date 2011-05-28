@@ -89,10 +89,22 @@ Class contentExtensionemail_newslettersrecipientgroups extends ExtensionPage{
 
 		if($new == false){
 			$groupManager = new RecipientgroupManager($this);
-			$group = $groupManager->about($this->_context[1]);
-			if(!empty($group)){
+			$group = $groupManager->create($this->_context[1]);
+			if(is_object($group)){
 				$entry = new XMLElement('entry');
-				General::array_to_xml($entry, $group);
+				$properties = $group->getProperties();
+				General::array_to_xml($entry, $properties);
+				if(!empty($properties['filters'])){
+					$filters = new XMLElement('filters');
+					foreach($properties['filters'] as $filter=>$val){
+						$filter_entry = new XMLElement('entry');
+						$fieldManager = new FieldManager($this);
+						$fieldManager->fetch($filter)->displayDatasourceFilterPanel($filter_entry, $val);
+						$filters->appendChild($filter_entry);
+					}
+					$entry->appendChild($filters);
+				}						
+				General::array_to_xml($entry, $group->about());
 				$recipientgroup->appendChild($entry);
 				$this->_XML->appendChild($recipientgroup);
 			}

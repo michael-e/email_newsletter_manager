@@ -57,7 +57,7 @@ Class RecipientSource extends DataSource{
 		if(!is_array($this->nameFields)){
 			$this->nameFields = array($this->nameFields);
 		}
-		$this->dsParamINCLUDEDELEMENTS = array_merge($this->nameFields, array($this->emailField));
+		$this->dsParamINCLUDEDELEMENTS = array_merge($this->nameFields, array($this->emailField), array('system:pagination'));
 		if(is_null($param_pool)){
 			$param_pool = $this->_param_pool;
 		}
@@ -77,5 +77,18 @@ Class RecipientSource extends DataSource{
 			$this->_count = $entries['total-entries'];
 		}
 		return $result;
-	}	
+	}
+	
+	public function getProperties(){
+		return array(
+			'section' => $this->getSource(),
+			'elements' => $this->dsParamINCLUDEDELEMENTS,
+			'filters' => $this->dsParamFILTERS,
+			'email' => $this->emailField,
+			'name' => array(
+				'field' => $this->nameFields,
+				'xslt' 	=> $this->nameXslt
+			)
+		);
+	}
 }

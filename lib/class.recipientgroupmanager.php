@@ -5,7 +5,7 @@ require_once(TOOLKIT . '/class.manager.php');
 Class RecipientgroupManager extends Manager{
 
 	public function __getHandleFromFilename($filename){
-		$result = sscanf($filename, 'group.%[^.php].php');
+		$result = sscanf($filename, 'group.%[^.].php');
 		return $result[0];
 	}
 

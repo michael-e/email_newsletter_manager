@@ -42,7 +42,6 @@
 			<input type="submit" value="Apply" name="action[apply]" />
 		</div>
 	</form>
-	<xsl:copy-of select="/"/>
 </xsl:template>
 
 <xsl:template match="recipientgroups/entry">
