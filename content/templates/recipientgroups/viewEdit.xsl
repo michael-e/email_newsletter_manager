@@ -47,7 +47,7 @@
 </xsl:template>
 
 <xsl:template name="debug">
-	<textarea rows="50">
+	<textarea rows="50" class="code">
 		<xsl:copy-of select="/" />
 	</textarea>
 </xsl:template>
