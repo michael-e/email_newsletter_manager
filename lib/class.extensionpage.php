@@ -16,7 +16,6 @@ Class ExtensionPage extends AdministrationPage{
 	
 	function view(){
 		$this->Contents = new XMLElement('div', NULL, array('id' => 'contents'));
-		$this->Form = new XMLElement('p','ugly hack..:(');
 		$this->Form->setAttribute('style','display:none;');
 		return parent::view();
 	}
