@@ -7,7 +7,7 @@
 <xsl:import href="extensions/email_newsletters/content/utilities/static-recipients.xsl" />
 <xsl:import href="extensions/email_newsletters/content/utilities/fields.xsl" />
 
-<xsl:output method="html"
+<xsl:output method="xml"
 	omit-xml-declaration="yes"
 	encoding="UTF-8"
 	indent="yes"/>
@@ -23,7 +23,7 @@
 		</xsl:choose>
 	</h2>
 	<form method="POST">
-		<!-- <xsl:call-template name="debug" /> -->
+		<xsl:call-template name="debug" />
 		<xsl:call-template name="essentials" />
 		<xsl:call-template name="filters" />
 		<xsl:call-template name="static-recipients" />

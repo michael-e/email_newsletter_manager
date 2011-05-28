@@ -8,7 +8,9 @@
 		<p class="help">Enter your recipients in the following format: <code>Name &lt;email&gt;</code> or <code>&quot;Name&quot; &lt;email&gt;</code>.</p>
 		<div>
 			<label>Recipients
-				<textarea class="code" name="fields[static_recipients]" rows="12" cols="50"></textarea>
+				<textarea class="code" name="fields[static_recipients]" rows="12" cols="50">
+					<xsl:text> </xsl:text>
+				</textarea>
 			</label>
 		</div>
 	</fieldset>
