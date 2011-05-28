@@ -7,7 +7,7 @@
 <xsl:import href="extensions/email_newsletters/content/utilities/static-recipients.xsl" />
 <xsl:import href="extensions/email_newsletters/content/utilities/fields.xsl" />
 
-<xsl:output method="xml"
+<xsl:output method="html"
 	omit-xml-declaration="yes"
 	encoding="UTF-8"
 	indent="yes"/>
