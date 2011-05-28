@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0"
-	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"	
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:xhtml="http://www.w3.org/1999/xhtml">
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:import href="extensions/email_newsletters/content/utilities/filters.xsl" />
 <xsl:import href="extensions/email_newsletters/content/utilities/essentials.xsl" />
 <xsl:import href="extensions/email_newsletters/content/utilities/static-recipients.xsl" />
 <xsl:import href="extensions/email_newsletters/content/utilities/fields.xsl" />
 
-<xsl:output method="html"
+<xsl:output method="xml"
+	doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
+	doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"
 	omit-xml-declaration="yes"
-	doctype-system="http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"
 	encoding="UTF-8"
-	indent="yes" />
+	indent="yes"/>
 
 <xsl:template match="/">
 	<h2>
@@ -26,6 +25,7 @@
 		</xsl:choose>
 	</h2>
 	<form method="POST">
+		<xsl:call-template name="debug" />
 		<xsl:call-template name="essentials" />
 		<xsl:call-template name="filters" />
 		<xsl:call-template name="static-recipients" />
