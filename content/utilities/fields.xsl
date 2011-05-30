@@ -25,7 +25,9 @@
 							<xsl:text>Name Field(s)</xsl:text>
 							<i>Optional</i>
 								<select name="fields[name-fields][]" multiple="yes">
-									<option value="0"></option>
+									<option value="0">
+										<xsl:text> </xsl:text>
+									</option>
 									<xsl:for-each select="field/elements">
 										<option value="{item}"><xsl:value-of select="item"/></option>
 									</xsl:for-each>
