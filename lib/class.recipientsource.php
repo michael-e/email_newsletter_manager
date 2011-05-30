@@ -86,7 +86,7 @@ Class RecipientSource extends DataSource{
 			'filters' => $this->dsParamFILTERS,
 			'email' => $this->emailField,
 			'name' => array(
-				'field' => $this->nameFields,
+				'fields' => $this->nameFields,
 				'xslt' 	=> $this->nameXslt
 			)
 		);

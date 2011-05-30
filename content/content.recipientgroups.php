@@ -71,7 +71,7 @@ Class contentExtensionemail_newslettersrecipientgroups extends ExtensionPage{
 		}
 		$this->_XML->appendChild($section_xml);
 		
-		$recipientgroup = new XMLElement('recipientgroup');
+		$recipientgroup = new XMLElement('recipientgroups');
 
 		if($this->_context[2] == 'saved' || $this->_context[3] == 'saved'){
 			$this->pageAlert(
@@ -93,18 +93,34 @@ Class contentExtensionemail_newslettersrecipientgroups extends ExtensionPage{
 			if(is_object($group)){
 				$entry = new XMLElement('entry');
 				$properties = $group->getProperties();
-				General::array_to_xml($entry, $properties);
+				General::array_to_xml($entry, $group->about());
+				
+				$source = new XMLElement('source', $properties['section']);
+				$entry->appendChild($source);
+				
+				$fields = new XMLElement('fields');
+				
+				$email = new XMLElement('email', $properties['email']);
+				$fields->appendChild($email);
+				
+				$name = new XMLElement('name');
+				General::array_to_xml($name, $properties['name']);
+				$fields->appendChild($name);
+				
+				$entry->appendChild($fields);
+				
 				if(!empty($properties['filters'])){
 					$filters = new XMLElement('filters');
 					foreach($properties['filters'] as $filter=>$val){
-						$filter_entry = new XMLElement('entry');
 						$fieldManager = new FieldManager($this);
+						$filter_entry = new XMLElement('entry', null, array('id'=>$filter, 'data-type'=>$fieldManager->fetch($filter)->handle()));
+
 						$fieldManager->fetch($filter)->displayDatasourceFilterPanel($filter_entry, $val);
 						$filters->appendChild($filter_entry);
 					}
 					$entry->appendChild($filters);
 				}						
-				General::array_to_xml($entry, $group->about());
+
 				$recipientgroup->appendChild($entry);
 				$this->_XML->appendChild($recipientgroup);
 			}
