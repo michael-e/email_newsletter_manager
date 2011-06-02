@@ -104,6 +104,7 @@ Class contentExtensionemail_newslettersrecipientgroups extends ExtensionPage{
 				$fields->appendChild($email);
 				
 				$name = new XMLElement('name');
+				$properties['name']['xslt'] = '<![CDATA[' . $properties['name']['xslt'] . ']]>';
 				General::array_to_xml($name, $properties['name']);
 				$fields->appendChild($name);
 				
