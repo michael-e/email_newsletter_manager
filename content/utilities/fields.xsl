@@ -12,7 +12,7 @@
 					<div>
 						<label>
 							<xsl:text>Email</xsl:text>
-							<select name="fields[email]">
+							<select name="fields[email-field]">
 								<xsl:for-each select="field/elements">
 									<option value="{item}"><xsl:value-of select="item"/></option>
 								</xsl:for-each>
