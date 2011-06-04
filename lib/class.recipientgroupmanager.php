@@ -1,6 +1,7 @@
 <?php
 
 require_once(TOOLKIT . '/class.manager.php');
+if(!defined('ENDIR')) define('ENDIR', EXTENSIONS . "/email_newsletters");
 
 Class RecipientgroupManager extends Manager{
 
@@ -13,8 +14,8 @@ Class RecipientgroupManager extends Manager{
 		return sprintf('recipientgroup%s', ucfirst($handle));
 	}
 	
-	public function __getClassPath($handle){
-		if(is_file(WORKSPACE . "/newsletter-recipients/group.$handle.php")) return WORKSPACE . '/newsletter-recipients';
+	public function __getClassPath($handle, $new = false){
+		if(is_file(WORKSPACE . "/newsletter-recipients/group.$handle.php") || $new == true) return WORKSPACE . '/newsletter-recipients';
 		else{
 			$extensions = Symphony::ExtensionManager()->listInstalledHandles();
 
@@ -29,7 +30,7 @@ Class RecipientgroupManager extends Manager{
 	}
 	
 	public function __getDriverPath($handle){
-		return $this->__getClassPath($handle) . "/group.$handle.php";
+		return self::__getClassPath($handle, true) . "/group.$handle.php";
 	}
 
 	public function listAll(){
@@ -121,5 +122,54 @@ Class RecipientgroupManager extends Manager{
 
 		return new $classname($this->_Parent, $env, $process_params);
 
+	}
+	
+	public function save($handle = null, $fields){
+		if($handle == Lang::createHandle($fields['name'], 255, '_') || $handle == null){
+			return self::_writeRecipientSource($handle, self::_parseTemplate($fields));
+		}
+		elseif(false == self::__getClassPath(Lang::createHandle($fields['name'], 255, '_'))){
+			if(!self::_writeRecipientSource(Lang::createHandle($fields['name'], 255, '_'), self::_parseTemplate($fields))) return false;
+			if(!@unlink(self::__getDriverPath($handle))) return false;
+			return true;
+		}
+		else{
+			throw new Exception('Recipientsource ' . $fields['handle'] . ' already exists. Please choose another name.');
+		}
+	}
+	
+	protected function _writeRecipientSource($handle, $contents){
+		$dir = self::__getClassPath($handle, true);
+		if(is_dir($dir) && is_writeable($dir)){
+			if((is_writeable(self::__getDriverPath($handle))) || !file_exists(self::__getDriverPath($handle))){
+				file_put_contents(self::__getDriverPath($handle), $contents);
+				return true;
+			}
+			else{
+				throw new Exception("File " . self::getDriverPath($handle) . " can not be written to. Please check permissions");
+				return false;
+			}
+		}
+		else{
+			throw new Exception("Directory $dir does not exist, or is not writeable.");
+			return false;
+		}
+	}
+	
+	protected function _parseTemplate($data){
+		$template = file_get_contents(ENDIR . '/content/templates/tpl/recipientSource.tpl');
+		
+
+		$template = str_replace('<!-- CLASS NAME -->' , self::__getClassName(Lang::createHandle($data['name'], 255, '_')), $template);
+		$template = str_replace('<!-- NAME -->' , addcslashes($data['name'], "'"), $template);
+		$template = str_replace('<!-- HANDLE -->' , Lang::createHandle($data['name'], 255, '_'), $template);
+		$template = str_replace('<!-- SOURCE -->' , addcslashes($data['source'], "'"), $template);
+		$template = str_replace('<!-- FILTERS -->' , var_export((array)$data['filter'][0], true), $template);
+		$template = str_replace('<!-- REQUIRED_PARAM -->' , addcslashes($data['required_param'], "'"), $template);
+		$template = str_replace('<!-- NAME_FIELDS -->' , var_export((array)$data['name-fields'], true), $template);
+		$template = str_replace('<!-- EMAIL_FIELD -->' , addcslashes($data['email-field'], "'"), $template);
+		$template = str_replace('<!-- NAME_XSLT -->' , addcslashes($data['name-xslt'], "'"), $template);
+		
+		return $template;
 	}
 }

@@ -48,6 +48,8 @@ Class contentExtensionemail_newslettersrecipientgroups extends ExtensionPage{
 		$this->addScriptToHead(URL . '/extensions/email_newsletters/assets/admin.js', 140);
 		$this->addStylesheetToHead(URL . '/extensions/email_newsletters/assets/admin.css', 'screen', 103);
 		
+		$errors = new XMLElement('errors');
+		
 		$section_xml = new XMLElement('sections');
 		$sectionManager = new SectionManager($this);
 		$sections = $sectionManager->fetch();
@@ -59,7 +61,7 @@ Class contentExtensionemail_newslettersrecipientgroups extends ExtensionPage{
 				General::array_to_xml($field_xml,$field->get()); 
 				
 				$filter_html = new XMLElement('filter_html');
-				$field->displayDatasourceFilterPanel($filter_html);
+				$field->displayDatasourceFilterPanel($filter_html, null, $errors, $section->get('id'));
 				$field_xml->appendChild($filter_html);
 				
 				$field_elements = new XMLElement('elements');
@@ -116,7 +118,7 @@ Class contentExtensionemail_newslettersrecipientgroups extends ExtensionPage{
 						$fieldManager = new FieldManager($this);
 						$filter_entry = new XMLElement('entry', null, array('id'=>$filter, 'data-type'=>$fieldManager->fetch($filter)->handle()));
 
-						$fieldManager->fetch($filter)->displayDatasourceFilterPanel($filter_entry, $val);
+						$fieldManager->fetch($filter)->displayDatasourceFilterPanel($filter_entry, $val, $errors, $properties['section']);
 						$filters->appendChild($filter_entry);
 					}
 					$entry->appendChild($filters);
@@ -136,10 +138,7 @@ Class contentExtensionemail_newslettersrecipientgroups extends ExtensionPage{
 
 		$errors = new XMLElement('errors');
 		if(isset($_POST['action']['delete'])){
-			if(Symphony::Database()->query('DELETE FROM `tbl_email_newsletters_recipientgroups` where `id` = "' . Symphony::Database()->cleanValue($this->_context[1]) . '" LIMIT 1')){
-				Symphony::Database()->delete('tbl_email_newsletters_recipientgroups_params', 'recipientgroup_id = "' . Symphony::Database()->cleanValue($this->_context[1]) . '"');
-				redirect(SYMPHONY_URL . '/extension/email_newsletters/recipientgroups/');
-				return;
+			if(true){
 			}
 			else{
 				$this->pageAlert(
@@ -149,23 +148,16 @@ Class contentExtensionemail_newslettersrecipientgroups extends ExtensionPage{
 				return true;
 			}
 		}
-		if(!empty($fields['name'])){
-			if($new){
-				Symphony::Database()->insert(array('name'=>$fields['name'], 'recipients'=>$fields['recipients'], 'id'=>$this->_context[1]), 'tbl_email_newsletters_recipientgroups', true);
-				$id = Symphony::Database()->getInsertId();
-			}
-			else{
-				$id = Symphony::Database()->cleanValue($this->_context[1]);
-				Symphony::Database()->update(array('name'=>$fields['name'], 'recipients'=>$fields['recipients']), 'tbl_email_newsletters_recipientgroups', 'id = "' . $id . '"');
-			}
-			Symphony::Database()->delete('tbl_email_newsletters_recipientgroups_params', '`recipientgroup_id` = "' . $id . '"');
-			foreach((array)$fields['params'] as $param){
-				if(!empty($param['name']) && !empty($param['value'])){
-					Symphony::Database()->insert(array('name'=>$param['name'], 'value'=>$param['value'], 'recipientgroup_id'=>$id, 'id'=>$param['id']), 'tbl_email_newsletters_recipientgroups_params', true);
+		if(!empty($fields['name']) && General::validateXML($fields['name-xslt'], $errors = new XMLElement('errors'), false)){
+			try{
+				if(RecipientGroupManager::save($this->_context[1], $fields, $new)){
+					redirect(SYMPHONY_URL . '/extension/email_newsletters/recipientgroups/edit/' . Lang::createHandle($fields['name'], 225, '_') . '/saved');
+					return true;
 				}
 			}
-			redirect(SYMPHONY_URL . '/extension/email_newsletters/recipientgroups/edit/' . $id . '/saved');
-			return true;
+			catch(Exception $e){
+				$this->pageAlert(__('Could not save: ' . $e->getMessage()),Alert::ERROR);
+			}
 		}
 		if(empty($fields['name'])){
 			$errors->appendChild(new XMLElement('name', __('This field can not be empty.')));

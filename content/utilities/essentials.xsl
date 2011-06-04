@@ -19,8 +19,8 @@
 							<xsl:if test="/data/fields">
 								<xsl:value-of select="/data/fields/name"/>
 							</xsl:if>
-							<xsl:if test="not(/data/fields) and /data/recipientgroup/entry/name">
-								<xsl:value-of select="/data/recipientgroup/entry/name"/>
+							<xsl:if test="not(/data/fields) and /data/recipientgroups/entry/name">
+								<xsl:value-of select="/data/recipientgroups/entry/name"/>
 							</xsl:if>
 						</xsl:attribute>
 					</input>
@@ -36,7 +36,7 @@
 						<optgroup label="Sections">
 							<xsl:for-each select="/data/sections/entry">
 								<option value="{id}">
-									<xsl:if test="/data/recipientgroup/entry/section = id">
+									<xsl:if test="/data/recipientgroups/entry/source = current()/id">
 										<xsl:attribute name="selected">
 											<xsl:text>yes</xsl:text>
 										</xsl:attribute>

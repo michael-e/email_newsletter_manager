@@ -62,14 +62,14 @@
 							<h4>System ID</h4>
 							<label>
 								<xsl:text>Value</xsl:text>
-								<input name="fields[filter][7][id]" type="text" />
+								<input name="fields[filter][{id}][id]" type="text" />
 							</label>
 						</li>
 						<li class="unique template" data-type="system:date">
 							<h4>System Date</h4>
 							<label>
 								<xsl:text>Value</xsl:text>
-								<input name="fields[filter][7][system:date]" type="text" />
+								<input name="fields[filter][{id}][system:date]" type="text" />
 							</label>
 						</li>
 						<xsl:for-each select="field">

@@ -84,6 +84,7 @@ Class RecipientSource extends DataSource{
 			'section' => $this->getSource(),
 			'elements' => $this->dsParamINCLUDEDELEMENTS,
 			'filters' => $this->dsParamFILTERS,
+			'required_param' => $this->dsParamREQUIREDPARAM,
 			'email' => $this->emailField,
 			'name' => array(
 				'fields' => $this->nameFields,
