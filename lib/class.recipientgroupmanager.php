@@ -165,7 +165,7 @@ Class RecipientgroupManager extends Manager{
 		$template = str_replace('<!-- HANDLE -->' , Lang::createHandle($data['name'], 255, '_'), $template);
 		$template = str_replace('<!-- SOURCE -->' , addcslashes($data['source'], "'"), $template);
 		$template = str_replace('<!-- FILTERS -->' , var_export((array)$data['filter'][0], true), $template);
-		$template = str_replace('<!-- REQUIRED_PARAM -->' , addcslashes($data['required_param'], "'"), $template);
+		$template = str_replace('<!-- REQUIRED_PARAM -->' , addcslashes($data['required_url_param'], "'"), $template);
 		$template = str_replace('<!-- NAME_FIELDS -->' , var_export((array)$data['name-fields'], true), $template);
 		$template = str_replace('<!-- EMAIL_FIELD -->' , addcslashes($data['email-field'], "'"), $template);
 		$template = str_replace('<!-- NAME_XSLT -->' , addcslashes($data['name-xslt'], "'"), $template);

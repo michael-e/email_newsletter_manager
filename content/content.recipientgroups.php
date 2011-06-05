@@ -110,16 +110,22 @@ Class contentExtensionemail_newslettersrecipientgroups extends ExtensionPage{
 				General::array_to_xml($name, $properties['name']);
 				$fields->appendChild($name);
 				
+				$required_param = new XMLElement('required_param', $properties['required_param']);
+				$fields->appendChild($required_param);
+				
 				$entry->appendChild($fields);
 				
 				if(!empty($properties['filters'])){
 					$filters = new XMLElement('filters');
+					$fieldManager = new FieldManager($this);
 					foreach($properties['filters'] as $filter=>$val){
-						$fieldManager = new FieldManager($this);
-						$filter_entry = new XMLElement('entry', null, array('id'=>$filter, 'data-type'=>$fieldManager->fetch($filter)->handle()));
+						$filter_obj = $fieldManager->fetch($filter);
+						if(is_object($filter_obj)){
+							$filter_entry = new XMLElement('entry', null, array('id'=>$filter, 'data-type'=>$fieldManager->fetch($filter)->handle()));
 
-						$fieldManager->fetch($filter)->displayDatasourceFilterPanel($filter_entry, $val, $errors, $properties['section']);
-						$filters->appendChild($filter_entry);
+							$fieldManager->fetch($filter)->displayDatasourceFilterPanel($filter_entry, $val, $errors, $properties['section']);
+							$filters->appendChild($filter_entry);
+						}
 					}
 					$entry->appendChild($filters);
 				}						
