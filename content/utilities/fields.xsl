@@ -41,6 +41,11 @@
 							</label>
 						</div>
 						<div>
+							<xsl:if test="/data/errors/name-xslt">
+								<xsl:attribute name="class">
+									<xsl:text>invalid</xsl:text>
+								</xsl:attribute>
+							</xsl:if>
 							<label>
 								<xsl:text>Name XSLT</xsl:text>
 								<i>optional</i>
@@ -56,6 +61,9 @@
 &lt;/xsl:stylesheet&gt;</xsl:text>
 								</textarea>
 							</label>
+							<xsl:if test="/data/errors/name-xslt">
+								<p><xsl:value-of select="/data/errors/name-xslt"/></p>
+							</xsl:if>
 						</div>
 					</div>
 		</div>
