@@ -7,14 +7,16 @@
 		<legend>Fields</legend>
 		<p class="help">From the section, select the fields that are storing your Name and Email information.</p>
 		<div>
-			<xsl:for-each select="/data/sections/entry">
-				<div class="contextual {id}">
 					<div>
 						<label>
 							<xsl:text>Email</xsl:text>
-							<select name="fields[email-field]">
-								<xsl:for-each select="field/elements">
-									<option value="{item}"><xsl:value-of select="item"/></option>
+							<select name="fields[email-field]" class="filtered">
+								<xsl:for-each select="/data/sections/entry">
+									<optgroup label="{name}">
+										<xsl:for-each select="field/elements">
+											<option value="{item}"><xsl:value-of select="item"/></option>
+										</xsl:for-each>
+									</optgroup>
 								</xsl:for-each>
 							</select>
 						</label>
@@ -24,12 +26,16 @@
 							<label>
 							<xsl:text>Name Field(s)</xsl:text>
 							<i>Optional</i>
-								<select name="fields[name-fields][]" multiple="yes">
+								<select name="fields[name-fields][]" multiple="yes" class="filtered">
 									<option value="0">
 										<xsl:text> </xsl:text>
 									</option>
-									<xsl:for-each select="field/elements">
-										<option value="{item}"><xsl:value-of select="item"/></option>
+									<xsl:for-each select="/data/sections/entry">
+										<optgroup label="{name}">
+											<xsl:for-each select="field/elements">
+												<option value="{item}"><xsl:value-of select="item"/></option>
+											</xsl:for-each>
+										</optgroup>
 									</xsl:for-each>
 								</select>
 							</label>
@@ -52,8 +58,6 @@
 							</label>
 						</div>
 					</div>
-				</div>
-			</xsl:for-each>
 		</div>
 	</fieldset>
 </xsl:template>

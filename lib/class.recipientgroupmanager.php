@@ -126,7 +126,7 @@ Class RecipientgroupManager extends Manager{
 	
 	public function save($handle = null, $fields){
 		if($handle == Lang::createHandle($fields['name'], 255, '_') || $handle == null){
-			return self::_writeRecipientSource($handle, self::_parseTemplate($fields));
+			return self::_writeRecipientSource(Lang::createHandle($fields['name'], 255, '_'), self::_parseTemplate($fields));
 		}
 		elseif(false == self::__getClassPath(Lang::createHandle($fields['name'], 255, '_'))){
 			if(!self::_writeRecipientSource(Lang::createHandle($fields['name'], 255, '_'), self::_parseTemplate($fields))) return false;
