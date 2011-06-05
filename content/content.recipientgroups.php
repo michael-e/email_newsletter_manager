@@ -197,7 +197,7 @@ Class contentExtensionemail_newslettersrecipientgroups extends ExtensionPage{
 			$errors->appendChild(new XMLElement('name-xslt', __('This field can not be empty.')));
 		}
 		if(!General::validateXML($fields['name-xslt'], $error, false)){
-			$errors->appendChild(new XMLElement('name-xslt', ''));
+			$errors->appendChild(new XMLElement('name-xslt', __('XML is invalid')));
 		}
 		$this->_XML->appendChild($errors);
 	}

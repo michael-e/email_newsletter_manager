@@ -89,6 +89,7 @@ Class RecipientSource extends DataSource{
 			}
 		}
 		catch(Exception $e){
+			throw $e;
 			$result->appendChild(new XMLElement('error', $e->getMessage()));
 			return $result;
 		}
@@ -114,5 +115,18 @@ Class RecipientSource extends DataSource{
 				'xslt' 	=> $this->nameXslt
 			)
 		);
+	}
+	
+	function __processAuthorFilter($field, $filter, $database){
+		if(!is_array($filter)){
+			$bits = preg_split('/,\s*/', $filter, -1, PREG_SPLIT_NO_EMPTY);
+			$bits = array_map('trim', $bits);
+		}
+		else{
+			$bits = $filter;
+		}
+		$sql = "SELECT count(id) as count, `id` FROM `tbl_authors` WHERE `".$field."` IN ('".implode("', '", $bits)."') LIMIT " . ((int)$this->dsParamSTARTPAGE - 1) * (int)$this->dsParamLIMIT . ",  " . ((int)$this->dsParamSTARTPAGE) * (int)$this->dsParamLIMIT;
+		$results = $database->fetch($sql);
+		return (is_array($authors) && !empty($authors) ? $authors : NULL);
 	}
 }
