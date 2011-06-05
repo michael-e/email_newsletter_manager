@@ -200,6 +200,7 @@ Class contentExtensionemail_newslettersrecipientgroups extends ExtensionPage{
 			$errors->appendChild(new XMLElement('name-xslt', __('XML is invalid')));
 		}
 		$this->_XML->appendChild($errors);
+		$this->pageAlert(__('An error occurred while processing this form. <a href="#error">See below for details.</a>'), Alert::ERROR);
 	}
 	
 	function __actionNew(){
