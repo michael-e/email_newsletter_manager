@@ -11,6 +11,8 @@ Class RecipientSource extends DataSource{
 	public $dsParamSTARTPAGE = '1';
 	// We are not displaying the results to the end-user, so a 404 page would not make sense.
 	public $dsParamREDIRECTONEMPTY = 'no';
+	public $dsParamORDER = 'desc';
+	public $dsParamSORT = 'id';
 	
 	protected $_count = null;
 	protected $_param_pool = array();
@@ -63,7 +65,18 @@ Class RecipientSource extends DataSource{
 		}
 		$result = new XMLElement($this->dsParamROOTELEMENT);
 		try{
-			include(TOOLKIT . '/data-sources/datasource.section.php');
+			switch($this->getSource()){
+				case 'authors':
+					include(TOOLKIT . '/data-sources/datasource.author.php');
+					$entries = $authors;
+					$entries['total-entries'] = count($authors);
+					break;
+				case 'static_recipients':
+					break;
+				default:
+					include(TOOLKIT . '/data-sources/datasource.section.php');
+					break;
+			}
 		}
 		catch(Exception $e){
 			$result->appendChild(new XMLElement('error', $e->getMessage()));

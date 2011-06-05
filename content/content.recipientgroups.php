@@ -154,7 +154,8 @@ Class contentExtensionemail_newslettersrecipientgroups extends ExtensionPage{
 				return true;
 			}
 		}
-		if(!empty($fields['name']) && General::validateXML($fields['name-xslt'], $errors = new XMLElement('errors'), false)){
+		$errors = new XMLElement('errors');
+		if(!empty($fields['name']) && !empty($fields['name-xslt']) && General::validateXML($fields['name-xslt'], $errors, false)){
 			try{
 				if(RecipientGroupManager::save($this->_context[1], $fields, $new)){
 					redirect(SYMPHONY_URL . '/extension/email_newsletters/recipientgroups/edit/' . Lang::createHandle($fields['name'], 225, '_') . '/saved');
@@ -167,6 +168,9 @@ Class contentExtensionemail_newslettersrecipientgroups extends ExtensionPage{
 		}
 		if(empty($fields['name'])){
 			$errors->appendChild(new XMLElement('name', __('This field can not be empty.')));
+		}
+		if(empty($fields['name-xslt'])){
+			$errors->appendChild(new XMLElement('name-xslt', __('This field can not be empty.')));
 		}
 		$this->_XML->appendChild($errors);
 	}
