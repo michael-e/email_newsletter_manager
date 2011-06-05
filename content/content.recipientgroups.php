@@ -119,12 +119,32 @@ Class contentExtensionemail_newslettersrecipientgroups extends ExtensionPage{
 					$filters = new XMLElement('filters');
 					$fieldManager = new FieldManager($this);
 					foreach($properties['filters'] as $filter=>$val){
-						$filter_obj = $fieldManager->fetch($filter);
-						if(is_object($filter_obj)){
-							$filter_entry = new XMLElement('entry', null, array('id'=>$filter, 'data-type'=>$fieldManager->fetch($filter)->handle()));
-
-							$fieldManager->fetch($filter)->displayDatasourceFilterPanel($filter_entry, $val, $errors, $properties['section']);
+						if($filter == 'id'){
+							$title = new XMLElement('h4', 'System ID');
+							$label = Widget::Label(__('Value'));
+							$label->appendChild(Widget::Input('fields[filter]['.$properties['section'].'][id]', General::sanitize($val)));
+							$filter_entry = new XMLElement('entry', null, array('id'=>'id', 'data-type'=>'id'));
+							$filter_entry->appendChild($title);
+							$filter_entry->appendChild($label);
 							$filters->appendChild($filter_entry);
+						}
+						if($filter == 'system:date'){
+							$title = new XMLElement('h4', 'System Date');
+							$label = Widget::Label(__('Value'));
+							$label->appendChild(Widget::Input('fields[filter]['.$properties['section'].'][system:date]', General::sanitize($val)));
+							$filter_entry = new XMLElement('entry', null, array('id'=>'id', 'data-type'=>'system:date'));
+							$filter_entry->appendChild($title);
+							$filter_entry->appendChild($label);
+							$filters->appendChild($filter_entry);
+						}
+						if(is_numeric($filter)){
+							$filter_obj = $fieldManager->fetch($filter);
+							if(is_object($filter_obj)){
+								$filter_entry = new XMLElement('entry', null, array('id'=>$filter, 'data-type'=>$fieldManager->fetch($filter)->handle()));
+
+								$fieldManager->fetch($filter)->displayDatasourceFilterPanel($filter_entry, $val, $errors, $properties['section']);
+								$filters->appendChild($filter_entry);
+							}
 						}
 					}
 					$entry->appendChild($filters);
@@ -155,7 +175,7 @@ Class contentExtensionemail_newslettersrecipientgroups extends ExtensionPage{
 			}
 		}
 		$errors = new XMLElement('errors');
-		if(!empty($fields['name']) && !empty($fields['name-xslt']) && General::validateXML($fields['name-xslt'], $errors, false)){
+		if(!empty($fields['name']) && !empty($fields['name-xslt']) && (General::validateXML($fields['name-xslt'], $error, false) == true)){
 			try{
 				if(RecipientGroupManager::save($this->_context[1], $fields, $new)){
 					redirect(SYMPHONY_URL . '/extension/email_newsletters/recipientgroups/edit/' . Lang::createHandle($fields['name'], 225, '_') . '/saved');
@@ -171,6 +191,9 @@ Class contentExtensionemail_newslettersrecipientgroups extends ExtensionPage{
 		}
 		if(empty($fields['name-xslt'])){
 			$errors->appendChild(new XMLElement('name-xslt', __('This field can not be empty.')));
+		}
+		if(!General::validateXML($fields['name-xslt'], $error, false)){
+			$errors->appendChild(new XMLElement('name-xslt', ''));
 		}
 		$this->_XML->appendChild($errors);
 	}

@@ -4,19 +4,29 @@ require_once(TOOLKIT . '/class.datasource.php');
 
 Class RecipientSource extends DataSource{
 
+	// custom source fields -> section source
 	public $emailField = null;
 	public $nameFields = Array();
 	public $nameXslt = null;
+	
+	// custom field -> static recipients
+	public $recipientList = null;
+
+	// fields taken from datasource. Overwrite these in your group file.
+	public $dsParamREQUIREDPARAM;
+	public $dsParamFILTERS;
+	public $dsParamROOTELEMENT;
+
+	// fields taken from datasources. Do not change these.
 	public $dsParamLIMIT = '10';
 	public $dsParamSTARTPAGE = '1';
-	// We are not displaying the results to the end-user, so a 404 page would not make sense.
 	public $dsParamREDIRECTONEMPTY = 'no';
 	public $dsParamORDER = 'desc';
 	public $dsParamSORT = 'id';
 	
+	// properties.
 	protected $_count = null;
 	protected $_param_pool = array();
-	
 	protected $_XSLTProc;
 	
 	public function __construct(&$parent, $env = array(), $process_params=true, $param_pool = array()){
