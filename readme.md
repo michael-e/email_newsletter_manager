@@ -43,13 +43,15 @@ Being able to use the Email Template Manager means that newsletter emails may in
 ### Advantages over the Email Newsletters extension
 
 - Newsletter setup is a lot easier, and so is maintenance.
-- Removed dependancy on the SwiftMailer framework. (Sending is done using Symphony's Core Emai API).
-- Improved database logging, removed filesystem logs
-- Real-time preview of the number of recipients in groups.
+- Removed the SwiftMailer framework dependancy. (Sending is done using Symphony's Core Emai API).
 - Removed the PHP CLI dependancy. (Using a custom PHP background process now.)
+- Improved database logging, removed filesystem logs.
+- Real-time preview of the number of recipients in groups.
+- No need anymore to use Symphony pages in order to generate email content or recipients lists.
+- Greatly improved scalability: The new concept has virtually no limits regarding the number of recipients.
 - Public API.
 
-The last pint, the public API, is especially interesting. While to the user the Email Newsletter Manager field looks rather similar to the field which was provided by the deprecated Email Newsletters extensions, it is now nothing more than a *remote control* which plugs into the API of the extension. In other words: This field is just one way to send newsletters. Now you can also send mass emails using custom events, for example.
+The last point, the public API, is especially interesting. While to the user the Email Newsletter Manager which comes with this extension field looks rather similar to the field which was provided by the deprecated Email Newsletters extension, this field is now simply a *remote control* which plugs into the API of the extension. In other words: This field is just one possible way to send newsletters. Now you can also send mass emails using custom events!
 
 This allows for interesting use cases (especially in conjunction with the Members extension):
 
