@@ -50,6 +50,10 @@ Class contentExtensionemail_newslettersrecipientgroups extends ExtensionPage{
 		
 		$errors = new XMLElement('errors');
 		
+		$context = new XMLElement('context');
+		General::array_to_xml($context, $this->_context);
+		$this->_XML->appendChild($context);
+
 		$section_xml = new XMLElement('sections');
 		$sectionManager = new SectionManager($this);
 		$sections = $sectionManager->fetch();
