@@ -17,7 +17,10 @@ In short words, the Email Newsletter Manager does:
 - allow to define recipient groups based on sections in Symphony (with a datasource-like editor)
 - allow to define senders
 - add an Email Newsletter Manager field to sections (which in itself allows to choose which recipient groups and senders should be available for this special newsletter)
+- send HTML and/or plain text emails (defined in the Email Template Manager extension)
 - upon sending:
+	- use a stable background process
+	- give feedback in the publish panel (and in the entry overview table)
 	- use templates defined in the ETM to render the email content
 	- copy the recipients to a database table based on the definitions (section, filters, fields) of the recipients groups
 	- read and process these recipients using pagination
@@ -30,12 +33,20 @@ Being able to use the Email Template Manager means that newsletter emails may in
 - recipient personalization (by using filtered datasources in the templates)
 
 
+<!--
+	TODO include the following:
+	- flexible recipient personalization
+	- "sender personalization" can be done in XSLT (using the field's datasource output which includes the sender ID and value)
+
+-->
+
 ### Advantages over the Email Newsletters extension
 
 - Newsletter setup is a lot easier, and so is maintenance.
 - Removed dependancy on the SwiftMailer framework. (Sending is done using Symphony's Core Emai API).
 - Improved database logging, removed filesystem logs
 - Real-time preview of the number of recipients in groups.
+- Removed the PHP CLI dependancy. (Using a custom PHP background process now.)
 - Public API.
 
 The last pint, the public API, is especially interesting. While to the user the Email Newsletter Manager field looks rather similar to the field which was provided by the deprecated Email Newsletters extensions, it is now nothing more than a *remote control* which plugs into the API of the extension. In other words: This field is just one way to send newsletters. Now you can also send mass emails using custom events, for example.
@@ -48,6 +59,40 @@ This allows for interesting use cases (especially in conjunction with the Member
 Of course these possibilitie still require a bit of custom code. But the public API of the extension should really help you.
 
 
+### Features
+
+- background processes for sending
+- feedback in the publish panel (and in the entry overview table)
+- send html and/or text emails
+- multiple recipient groups
+- flexible recipient personalization
+- multiple senders
+- "sender personalization" can be done in XSLT (using the field's datasource output which includes the sender ID and value)
+- verbose log files, gzipped (if available)
+
+
+### What this extension won't do
+
+At the time of writing the following features are supposed to be built in separate extensions (when the time comes):
+
+- email campaign statistics/tracking
+- email bounce management
+
+
+## Installation & Updating
+
+Information about [installing and updating extensions](http://symphony-cms.com/learn/tasks/view/install-an-extension/) can be found in the Symphony documentation at <http://symphony-cms.com/learn/>.
+
+
+## Legal
+
+This Symphony extension is released under the MIT/X11 license. The license file is included in the distribution.
+
+Please be aware of morality and legal conditions in your country concerning mass mailings. In many countries special recipient opt-in and opt-out procedures may be required, and you might encounter the need to store opt-in evidence on your server. Meeting such regulations is beyond the scope of this extension.
+
+Never use this extension for SPAM. If you do so we will hate you.
+
+
 ## API
 
 <!--
@@ -57,6 +102,108 @@ Of course these possibilitie still require a bit of custom code. But the public 
 - select recipient group(s)
 - select ETM template
 - send
+
+
+## Data Source output
+
+<!--
+	TODO check if DS output description is still true for ENM
+-->
+
+The data source output of the Email Newsletter field contains:
+
+- author-id
+- status
+- total (emails)
+- sent (emails)
+- errors (emails)
+- sender
+- recipient groups
+
+It will look like this in your page XML:
+
+	<email-newsletter author-id="1" status="processing" total="602" sent="120" errors="0">
+		<sender id="1">Michael E.</sender>
+		<recipients>
+			<group id="1">Clients</group>
+			<group id="3">Partners (Bavaria)</group>
+		</recipients>
+	</email-newsletter>
+
+This XML output allows for advanced email customization using XSLT. You may, for example, append custom headers or footers for certain sender IDs.
+
+
+## Param Pool value
+
+<!--
+	TODO check if param output is still the same in ENM
+-->
+
+If you use the Email Newsletter field to be output to the param pool (for Data Source chaining), output will be the **sender ID**! (This seems to be the most useful output.)
+
+
+## The "Send" button
+
+The "Send" button actually is a "Save and Send" button, so it will save the entry and start the "mailing engine" with a single click. I think that this is what people expect this button to do. (The implementation in Symphony has been rather hard.)
+
+If you click the button, the system will prepare for sendind (e.g. count the recipients and display the number in the GUI), then wait for some seconds before actually starting the send process. This allows for "last minute cancelling" in case a user has not really (?) meant to really (!) send the newsletter. :-)
+
+
+## Before you start
+
+Please note that successfully sending mass mailings will require your email box to be set up "more than correctly". So please check the following:
+
+- correct MX records
+- SPF (Sender Policy Framework) record
+- optional: reverse DNS entry (PTR/Reverse DNS checks)
+- optional: Domain Keys / DKIM
+
+It is beyond the scope of this software to explain these measures in detail. Anyway the first two are really important if you don't want your email to be flagged as spam. If you don't know what it is, ask your provider or consult the web (i.e. Google, isn't it?).
+
+Here are some useful links concerning SPF records:
+
+- <http://phpmailer.codeworxtech.com/index.php?pg=tip_spf>
+- <http://old.openspf.org/wizard.html>
+
+Here is a simple example DNS record which worked very well in my tests:
+
+	example.com. IN TXT "v=spf1 a mx"
+
+
+## Miscellaneous
+
+### Internationalization
+
+<!--
+	TODO decide how internationalization will be handled
+-->
+
+We are providing this extension with a German language file. More translations are welcome, but it should be noted that language strings might change massively for the "official" 1.0 release.
+
+### Recipient email duplicates
+
+By design the extension will not send an email to one address multiple times. This is due to the design of the SwiftMailer library. As written in the documentation ([Adding Recipients to Your Message](http://swiftmailer.org/docs/recipients "Adding Recipients to Your Message – Swift Mailer")), any recipient list must be an array using the recipient's email address as key. So if an email address is included multiple times in your recipients XML page, the last address/name pair will be used.
+
+### Ampersands
+
+<!--
+	TODO check ampersands in Plain Text emails
+-->
+
+You will probably find no way to display ampersands as `&` on your TEXT preview page. This is by nature of XSLT: ampersand will always be encoded as `&amp;`. However, upon sending those entities will be replaced by `&`, and the Swiftmailer library will leave them untouched. Since the newsletter TEXT page will probably be used for preview purposes only, this is regarded a minor flaw.
+
+
+## Known issues
+
+- There are bugs concerning HTML form button values in Internet Explorer 6 and 7 (which shouldn't be used for Symphony anyway). This means that:
+
+	- You won't be able to send a newsletter in IE6 (who cares?)
+	- You won't be able to handle multiple Email Newsletters (i.e. Email Newsletter fields) **in the same section** using IE7. This is considered a rare setup (but is actually a supported feature in modern browsers).
+
+	These constraints are regarded a small price for having a combined "Save and Send" button (which is simply called "Send"). (We actually need the button's value to implement this functionality.)
+
+
+---
 
 
 ## 2do
