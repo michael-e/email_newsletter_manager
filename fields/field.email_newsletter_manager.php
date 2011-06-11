@@ -6,7 +6,7 @@
 	 * @package Email Newsletters
 	 * @author Michael Eichelsdoerfer
 	 **/
-	class fieldEmail_Newsletter extends Field
+	class fieldEmail_Newsletter_Manager extends Field
 	{
 		protected $_field_id;
 		protected $_entry_id;
@@ -18,7 +18,7 @@
 		function __construct(&$parent)
 		{
 			parent::__construct($parent);
-			$this->_name = __('Email Newsletter');
+			$this->_name = __('Email Newsletter Manager');
 			$this->_required = false;
 		}
 
