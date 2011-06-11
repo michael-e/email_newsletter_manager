@@ -10,7 +10,7 @@
 <xsl:template match="/">
 	<h2>
 		<span>Newsletter Senders</span>
-		<a href="{concat($root, '/symphony/extension/email_newsletters/senders/new')}" class="create button">Create New</a>
+		<a href="{concat($root, '/symphony/extension/email_newsletter_manager/senders/new')}" class="create button">Create New</a>
 	</h2>
 	<form method="post" action="{$current-url}">
 		<table class="selectable">
@@ -48,7 +48,7 @@
 <xsl:template match="senders/entry">
 	<tr>
 		<td>
-			<a href="{concat($root, '/symphony/extension/email_newsletters/senders/edit/', id)}"><xsl:value-of select="name"/></a>
+			<a href="{concat($root, '/symphony/extension/email_newsletter_manager/senders/edit/', id)}"><xsl:value-of select="name"/></a>
 			<input name="items[{id}]" type="checkbox" />
 		</td>
 		<td>

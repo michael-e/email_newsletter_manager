@@ -1,6 +1,6 @@
 <?php
 
-require_once(EXTENSIONS . '/email_newsletters/lib/class.recipientsource.php');
+require_once(EXTENSIONS . '/email_newsletter_manager/lib/class.recipientsource.php');
 
 class <!-- CLASS NAME --> extends RecipientSource{
 	

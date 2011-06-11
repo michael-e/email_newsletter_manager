@@ -2,10 +2,10 @@
 <xsl:stylesheet version="1.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-<xsl:import href="extensions/email_newsletters/content/utilities/filters.xsl" />
-<xsl:import href="extensions/email_newsletters/content/utilities/essentials.xsl" />
-<xsl:import href="extensions/email_newsletters/content/utilities/static-recipients.xsl" />
-<xsl:import href="extensions/email_newsletters/content/utilities/fields.xsl" />
+<xsl:import href="extensions/email_newsletter_manager/content/utilities/filters.xsl" />
+<xsl:import href="extensions/email_newsletter_manager/content/utilities/essentials.xsl" />
+<xsl:import href="extensions/email_newsletter_manager/content/utilities/static-recipients.xsl" />
+<xsl:import href="extensions/email_newsletter_manager/content/utilities/fields.xsl" />
 
 <xsl:output method="xml"
 	omit-xml-declaration="yes"

@@ -1,6 +1,6 @@
 <?php
 
-class extension_email_newsletters extends extension{
+class extension_email_newsletter_manager extends extension{
 
 	public function about(){
 		return array(
@@ -37,7 +37,7 @@ class extension_email_newsletters extends extension{
 		if($etm instanceof Extension){
 			Symphony::Database()->query(
 				'CREATE TABLE IF NOT EXISTS
-				`tbl_email_newsletters_recipientgroups` (
+				`tbl_email_newsletter_manager_recipientgroups` (
 					`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 					`name` varchar(255) NOT NULL,
 					`recipients` text,
@@ -50,7 +50,7 @@ class extension_email_newsletters extends extension{
 			);
 			Symphony::Database()->query(
 				'CREATE TABLE IF NOT EXISTS
-				`tbl_email_newsletters_recipientgroups_params` (
+				`tbl_email_newsletter_manager_recipientgroups_params` (
 					`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 					`recipientgroup_id` int(10) unsigned NOT NULL,
 					`name` varchar(255) NOT NULL,
@@ -64,7 +64,7 @@ class extension_email_newsletters extends extension{
 			);
 			Symphony::Database()->query(
 				'CREATE TABLE IF NOT EXISTS
-				`tbl_email_newsletters_senders` (
+				`tbl_email_newsletter_manager_senders` (
 					`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 					`name` varchar(255)  NOT NULL,
 					`email` varchar(255)  NOT NULL,
@@ -85,9 +85,9 @@ class extension_email_newsletters extends extension{
 	}
 	
 	public function uninstall(){
-		Symphony::Database()->query('DROP TABLE `tbl_email_newsletters_recipientgroups`');
-		Symphony::Database()->query('DROP TABLE `tbl_email_newsletters_recipientgroups_params`');
-		Symphony::Database()->query('DROP TABLE `tbl_email_newsletters_senders`');
+		Symphony::Database()->query('DROP TABLE `tbl_email_newsletter_manager_recipientgroups`');
+		Symphony::Database()->query('DROP TABLE `tbl_email_newsletter_manager_recipientgroups_params`');
+		Symphony::Database()->query('DROP TABLE `tbl_email_newsletter_manager_senders`');
 		return true;
 	}
 }

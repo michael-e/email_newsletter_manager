@@ -1,15 +1,15 @@
 <?php
 
-if(!defined('ENDIR')) define('ENDIR', EXTENSIONS . "/email_newsletters");
-if(!defined('ENVIEWS')) define('ENVIEWS', ENDIR . "/content/templates");
+if(!defined('ENMDIR')) define('ENMDIR', EXTENSIONS . "/email_newsletter_manager");
+if(!defined('ENVIEWS')) define('ENVIEWS', ENMDIR . "/content/templates");
 
 if(!class_exists('ExtensionPage')){
-	require_once(ENDIR . '/lib/class.extensionpage.php');
+	require_once(ENMDIR . '/lib/class.extensionpage.php');
 }
 
 require_once(TOOLKIT . '/class.xsltprocess.php');
 
-Class contentExtensionemail_newsletterssenders extends ExtensionPage{
+Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 	
 	protected $_type;
 	protected $_function;
@@ -28,7 +28,7 @@ Class contentExtensionemail_newsletterssenders extends ExtensionPage{
 	function __viewIndex(){
 		$this->setPageType('index');
 		$this->setTitle(__("Symphony - Email Senders"));
-		$results = Symphony::Database()->fetch('SELECT * from `tbl_email_newsletters_senders` ORDER BY name ASC');
+		$results = Symphony::Database()->fetch('SELECT * from `tbl_email_newsletter_manager_senders` ORDER BY name ASC');
 		$senders = new XMLElement('senders');
 		foreach($results as $result){
 			$entry = new XMLElement('entry');
@@ -53,15 +53,15 @@ Class contentExtensionemail_newsletterssenders extends ExtensionPage{
 					__('Email Sender updated at %1$s. <a href="%2$s" accesskey="c">Create another?</a> <a href="%3$s" accesskey="a">View all Senders</a>'),
 					array(
 						DateTimeObj::getTimeAgo(__SYM_TIME_FORMAT__),
-						SYMPHONY_URL . '/extension/email_newsletters/senders/new/',
-						SYMPHONY_URL . '/extension/email_newsletters/senders/',
+						SYMPHONY_URL . '/extension/email_newsletter_manager/senders/new/',
+						SYMPHONY_URL . '/extension/email_newsletter_manager/senders/',
 					)
 				),
 				Alert::SUCCESS
 			);
 		}
 
-		$result = Symphony::Database()->fetch('SELECT * from `tbl_email_newsletters_senders` WHERE id = "' . Symphony::Database()->cleanValue($this->_context[1]) . '"');
+		$result = Symphony::Database()->fetch('SELECT * from `tbl_email_newsletter_manager_senders` WHERE id = "' . Symphony::Database()->cleanValue($this->_context[1]) . '"');
 		$senders = new XMLElement('senders');
 		$entry = new XMLElement('entry');
 		General::array_to_xml($entry, (array)$result[0]);
@@ -72,7 +72,7 @@ Class contentExtensionemail_newsletterssenders extends ExtensionPage{
 	function __actionIndex(){
 		if($_POST['with-selected'] == 'delete'){
 			foreach((array)$_POST['items'] as $item=>$status){
-				Symphony::Database()->query('DELETE FROM `tbl_email_newsletters_senders` where `id` = "' . Symphony::Database()->cleanValue($item) . '" LIMIT 1');
+				Symphony::Database()->query('DELETE FROM `tbl_email_newsletter_manager_senders` where `id` = "' . Symphony::Database()->cleanValue($item) . '" LIMIT 1');
 			}
 		}
 	}
@@ -80,15 +80,15 @@ Class contentExtensionemail_newsletterssenders extends ExtensionPage{
 	function __actionEdit($new = false){
 		$fields = $_POST['fields'];
 
-		$result = Symphony::Database()->fetch('SELECT id FROM `tbl_email_newsletters_senders` where id = "' . Symphony::Database()->cleanValue($this->_context[1]) . '"');
+		$result = Symphony::Database()->fetch('SELECT id FROM `tbl_email_newsletter_manager_senders` where id = "' . Symphony::Database()->cleanValue($this->_context[1]) . '"');
 		if(empty($result) && !$new){
-			redirect(SYMPHONY_URL . '/extension/email_newsletters/senders/');
+			redirect(SYMPHONY_URL . '/extension/email_newsletter_manager/senders/');
 			return false;
 		}
 
 		if(isset($_POST['action']['delete'])){
-			if(Symphony::Database()->query('DELETE FROM `tbl_email_newsletters_senders` where `id` = "' . Symphony::Database()->cleanValue($this->_context[1]) . '" LIMIT 1')){
-				redirect(SYMPHONY_URL . '/extension/email_newsletters/senders/');
+			if(Symphony::Database()->query('DELETE FROM `tbl_email_newsletter_manager_senders` where `id` = "' . Symphony::Database()->cleanValue($this->_context[1]) . '" LIMIT 1')){
+				redirect(SYMPHONY_URL . '/extension/email_newsletter_manager/senders/');
 				return;
 			}
 			else{
@@ -105,13 +105,13 @@ Class contentExtensionemail_newsletterssenders extends ExtensionPage{
 		if(!empty($fields['name']) && !empty($fields['email']) && General::validateString($fields['email'], $validators['email'])){
 			unset($fields['id']);
 			if(!$new){
-				Symphony::Database()->update($fields, 'tbl_email_newsletters_senders', 'id = "' . Symphony::Database()->cleanValue($this->_context[1]) . '"');
+				Symphony::Database()->update($fields, 'tbl_email_newsletter_manager_senders', 'id = "' . Symphony::Database()->cleanValue($this->_context[1]) . '"');
 			}
 			else{
-				Symphony::Database()->insert($fields, 'tbl_email_newsletters_senders', false);
+				Symphony::Database()->insert($fields, 'tbl_email_newsletter_manager_senders', false);
 				$this->_context[1] = Symphony::Database()->getInsertId();
 			}
-			redirect(SYMPHONY_URL . '/extension/email_newsletters/senders/edit/' . Symphony::Database()->cleanValue($this->_context[1]) . '/saved');
+			redirect(SYMPHONY_URL . '/extension/email_newsletter_manager/senders/edit/' . Symphony::Database()->cleanValue($this->_context[1]) . '/saved');
 		}
 		if(empty($fields['name'])){
 			$errors->appendChild(new XMLElement('name', __('This field can not be empty.')));

@@ -1,16 +1,16 @@
 <?php
 
-if(!defined('ENDIR')) define('ENDIR', EXTENSIONS . "/email_newsletters");
-if(!defined('ENVIEWS')) define('ENVIEWS', ENDIR . "/content/templates");
+if(!defined('ENMDIR')) define('ENMDIR', EXTENSIONS . "/email_newsletter_manager");
+if(!defined('ENVIEWS')) define('ENVIEWS', ENMDIR . "/content/templates");
 
 if(!class_exists('ExtensionPage')){
-	require_once(ENDIR . '/lib/class.extensionpage.php');
+	require_once(ENMDIR . '/lib/class.extensionpage.php');
 }
 
 require_once(TOOLKIT . '/class.xsltprocess.php');
-require_once(ENDIR . '/lib/class.recipientgroupmanager.php');
+require_once(ENMDIR . '/lib/class.recipientgroupmanager.php');
 
-Class contentExtensionemail_newslettersrecipientgroups extends ExtensionPage{
+Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionPage{
 
 	function __construct(){
 		$this->_XSLTProc = new XsltProcess();
@@ -38,7 +38,7 @@ Class contentExtensionemail_newslettersrecipientgroups extends ExtensionPage{
 	function __actionIndex(){
 		if($_POST['with-selected'] == 'delete'){
 			foreach((array)$_POST['items'] as $item=>$status){
-				Symphony::Database()->query('DELETE FROM `tbl_email_newsletters_recipientgroups` where `id` = "' . Symphony::Database()->cleanValue($item) . '" LIMIT 1');
+				Symphony::Database()->query('DELETE FROM `tbl_email_newsletter_manager_recipientgroups` where `id` = "' . Symphony::Database()->cleanValue($item) . '" LIMIT 1');
 			}
 		}
 	}
@@ -85,8 +85,8 @@ Class contentExtensionemail_newslettersrecipientgroups extends ExtensionPage{
 					__('Email Recipient updated at %1$s. <a href="%2$s" accesskey="c">Create another?</a> <a href="%3$s" accesskey="a">View all Recipient Groups</a>'),
 					array(
 						DateTimeObj::getTimeAgo(__SYM_TIME_FORMAT__),
-						SYMPHONY_URL . '/extension/email_newsletters/recipientgroups/new/',
-						SYMPHONY_URL . '/extension/email_newsletters/recipientgroups/',
+						SYMPHONY_URL . '/extension/email_newsletter_manager/recipientgroups/new/',
+						SYMPHONY_URL . '/extension/email_newsletter_manager/recipientgroups/',
 					)
 				),
 				Alert::SUCCESS
@@ -182,7 +182,7 @@ Class contentExtensionemail_newslettersrecipientgroups extends ExtensionPage{
 		if(!empty($fields['name']) && !empty($fields['name-xslt']) && (General::validateXML($fields['name-xslt'], $error, false) == true)){
 			try{
 				if(RecipientGroupManager::save($this->_context[1], $fields, $new)){
-					redirect(SYMPHONY_URL . '/extension/email_newsletters/recipientgroups/edit/' . Lang::createHandle($fields['name'], 225, '_') . '/saved');
+					redirect(SYMPHONY_URL . '/extension/email_newsletter_manager/recipientgroups/edit/' . Lang::createHandle($fields['name'], 225, '_') . '/saved');
 					return true;
 				}
 			}

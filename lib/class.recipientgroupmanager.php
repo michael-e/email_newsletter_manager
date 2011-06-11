@@ -1,7 +1,7 @@
 <?php
 
 require_once(TOOLKIT . '/class.manager.php');
-if(!defined('ENDIR')) define('ENDIR', EXTENSIONS . "/email_newsletters");
+if(!defined('ENMDIR')) define('ENMDIR', EXTENSIONS . "/email_newsletter_manager");
 
 Class RecipientgroupManager extends Manager{
 
@@ -157,7 +157,7 @@ Class RecipientgroupManager extends Manager{
 	}
 	
 	protected function _parseTemplate($data){
-		$template = file_get_contents(ENDIR . '/content/templates/tpl/recipientSource.tpl');
+		$template = file_get_contents(ENMDIR . '/content/templates/tpl/recipientSource.tpl');
 		
 
 		$template = str_replace('<!-- CLASS NAME -->' , self::__getClassName(Lang::createHandle($data['name'], 255, '_')), $template);
