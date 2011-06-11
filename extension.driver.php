@@ -8,10 +8,14 @@ class extension_email_newsletter_manager extends extension{
 			'version' => '1.0 Alpha',
 			'author' => array(
 				array(
-					'name'=>'Huib Keemink'
+					'name'=>'Huib Keemink',
+					'website' => 'http://www.creativedutchmen.com',
+					'email' => 'huib.keemink@creativedutchmen.com',
 				),
 				array(
-					'name' => 'Michael Eichelsd&ouml;rfer'
+					'name' => 'Michael Eichelsdoerfer',
+					'website' => 'http://www.michael-eichelsdoerfer.de',
+					'email' => 'info@michael-eichelsdoerfer.de',
 				)
 			)
 		);
