@@ -4,8 +4,8 @@ class extension_email_newsletter_manager extends extension{
 
 	public function about(){
 		return array(
-			'name' => 'Email Newsletters',
-			'version' => '2.0 Alpha',
+			'name' => 'Email Newsletter Manager',
+			'version' => '1.0 Alpha',
 			'author' => array(
 				array(
 					'name'=>'Huib Keemink'
