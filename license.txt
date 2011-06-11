@@ -1,5 +1,5 @@
-All source code included in the "Email Newsletters 2" Symphony Extension 
-archive is, unless otherwise specified, released under the MIT licence as 
+All source code included in the "Email Newsletter Manager" Symphony Extension
+archive is, unless otherwise specified, released under the MIT licence as
 follows:
 
 ----- begin license block -----
