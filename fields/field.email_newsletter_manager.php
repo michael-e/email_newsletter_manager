@@ -3,8 +3,7 @@
 	/**
 	 * Field: Email Newsletter
 	 *
-	 * @package Email Newsletters
-	 * @author Michael Eichelsdoerfer
+	 * @package Email Newsletter Manager
 	 **/
 	class fieldEmail_Newsletter_Manager extends Field
 	{
