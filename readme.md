@@ -200,7 +200,7 @@ You will probably find no way to display ampersands as `&` on your TEXT preview 
 - There are bugs concerning HTML form button values in Internet Explorer 6 and 7 (which shouldn't be used for Symphony anyway). This means that:
 
 	- You won't be able to send a newsletter in IE6 (who cares?)
-	- You won't be able to handle multiple Email Newsletters (i.e. Email Newsletter fields) **in the same section** using IE7. This is considered a rare setup (but is actually a supported feature in modern browsers).
+	- You won't be able to handle multiple email newsletters (i.e. Email Newsletter Manager fields) **in the same section** using IE7. This is considered a rare setup (but is actually a supported feature in modern browsers).
 
 	These constraints are regarded a small price for having a combined "Save and Send" button (which is simply called "Send"). (We actually need the button's value to implement this functionality.)
 
