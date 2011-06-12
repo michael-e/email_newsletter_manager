@@ -58,11 +58,26 @@
 				<div class="contextual {id}">
 					<p class="label">Filter <xsl:value-of select="name"/> by</p>
 					<ol class="filters-duplicator">
+						<xsl:for-each select="/data/recipientgroups/entry/filters/entry[@data-type = 'id']">
+							<li class="unique" data-type="id">
+								<xsl:copy-of select="*"/>
+							</li>
+						</xsl:for-each>
+						<xsl:for-each select="/data/recipientgroups/entry/filters/entry[@data-type = 'system:date']">
+							<li class="unique" data-type="system:date">
+								<xsl:copy-of select="*"/>
+							</li>
+						</xsl:for-each>
+						<xsl:for-each select="/data/recipientgroups/entry/filters/entry[@id = current()/field/id]">
+							<li class="unique" data-type="{@data-type}">
+								<xsl:copy-of select="*"/>
+							</li>
+						</xsl:for-each>
 						<li class="unique template" data-type="id">
 							<h4>System ID</h4>
 							<label>
 								<xsl:text>Value</xsl:text>
-								<input name="fields[filter][{id}][id]" type="text" />
+								<input name="fields[filter][{id}][id]" type="text"/>
 							</label>
 						</li>
 						<li class="unique template" data-type="system:date">
@@ -73,7 +88,7 @@
 							</label>
 						</li>
 						<xsl:for-each select="field">
-							<li class="unique template" data-type="{element-name}">
+							<li class="unique template" data-type="{type}">
 								<xsl:copy-of select="filter_html/node()"/>
 							</li>
 						</xsl:for-each>
