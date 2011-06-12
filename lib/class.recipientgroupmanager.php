@@ -13,7 +13,7 @@ Class RecipientgroupManager extends Manager{
 	public function __getClassName($handle){
 		return sprintf('recipientgroup%s', ucfirst($handle));
 	}
-	
+
 	public function __getClassPath($handle, $new = false){
 		if(is_file(WORKSPACE . "/newsletter-recipients/group.$handle.php") || $new == true) return WORKSPACE . '/newsletter-recipients';
 		else{
@@ -28,7 +28,7 @@ Class RecipientgroupManager extends Manager{
 
 		return false;
 	}
-	
+
 	public function __getDriverPath($handle){
 		return self::__getClassPath($handle, true) . "/group.$handle.php";
 	}
@@ -123,7 +123,7 @@ Class RecipientgroupManager extends Manager{
 		return new $classname($this->_Parent, $env, $process_params);
 
 	}
-	
+
 	public function save($handle = null, $fields){
 		if($handle == Lang::createHandle($fields['name'], 255, '_') || $handle == null){
 			return self::_writeRecipientSource(Lang::createHandle($fields['name'], 255, '_'), self::_parseTemplate($fields));
@@ -137,7 +137,7 @@ Class RecipientgroupManager extends Manager{
 			throw new Exception('Recipientsource ' . $fields['handle'] . ' already exists. Please choose another name.');
 		}
 	}
-	
+
 	protected function _writeRecipientSource($handle, $contents){
 		$dir = self::__getClassPath($handle, true);
 		if(is_dir($dir) && is_writeable($dir)){
@@ -155,21 +155,28 @@ Class RecipientgroupManager extends Manager{
 			return false;
 		}
 	}
-	
+
 	protected function _parseTemplate($data){
 		$template = file_get_contents(ENMDIR . '/content/templates/tpl/recipientSource.tpl');
-		
+
+		// flatten the duplicator array
+		$filters = array();
+		foreach($data['filter'] as $filter){
+			foreach($filter as $key => $value){
+				$filters[$key] = $value;
+			}
+		}
 
 		$template = str_replace('<!-- CLASS NAME -->' , self::__getClassName(Lang::createHandle($data['name'], 255, '_')), $template);
 		$template = str_replace('<!-- NAME -->' , addcslashes($data['name'], "'"), $template);
 		$template = str_replace('<!-- HANDLE -->' , Lang::createHandle($data['name'], 255, '_'), $template);
 		$template = str_replace('<!-- SOURCE -->' , addcslashes($data['source'], "'"), $template);
-		$template = str_replace('<!-- FILTERS -->' , var_export((array)$data['filter'][0], true), $template);
+		$template = str_replace('<!-- FILTERS -->' , var_export($filters, true), $template);
 		$template = str_replace('<!-- REQUIRED_PARAM -->' , addcslashes($data['required_url_param'], "'"), $template);
 		$template = str_replace('<!-- NAME_FIELDS -->' , var_export((array)$data['name-fields'], true), $template);
 		$template = str_replace('<!-- EMAIL_FIELD -->' , addcslashes($data['email-field'], "'"), $template);
 		$template = str_replace('<!-- NAME_XSLT -->' , addcslashes($data['name-xslt'], "'"), $template);
-		
+
 		return $template;
 	}
 }
