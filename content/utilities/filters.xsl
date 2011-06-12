@@ -58,12 +58,20 @@
 				<div class="contextual {id}">
 					<p class="label">Filter <xsl:value-of select="name"/> by</p>
 					<ol class="filters-duplicator">
-						<xsl:for-each select="/data/recipientgroups/entry/filters/entry[@data-type = 'id']">
+						<!--
+							Checking for strings in @name attributes looks rather dangerous;
+							unfortunately that is the only way to go with the current XML.
+						-->
+						<xsl:for-each select="/data/recipientgroups/entry/filters/entry[
+							@data-type = 'id' and
+							contains(label/input/@name, concat('[', current()/id,']'))]">
 							<li class="unique" data-type="id">
 								<xsl:copy-of select="*"/>
 							</li>
 						</xsl:for-each>
-						<xsl:for-each select="/data/recipientgroups/entry/filters/entry[@data-type = 'system:date']">
+						<xsl:for-each select="/data/recipientgroups/entry/filters/entry[
+							@data-type = 'system:date' and
+							contains(label/input/@name, concat('[', current()/id,']'))]">
 							<li class="unique" data-type="system:date">
 								<xsl:copy-of select="*"/>
 							</li>
