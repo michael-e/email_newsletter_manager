@@ -62,6 +62,10 @@
 							Checking for strings in @name attributes looks rather dangerous;
 							unfortunately that is the only way to go with the current XML.
 						-->
+						<!--
+							TODO that fucking duplicator is still broken for IDs and system dates;
+							it is by far the craziest construction I have seen in the last months.
+						-->
 						<xsl:for-each select="/data/recipientgroups/entry/filters/entry[
 							@data-type = 'id' and
 							contains(label/input/@name, concat('[', current()/id,']'))]">
