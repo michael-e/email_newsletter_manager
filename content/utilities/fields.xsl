@@ -14,7 +14,12 @@
 						<xsl:for-each select="/data/sections/entry">
 							<optgroup label="{name}">
 								<xsl:for-each select="field/elements">
-									<option value="{item}"><xsl:value-of select="item"/></option>
+									<option value="{item}">
+										<xsl:if test="/data/recipientgroups/entry/fields/email = item">
+											<xsl:attribute name="selected">selected</xsl:attribute>
+										</xsl:if>
+										<xsl:value-of select="item"/>
+									</option>
 								</xsl:for-each>
 							</optgroup>
 						</xsl:for-each>
@@ -33,7 +38,12 @@
 							<xsl:for-each select="/data/sections/entry">
 								<optgroup label="{name}">
 									<xsl:for-each select="field/elements">
-										<option value="{item}"><xsl:value-of select="item"/></option>
+										<option value="{item}">
+											<xsl:if test="/data/recipientgroups/entry/fields/name/fields/item = item">
+												<xsl:attribute name="selected">selected</xsl:attribute>
+											</xsl:if>
+											<xsl:value-of select="item"/>
+										</option>
 									</xsl:for-each>
 								</optgroup>
 							</xsl:for-each>
