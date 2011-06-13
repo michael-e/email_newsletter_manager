@@ -108,7 +108,7 @@
 			<label>
 				<xsl:text>Required URL Parameter</xsl:text>
 				<i>Optional</i>
-				<input type="text" name="fields[required_url_param]" />
+				<input type="text" name="fields[required_url_param]" value="{/data/recipientgroups/entry/fields/required_param}"/>
 			</label>
 			<p class="help">An empty result will be returned when this parameter does not have a value. Do not wrap the parameter with curly-braces.</p>
 		</div>
