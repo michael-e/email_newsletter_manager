@@ -47,9 +47,9 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 		$this->setPageType('form');
 		$this->addScriptToHead(URL . '/extensions/email_newsletter_manager/assets/email_newsletter_manager.recipientgroups.js', 140);
 		$this->addStylesheetToHead(URL . '/extensions/email_newsletter_manager/assets/email_newsletter_manager.recipientgroups.css', 'screen', 103);
-		
+
 		$errors = new XMLElement('errors');
-		
+
 		$context = new XMLElement('context');
 		General::array_to_xml($context, $this->_context);
 		$this->_XML->appendChild($context);
@@ -62,21 +62,21 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 			General::array_to_xml($entry, $section->get());
 			foreach($section->fetchFields() as $field){
 				$field_xml = new XMLElement('field');
-				General::array_to_xml($field_xml,$field->get()); 
-				
+				General::array_to_xml($field_xml,$field->get());
+
 				$filter_html = new XMLElement('filter_html');
 				$field->displayDatasourceFilterPanel($filter_html, null, $errors, $section->get('id'));
 				$field_xml->appendChild($filter_html);
-				
+
 				$field_elements = new XMLElement('elements');
 				General::array_to_xml($field_elements, $field->fetchIncludableElements());
 				$field_xml->appendChild($field_elements);
 				$entry->appendChild($field_xml);
-			}			
+			}
 			$section_xml->appendChild($entry);
 		}
 		$this->_XML->appendChild($section_xml);
-		
+
 		$recipientgroup = new XMLElement('recipientgroups');
 
 		if($this->_context[2] == 'saved' || $this->_context[3] == 'saved'){
@@ -100,25 +100,25 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 				$entry = new XMLElement('entry');
 				$properties = $group->getProperties();
 				General::array_to_xml($entry, $group->about());
-				
+
 				$source = new XMLElement('source', $properties['section']);
 				$entry->appendChild($source);
-				
+
 				$fields = new XMLElement('fields');
-				
+
 				$email = new XMLElement('email', $properties['email']);
 				$fields->appendChild($email);
-				
+
 				$name = new XMLElement('name');
 				$properties['name']['xslt'] = $properties['name']['xslt'];
 				General::array_to_xml($name, $properties['name']);
 				$fields->appendChild($name);
-				
+
 				$required_param = new XMLElement('required_param', $properties['required_param']);
 				$fields->appendChild($required_param);
-				
+
 				$entry->appendChild($fields);
-				
+
 				if(!empty($properties['filters'])){
 					$filters = new XMLElement('filters');
 					$fieldManager = new FieldManager($this);
@@ -141,7 +141,15 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 							$filter_entry->appendChild($label);
 							$filters->appendChild($filter_entry);
 						}
-						if(is_numeric($filter)){
+						// find the field IDs of the current section
+						$section = $sectionManager->fetch($properties['section']);
+						$section_fields = $section->fetchFields();
+						foreach ($section_fields as $field) {
+							$field_ids[] = $field->get('id');
+						}
+						// only add filters to the duplicator if the field id
+						// belongs to the current section
+						if(is_numeric($filter) && in_array($filter, $field_ids)){
 							$filter_obj = $fieldManager->fetch($filter);
 							if(is_object($filter_obj)){
 								$filter_entry = new XMLElement('entry', null, array('id'=>$filter, 'data-type'=>$fieldManager->fetch($filter)->handle()));
@@ -152,7 +160,7 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 						}
 					}
 					$entry->appendChild($filters);
-				}						
+				}
 
 				$recipientgroup->appendChild($entry);
 				$this->_XML->appendChild($recipientgroup);
@@ -162,7 +170,7 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 			}
 		}
 	}
-	
+
 	function __actionEdit($new = false){
 		$fields = $_POST['fields'];
 
@@ -202,11 +210,11 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 		$this->_XML->appendChild($errors);
 		$this->pageAlert(__('An error occurred while processing this form. <a href="#error">See below for details.</a>'), Alert::ERROR);
 	}
-	
+
 	function __actionNew(){
 		$this->__actionEdit(true);
 	}
-	
+
 	function __viewNew(){
 		$this->_context[1] = 'New';
 		$this->_useTemplate = 'viewEdit';
