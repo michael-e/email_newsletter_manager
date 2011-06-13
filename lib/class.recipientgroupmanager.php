@@ -161,9 +161,10 @@ Class RecipientgroupManager extends Manager{
 
 		// flatten the duplicator array
 		$filters = array();
-		if(is_array($data['filter'])){
+		if(is_array($data['filter']) && !empty($data['filter'])){
 			foreach($data['filter'] as $filter){
 				foreach($filter as $key => $value){
+					if(trim($value) == '') continue;
 					$filters[$key] = $value;
 				}
 			}
