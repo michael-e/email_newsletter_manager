@@ -23,7 +23,7 @@
 		</xsl:choose>
 	</h2>
 	<form method="POST">
-		<xsl:call-template name="debug" />
+		<!-- <xsl:call-template name="debug" /> -->
 		<xsl:call-template name="essentials" />
 		<xsl:call-template name="filters" />
 		<xsl:call-template name="static-recipients" />
