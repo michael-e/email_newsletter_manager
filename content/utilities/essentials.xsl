@@ -40,7 +40,7 @@
 								<option value="{id}">
 									<xsl:if test="/data/recipientgroups/entry/source = current()/id">
 										<xsl:attribute name="selected">
-											<xsl:text>yes</xsl:text>
+											<xsl:text>selected</xsl:text>
 										</xsl:attribute>
 									</xsl:if>
 									<xsl:value-of select="name"/>
