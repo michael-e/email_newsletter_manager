@@ -45,6 +45,7 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 
 	function __viewEdit($new = false){
 		$this->setPageType('form');
+		$this->setTitle(sprintf(__("Symphony - Email Recipients - %s", Array(), false), ucfirst($this->_context[1])));
 		$this->addScriptToHead(URL . '/extensions/email_newsletter_manager/assets/email_newsletter_manager.recipientgroups.js', 140);
 		$this->addStylesheetToHead(URL . '/extensions/email_newsletter_manager/assets/email_newsletter_manager.recipientgroups.css', 'screen', 103);
 
