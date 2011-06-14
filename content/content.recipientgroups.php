@@ -189,7 +189,6 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 				return true;
 			}
 		}
-		$errors = new XMLElement('errors');
 		if(!empty($fields['name']) && !empty($fields['name-xslt']) && (General::validateXML($fields['name-xslt'], $error, false) == true)){
 			try{
 				if(RecipientGroupManager::save($this->_context[1], $fields, $new)){
