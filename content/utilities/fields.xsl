@@ -60,28 +60,32 @@
 						<xsl:text>Name XSLT</xsl:text>
 						<i>optional</i>
 						<textarea class="code" name="fields[name-xslt]" rows="10" style="height:9.166em">
-							<!--
-								TODO add postback value
-							-->
-							<xsl:choose>
-								<xsl:when test="/data/context/item[@index=1] = 'new'">
-									<xsl:text>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;xsl:stylesheet version="1.0"
-	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"&gt;
+							<xsl:variable name="name-xslt">
+								<xsl:choose>
+									<xsl:when test="/data/context/item[@index=1] = 'new'">
+<xsl:text><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0"
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-&lt;xsl:template match="/"&gt;
-	&lt;xsl:value-of select="."/&gt;
-&lt;/xsl:template&gt;
+<xsl:template match="/">
+	<xsl:value-of select="."/>
+</xsl:template>
 
-&lt;/xsl:stylesheet&gt;</xsl:text>
-								</xsl:when>
-								<xsl:when test="data/recipientgroups/entry/fields/name/xslt = ''">
-									<xsl:text>&#010;</xsl:text>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="data/recipientgroups/entry/fields/name/xslt"/>
-								</xsl:otherwise>
-							</xsl:choose>
+</xsl:stylesheet>]]></xsl:text>
+									</xsl:when>
+									<xsl:when test="/data/post-fields/name-xslt">
+										<xsl:value-of select="/data/post-fields/name-xslt"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="data/recipientgroups/entry/fields/name/xslt"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:variable>
+							<xsl:value-of select="$name-xslt"/>
+							<!-- prevent output of self-closing textarea element -->
+							<xsl:if test="$name-xslt = ''">
+								<xsl:text>&#010;</xsl:text>
+							</xsl:if>
 						</textarea>
 					</label>
 					<xsl:if test="/data/errors/name-xslt">
