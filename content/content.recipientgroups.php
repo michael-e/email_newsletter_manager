@@ -177,7 +177,6 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 	function __actionEdit($new = false){
 		$fields = $_POST['fields'];
 
-		$errors = new XMLElement('errors');
 		if(isset($_POST['action']['delete'])){
 			if(true){
 			}
@@ -189,6 +188,14 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 				return true;
 			}
 		}
+
+		$post_fields = new XMLElement('post-fields');
+		foreach($fields as $name => $value){
+			$post_fields->appendChild(new XMLElement($name, '<![CDATA['.$value.']]>'));
+		}
+		$this->_XML->appendChild($post_fields);
+
+		$errors = new XMLElement('errors');
 		if(!empty($fields['name']) && !empty($fields['name-xslt']) && (General::validateXML($fields['name-xslt'], $error, false) == true)){
 			try{
 				if(RecipientGroupManager::save($this->_context[1], $fields, $new)){
