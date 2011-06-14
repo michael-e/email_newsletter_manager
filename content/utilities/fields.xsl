@@ -59,7 +59,7 @@
 					<label>
 						<xsl:text>Name XSLT</xsl:text>
 						<i>optional</i>
-						<textarea class="code" name="fields[name-xslt]" rows="10" style="height:9.166em">
+						<textarea class="code" name="fields[name-xslt]" rows="10">
 							<xsl:variable name="name-xslt">
 								<xsl:choose>
 									<xsl:when test="/data/context/item[@index=1] = 'new'">
