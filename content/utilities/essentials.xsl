@@ -15,16 +15,15 @@
 				<label>
 					<xsl:text>Name</xsl:text>
 					<input type="text" name="fields[name]">
-						<!--
-							TODO add postback value
-						-->
 						<xsl:attribute name="value">
-							<xsl:if test="/data/fields">
-								<xsl:value-of select="/data/fields/name"/>
-							</xsl:if>
-							<xsl:if test="not(/data/fields) and /data/recipientgroups/entry/name">
-								<xsl:value-of select="/data/recipientgroups/entry/name"/>
-							</xsl:if>
+							<xsl:choose>
+								<xsl:when test="/data/post-fields/name">
+									<xsl:value-of select="/data/post-fields/name"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="/data/recipientgroups/entry/name"/>
+								</xsl:otherwise>
+							</xsl:choose>
 						</xsl:attribute>
 					</input>
 				</label>
