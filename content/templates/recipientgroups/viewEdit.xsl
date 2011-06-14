@@ -15,8 +15,8 @@
 <xsl:template match="/">
 	<h2>
 		<xsl:choose>
-			<xsl:when test="/data/recipientgroup/entry/name">
-				<span><xsl:value-of select="/data/recipientgroup/entry/name" /></span>
+			<xsl:when test="/data/recipientgroups/entry/name">
+				<span><xsl:value-of select="/data/recipientgroups/entry/name" /></span>
 				<a href="#" class="button">Preview Recipients</a>
 			</xsl:when>
 			<xsl:otherwise><span>New Recipient Group</span></xsl:otherwise>
