@@ -31,7 +31,7 @@
 					<label>
 					<xsl:text>Name Field(s)</xsl:text>
 					<i>Optional</i>
-						<select name="fields[name-fields][]" multiple="yes" class="filtered">
+						<select name="fields[name-fields][]" multiple="multiple" class="filtered">
 							<option value="0">
 								<xsl:text> </xsl:text>
 							</option>
