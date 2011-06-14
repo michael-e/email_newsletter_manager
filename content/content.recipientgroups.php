@@ -77,7 +77,7 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 		}
 		$this->_XML->appendChild($section_xml);
 
-		$recipientgroup = new XMLElement('recipientgroups');
+		$recipientgroups = new XMLElement('recipientgroups');
 
 		if($this->_context[2] == 'saved' || $this->_context[3] == 'saved'){
 			$this->pageAlert(
@@ -165,8 +165,8 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 					$entry->appendChild($filters);
 				}
 
-				$recipientgroup->appendChild($entry);
-				$this->_XML->appendChild($recipientgroup);
+				$recipientgroups->appendChild($entry);
+				$this->_XML->appendChild($recipientgroups);
 			}
 			else{
 				Administration::instance()->errorPageNotFound();
