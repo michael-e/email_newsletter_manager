@@ -60,6 +60,9 @@
 						<xsl:text>Name XSLT</xsl:text>
 						<i>optional</i>
 						<textarea class="code" name="fields[name-xslt]" rows="10" style="height:9.166em">
+							<!--
+								TODO add postback value
+							-->
 							<xsl:choose>
 								<xsl:when test="/data/context/item[@index=1] = 'new'">
 									<xsl:text>&lt;?xml version="1.0" encoding="UTF-8"?&gt;

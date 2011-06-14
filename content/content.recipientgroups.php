@@ -94,6 +94,9 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 		}
 
 		if($new == false){
+			/*
+				TODO add POST values to XML
+			*/
 			$groupManager = new RecipientgroupManager($this);
 			$group = $groupManager->create($this->_context[1]);
 			if(is_object($group)){

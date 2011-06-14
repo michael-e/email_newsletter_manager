@@ -15,6 +15,9 @@
 				<label>
 					<xsl:text>Name</xsl:text>
 					<input type="text" name="fields[name]">
+						<!--
+							TODO add postback value
+						-->
 						<xsl:attribute name="value">
 							<xsl:if test="/data/fields">
 								<xsl:value-of select="/data/fields/name"/>
