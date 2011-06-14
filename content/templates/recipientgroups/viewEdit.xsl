@@ -22,7 +22,7 @@
 			<xsl:otherwise><span>New Recipient Group</span></xsl:otherwise>
 		</xsl:choose>
 	</h2>
-	<form method="POST">
+	<form method="post">
 		<!-- <xsl:call-template name="debug" /> -->
 		<xsl:call-template name="essentials" />
 		<xsl:call-template name="filters" />
