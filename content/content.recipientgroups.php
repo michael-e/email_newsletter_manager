@@ -243,7 +243,10 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 		}
 		$source->dsParamLIMIT = 10;
 		$source->dsParamSTARTPAGE = 1;
-		$xml = $source->getSlice();
+		$null = null;
+		$elements = $source->getSlice();
+		var_dump($elements);
+		die();
 		//$this->_XML->appendChild($xml);
 	}
 }

@@ -6,7 +6,13 @@ Class ExtensionPage extends AdministrationPage{
 	
 	protected $_useTemplate = null;
 	public $viewDir = '';
-
+	protected $_XSLTProc;
+	
+	function __construct($params){
+		$this->_XSLTProc = new XsltProcess();
+		parent::__construct($params);
+	}
+	
 	function __switchboard($type = 'view'){
 		$this->_type = $type;
 		if(!isset($this->_context[0]) || trim($this->_context[0]) == '') $this->_function = 'index';
