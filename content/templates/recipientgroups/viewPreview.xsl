@@ -73,6 +73,11 @@
 </xsl:template>
 <xsl:template match="recipients/item">
 	<tr>
+		<xsl:if test="not(valid)">
+			<xsl:attribute name="class">
+				<xsl:text>invalid</xsl:text>
+			</xsl:attribute>
+		</xsl:if>
 		<td>
 			<xsl:value-of select="name"/>
 		</td>
@@ -83,7 +88,7 @@
 			<xsl:if test="valid = 1">
 				<xsl:text>yes</xsl:text>
 			</xsl:if>
-			<xsl:if test="valid = 0">
+			<xsl:if test="not(valid)">
 				<xsl:text>no</xsl:text>
 			</xsl:if>
 		</td>

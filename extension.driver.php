@@ -36,6 +36,23 @@ class extension_email_newsletter_manager extends extension{
 		);
 	}
 	
+	public function getSubscribedDelegates(){
+		return array(
+			array(
+				'page' => '/backend/',
+				'delegate' => 'InitaliseAdminPageHead',
+				'callback' => 'appendStyles'
+			)
+		);
+	}
+	
+	public function appendStyles($context) {
+			$callback = $context['parent']->getPageCallback();
+
+			if ($callback['driver'] == 'recipientgroups' && $callback['classname'] == 'contentExtensionEmail_newsletter_managerRecipientgroups' && $callback['context'][0] == 'preview')
+				$context['parent']->Page->addStylesheetToHead(URL . '/extensions/email_newsletter_manager/assets/email_newsletter_manager.recipientgroups.preview.css', 'screen', 1000);
+		}
+	
 	public function install(){
 		$etm = Symphony::ExtensionManager()->getInstance('email_template_manager');
 		if($etm instanceof Extension){

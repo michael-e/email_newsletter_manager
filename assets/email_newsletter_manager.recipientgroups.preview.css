@@ -1,0 +1,10 @@
+tr.invalid{
+	color:white;
+}
+tr.invalid td{
+	background-color:#e28584;
+	border-color:#dfa8a7;
+}
+tr.invalid:nth-child(2n) td{
+	background-color:#e88f8f;
+}
