@@ -7,6 +7,10 @@ Class RecipientSourceSection extends RecipientSource{
 	public $emailField = null;
 	public $nameFields = Array();
 	public $nameXslt = null;
+	
+	public $dsParamLIMIT = 10;
+	public $dsParamPAGINATERESULTS = 'yes';
+	public $dsParamSTARTPAGE = 1;
 
 	/**
 	 * Fetch generated recipient data.
@@ -22,6 +26,13 @@ Class RecipientSourceSection extends RecipientSource{
 	 */
 	public function getSlice(){
 		$entries = $this->grab();
+		$return['total-entries'] = $entries['total-entries'];
+		$return['total-pages'] = $entries['total-pages'];
+		$return['remaining-pages'] = $entries['remaining-pages'];
+		$return['remaining-entries'] = $entries['remaining-entries'];
+		$return['entries-per-page'] = $entries['limit'];
+		$return['start'] = $entries['start'];
+		$return['current-page'] = $this->dsParamSTARTPAGE;
 		$field_ids = array();
 		$entryManager = new EntryManager($this->_Parent);
 		$xsltproc = new XsltProcess();

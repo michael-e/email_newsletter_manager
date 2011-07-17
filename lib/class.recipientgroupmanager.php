@@ -161,7 +161,7 @@ Class RecipientgroupManager extends Manager{
 	}
 
 	protected function _parseTemplate($data){
-		$template = file_get_contents(ENMDIR . '/content/templates/tpl/recipientSource.tpl');
+		$template = file_get_contents(ENMDIR . '/content/templates/tpl/recipientSourceSection.tpl');
 
 		// flatten the duplicator array
 		$filters = array();

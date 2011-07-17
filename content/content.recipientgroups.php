@@ -241,12 +241,16 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 		catch(Exception $e){
 			Administration::instance()->errorPageNotFound();
 		}
-		$source->dsParamLIMIT = 10;
-		$source->dsParamSTARTPAGE = 1;
-		$null = null;
+		if($_GET['pg']){
+			$source->dsParamSTARTPAGE = (int)$_GET['pg'];
+		}
 		$elements = $source->getSlice();
-		var_dump($elements);
-		die();
-		//$this->_XML->appendChild($xml);
+		$recipients = new XMLElement('recipients');
+		General::array_to_xml($recipients, $source->about());
+		General::array_to_xml($recipients, $elements);
+		$context = new XMLElement('context');
+		General::array_to_xml($context, $this->_context);
+		$this->_XML->appendChild($context);
+		$this->_XML->appendChild($recipients);
 	}
 }

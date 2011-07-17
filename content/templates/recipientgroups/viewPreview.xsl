@@ -8,6 +8,85 @@
 	indent="yes" />
 
 <xsl:template match="/">
-	<xsl:copy-of select="/" />
+	<h2>
+		<span><xsl:value-of select="/data/recipients/name" /> (preview)</span>
+		<a href="{concat($root, '/symphony/extension/email_newsletter_manager/recipientgroups/edit/', /data/context/item[@index = 2])}" class="button">Edit Recipient Source</a>
+	</h2>
+	<form method="post" action="{$current-url}">
+		<table class="selectable">
+			<thead>
+				<tr>
+					<th scope="col">Name</th>
+					<th scope="col">Email</th>
+					<th scope="col">Valid</th>
+				</tr>
+			</thead>
+			<tbody>
+				<xsl:if test="/data/recipients/item">
+					<xsl:apply-templates select="/data/recipients/item"/>
+				</xsl:if>
+				<xsl:if test="not(/data/recipients/item)">
+					<tr>
+						<td class="inactive" colspan="3">
+							<xsl:text>None found</xsl:text>
+						</td>
+					</tr>
+				</xsl:if>
+			</tbody>
+		</table>
+		<xsl:if test="/data/recipients/total-pages &gt; 1">
+			<ul class="page">
+				<li><xsl:if test="/data/recipients/current-page &gt; 1">
+						<a href="{concat($root, '/symphony/extension/email_newsletter_manager/recipientgroups/preview/', /data/context/item[@index = 2], '?pg=1')}">First</a>
+					</xsl:if>
+					<xsl:if test="not(/data/recipients/current-page &gt; 1)">
+						First
+					</xsl:if></li>
+				<li>
+					<xsl:if test="/data/recipients/current-page &gt; 1">
+						<a href="{concat($root, '/symphony/extension/email_newsletter_manager/recipientgroups/preview/', /data/context/item[@index = 2], '?pg=', /data/recipients/current-page - 1)}">&#8592; Previous</a>
+					</xsl:if>
+					<xsl:if test="not(/data/recipients/current-page &gt; 1)">
+						&#8592; Previous
+					</xsl:if>
+				</li>
+				<li title="Viewing {/data/recipients/start} - {/data/recipients/start + /data/recipients/entries-per-page - 1} of {/data/recipients/total-entries} entries">Page <xsl:value-of select="/data/recipients/current-page" /> of <xsl:value-of select="/data/recipients/total-pages" /></li>
+				<li>
+					<xsl:if test="/data/recipients/remaining-pages &gt; 0">
+						<a href="{concat($root, '/symphony/extension/email_newsletter_manager/recipientgroups/preview/', /data/context/item[@index = 2], '?pg=', /data/recipients/current-page + 1)}">Next &#8594;</a>
+					</xsl:if>
+					<xsl:if test="not(/data/recipients/remaining-pages &gt; 0)">
+						Next &#8594;
+					</xsl:if>					
+				</li>
+				<li>
+					<xsl:if test="/data/recipients/remaining-pages &gt; 0">
+						<a href="{concat($root, '/symphony/extension/email_newsletter_manager/recipientgroups/preview/', /data/context/item[@index = 2], '?pg=', /data/recipients/total-pages)}">Last</a>
+					</xsl:if>
+					<xsl:if test="not(/data/recipients/remaining-pages &gt; 0)">
+						Last
+					</xsl:if>
+				</li>
+			</ul>
+		</xsl:if>
+	</form>
+</xsl:template>
+<xsl:template match="recipients/item">
+	<tr>
+		<td>
+			<xsl:value-of select="name"/>
+		</td>
+		<td>
+			<xsl:value-of select="email"/>
+		</td>
+		<td>
+			<xsl:if test="valid = 1">
+				<xsl:text>yes</xsl:text>
+			</xsl:if>
+			<xsl:if test="valid = 0">
+				<xsl:text>no</xsl:text>
+			</xsl:if>
+		</td>
+	</tr>
 </xsl:template>
 </xsl:stylesheet>
