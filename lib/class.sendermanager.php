@@ -3,25 +3,25 @@
 require_once(TOOLKIT . '/class.manager.php');
 if(!defined('ENMDIR')) define('ENMDIR', EXTENSIONS . "/email_newsletter_manager");
 
-Class RecipientgroupManager extends Manager{
+Class SenderManager extends Manager{
 
 	public function __getHandleFromFilename($filename){
-		$result = sscanf($filename, 'group.%[^.].php');
+		$result = sscanf($filename, 'sender.%[^.].php');
 		return $result[0];
 	}
 
 	public function __getClassName($handle){
-		return sprintf('recipientgroup%s', ucfirst($handle));
+		return sprintf('sender%s', ucfirst($handle));
 	}
 
 	public function __getClassPath($handle, $new = false){
-		if(is_file(WORKSPACE . "/email-newsletters/group.$handle.php") || $new == true) return WORKSPACE . '/email-newsletters';
+		if(is_file(WORKSPACE . "/email-newsletters/sender.$handle.php") || $new == true) return WORKSPACE . '/email-newsletters';
 		else{
 			$extensions = Symphony::ExtensionManager()->listInstalledHandles();
 
 			if(is_array($extensions) && !empty($extensions)){
 				foreach($extensions as $e){
-					if(is_file(EXTENSIONS . "/$e/email-newsletters/group.$handle.php")) return EXTENSIONS . "/$e/email-newsletters";
+					if(is_file(EXTENSIONS . "/$e/email-newsletters/sender.$handle.php")) return EXTENSIONS . "/$e/email-newsletters";
 				}
 			}
 		}
@@ -30,13 +30,13 @@ Class RecipientgroupManager extends Manager{
 	}
 
 	public function __getDriverPath($handle){
-		return self::__getClassPath($handle, true) . "/group.$handle.php";
+		return self::__getClassPath($handle, true) . "/sender.$handle.php";
 	}
 
 	public function listAll(){
 		$result = array();
 
-		$structure = General::listStructure(WORKSPACE . '/email-newsletters', '/group.[\\w-]+.php/', false, 'ASC', WORKSPACE . '/email-newsletters');
+		$structure = General::listStructure(WORKSPACE . '/email-newsletters', '/sender.[\\w-]+.php/', false, 'ASC', WORKSPACE . '/email-newsletters');
 
 		if(is_array($structure['filelist']) && !empty($structure['filelist'])){
 			foreach($structure['filelist'] as $f){
@@ -71,7 +71,7 @@ Class RecipientgroupManager extends Manager{
 			foreach($extensions as $e){
 				if(!is_dir(EXTENSIONS . "/$e/email-newsletters")) continue;
 
-				$tmp = General::listStructure(EXTENSIONS . "/$e/email-newsletters", '/group.[\\w-]+.php/', false, 'ASC', EXTENSIONS . "/$e/email-newsletters");
+				$tmp = General::listStructure(EXTENSIONS . "/$e/email-newsletters", '/sender.[\\w-]+.php/', false, 'ASC', EXTENSIONS . "/$e/email-newsletters");
 
 				if(is_array($tmp['filelist']) && !empty($tmp['filelist'])){
 					foreach($tmp['filelist'] as $f){
@@ -112,7 +112,7 @@ Class RecipientgroupManager extends Manager{
 		if(!is_file($path)){
 			throw new Exception(
 				__(
-					'Could not find Recipient Group <code>%s</code>. If the Recipient Group was provided by an Extension, ensure that it is installed, and enabled.',
+					'Could not find Newsletter Sender <code>%s</code>. If the Newsletter Sender was provided by an Extension, ensure that it is installed, and enabled.',
 					array($handle)
 				)
 			);
@@ -126,15 +126,15 @@ Class RecipientgroupManager extends Manager{
 
 	public function save($handle = null, $fields){
 		if($handle == Lang::createHandle($fields['name'], 255, '_') || $handle == null){
-			return self::_writeRecipientSource(Lang::createHandle($fields['name'], 255, '_'), self::_parseTemplate($fields));
+			return self::_writeSender(Lang::createHandle($fields['name'], 255, '_'), self::_parseTemplate($fields));
 		}
 		elseif(false == self::__getClassPath(Lang::createHandle($fields['name'], 255, '_'))){
-			if(!self::_writeRecipientSource(Lang::createHandle($fields['name'], 255, '_'), self::_parseTemplate($fields))) return false;
+			if(!self::_writeSender(Lang::createHandle($fields['name'], 255, '_'), self::_parseTemplate($fields))) return false;
 			if(!@unlink(self::__getDriverPath($handle))) return false;
 			return true;
 		}
 		else{
-			throw new Exception('Recipientsource ' . $fields['handle'] . ' already exists. Please choose another name.');
+			throw new Exception('Newsletter Sender ' . $fields['handle'] . ' already exists. Please choose another name.');
 		}
 	}
 	
@@ -142,7 +142,7 @@ Class RecipientgroupManager extends Manager{
 		return @unlink(self::__getDriverPath($handle));
 	}
 
-	protected function _writeRecipientSource($handle, $contents){
+	protected function _writeSender($handle, $contents){
 		$dir = self::__getClassPath($handle, true);
 		if(is_dir($dir) && is_writeable($dir)){
 			if((is_writeable(self::__getDriverPath($handle))) || !file_exists(self::__getDriverPath($handle))){
@@ -161,7 +161,7 @@ Class RecipientgroupManager extends Manager{
 	}
 
 	protected function _parseTemplate($data){
-		$template = file_get_contents(ENMDIR . '/content/templates/tpl/recipientSource.tpl');
+		$template = file_get_contents(ENMDIR . '/content/templates/tpl/sender.tpl');
 
 		// flatten the duplicator array
 		$filters = array();

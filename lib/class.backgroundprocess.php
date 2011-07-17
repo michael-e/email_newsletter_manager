@@ -5,71 +5,22 @@ Class BackgroundProcessException extends Exception{
 
 Class BackgroundProcess{
 	
-	protected $_status;
 	protected $_batchURL;
 
-	const STATUS_IDLE 		= 'idle';
-	const STATUS_RUNNING 	= 'running';
-	const STATUS_COMPLETED 	= 'completed';
-	const STATUS_STOPPED	= 'stopped';
-	const STATUS_PAUSED		= 'paused';
-	
+	const FLAG_RUN		= 'run';
 	const FLAG_PAUSE	= 'pause';
 	const FLAG_START	= 'start';
 	const FLAG_STOP		= 'stop';
 
 	public function __construct(){
-		$this->_status = self::STATUS_IDLE;
+	}
+
+	public function run(){
 	}
 
 	public function action(){
-		return self::STATUS_COMPLETED;
 	}
 
-	public function start(){
-		$this->_status = self::STATUS_RUNNING;
-		$status = $this->action();
-		if($status == self::STATUS_RUNNING){
-			$this->nextBatch();
-			return true;
-		}
-		elseif($status == self::STATUS_COMPLETED){
-			$this->_status = self::STATUS_COMPLETED;
-			return true;
-		}
-		else{
-			$this->_status = self::STATUS_STOPPED;
-			return false;
-		}
-	}
-
-	public function stop(){
-		$this->_status = self::STATUS_STOPPED;
-		exit();
-	}
-
-	public function pause(){
-		$this->_status = self::STATUS_PAUSED;
-	}
-
-	public function getStatus(){
-		return $this->_status;
-	}
-
-	public function updateStatus(){
-		$flag = $this->getFlag();
-		if($flag == self::FLAG_PAUSE && $this->_status != self::STATUS_PAUSED){
-			$this->pause();
-		}
-		elseif($flag == self::FLAG_START && $this->_status != self::STATUS_RUNNING){
-			$this->start();
-		}
-		elseif($flag == self::FLAG_STOP && $this->_status != self::STATUS_STOPPED){
-			$this->stop();
-		}
-		return true;
-	}
-	
 	public function getFlag(){
 	}
 

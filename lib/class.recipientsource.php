@@ -53,9 +53,22 @@ Class RecipientSource extends DataSource{
 		$xml = $this->grab();
 		try{
 			$generated_xml = $xml->generate();
-			$name = trim($this->_XSLTProc->process($generated_xml, $this->nameXslt, $this->param_pool));
-			$email = trim($this->_XSLTProc->process($generated_xml, $this->emailXslt, $this->param_pool));
-			require_once(TOOLKIT . '/util.validators.php');
+			$dom = new DOMDocument();
+			$dom->strictErrorChecking = false;
+			$dom->loadXML($generated_xml);
+			$xpath = new DOMXPath($dom);
+			$results = @$xpath->evaluate('/recipients/entry');
+			if(is_object($results)){
+				$i = 0;
+				foreach($results as $result){
+					$xml = $dom->saveXML($result);
+					$recipients[$i]['name'] = trim($this->_XSLTProc->process($xml, $this->nameXslt));
+					$recipients[$i]['email'] = trim($this->_XSLTProc->process($xml, '<?xml version="1.0" encoding="UTF-8"?><xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:output method="text" /><xsl:template match="/entry"><xsl:value-of select="'.$this->emailField.'"/></xsl:template></xsl:stylesheet>'));
+					$i++;
+				}
+			}
+			var_dump($recipients);
+			
 			if(!General::validateString($email, $validators['email'])){
 				throw new Exception();
 			}

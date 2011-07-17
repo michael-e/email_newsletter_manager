@@ -38,7 +38,7 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 	function __actionIndex(){
 		if($_POST['with-selected'] == 'delete'){
 			foreach((array)$_POST['items'] as $item=>$status){
-				Symphony::Database()->query('DELETE FROM `tbl_email_newsletter_manager_recipientgroups` where `id` = "' . Symphony::Database()->cleanValue($item) . '" LIMIT 1');
+				RecipientGroupManager::delete($item);
 			}
 		}
 	}
@@ -229,5 +229,21 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 		$this->_context[1] = 'New';
 		$this->_useTemplate = 'viewEdit';
 		$this->__viewEdit(true);
+	}
+	
+	function __viewPreview(){
+		$this->setPageType('index');
+		$this->setTitle(__("Symphony - Newsletter Recipient Groups Preview"));
+		$groupManager = new RecipientgroupManager($this);
+		try{
+			$source = $groupManager->create($this->_context[1]);
+		}
+		catch(Exception $e){
+			Administration::instance()->errorPageNotFound();
+		}
+		$source->dsParamLIMIT = 10;
+		$source->dsParamSTARTPAGE = 1;
+		$xml = $source->getSlice();
+		//$this->_XML->appendChild($xml);
 	}
 }
