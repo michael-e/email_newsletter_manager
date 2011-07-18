@@ -172,4 +172,15 @@ Class RecipientSourceSection extends RecipientSource{
 			'joins'	=> $joins
 		);
 	}
+	
+	public function getProperties(){
+		$properties = array(
+			'email' => $this->emailField,
+			'name' => array(
+				'fields' => $this->nameFields,
+				'xslt' 	=> $this->nameXslt
+			)
+		);
+		return array_merge(parent::getProperties(), $properties);
+	}
 }

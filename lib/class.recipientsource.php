@@ -44,15 +44,8 @@ Class RecipientSource extends DataSource{
 	
 	public function getProperties(){
 		return array(
-			'section' => $this->getSource(),
-			'elements' => $this->dsParamINCLUDEDELEMENTS,
-			'filters' => $this->dsParamFILTERS,
-			'required_param' => $this->dsParamREQUIREDPARAM,
-			'email' => $this->emailField,
-			'name' => array(
-				'fields' => $this->nameFields,
-				'xslt' 	=> $this->nameXslt
-			)
+			'source' => $this->getSource(),
+			'filters' => $this->dsParamFILTERS
 		);
 	}
 }

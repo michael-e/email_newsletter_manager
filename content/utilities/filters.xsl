@@ -52,6 +52,11 @@
 							<input name="fields[filter][author][user_type]" type="text" />
 						</label>
 					</li>
+					<xsl:for-each select="/data/recipientgroups/entry/filters/entry[contains(label/input/@name, '[authors]')]">
+						<li class="unique" data-type="{@data-type}">
+							<xsl:copy-of select="*"/>
+						</li>
+					</xsl:for-each>
 				</ol>
 			</div>
 			<xsl:for-each select="/data/sections/entry">

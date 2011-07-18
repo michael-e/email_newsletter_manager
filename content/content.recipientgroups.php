@@ -105,32 +105,33 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 				$properties = $group->getProperties();
 				General::array_to_xml($entry, $group->about());
 
-				$source = new XMLElement('source', $properties['section']);
+				$source = new XMLElement('source', $properties['source']);
 				$entry->appendChild($source);
 
-				$fields = new XMLElement('fields');
+				// Section Only
+				if(is_numeric($properties['source'])){
 
-				$email = new XMLElement('email', $properties['email']);
-				$fields->appendChild($email);
+					$fields = new XMLElement('fields');
 
-				$name = new XMLElement('name');
-				$properties['name']['xslt'] = $properties['name']['xslt'];
-				General::array_to_xml($name, $properties['name']);
-				$fields->appendChild($name);
+					$email = new XMLElement('email', $properties['email']);
+					$fields->appendChild($email);
 
-				$required_param = new XMLElement('required_param', $properties['required_param']);
-				$fields->appendChild($required_param);
+					$name = new XMLElement('name');
+					General::array_to_xml($name, $properties['name']);
+					$fields->appendChild($name);
 
-				$entry->appendChild($fields);
+					$entry->appendChild($fields);
+				}
 
 				if(!empty($properties['filters'])){
 					$filters = new XMLElement('filters');
 					$fieldManager = new FieldManager($this);
 					foreach($properties['filters'] as $filter=>$val){
+						// Section and Author
 						if($filter == 'id'){
 							$title = new XMLElement('h4', 'System ID');
 							$label = Widget::Label(__('Value'));
-							$label->appendChild(Widget::Input('fields[filter]['.$properties['section'].'][id]', General::sanitize($val)));
+							$label->appendChild(Widget::Input('fields[filter]['.$properties['source'].'][id]', General::sanitize($val)));
 							$filter_entry = new XMLElement('entry', null, array('id'=>'id', 'data-type'=>'id'));
 							$filter_entry->appendChild($title);
 							$filter_entry->appendChild($label);
@@ -139,29 +140,43 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 						if($filter == 'system:date'){
 							$title = new XMLElement('h4', 'System Date');
 							$label = Widget::Label(__('Value'));
-							$label->appendChild(Widget::Input('fields[filter]['.$properties['section'].'][system:date]', General::sanitize($val)));
+							$label->appendChild(Widget::Input('fields[filter]['.$properties['source'].'][system:date]', General::sanitize($val)));
 							$filter_entry = new XMLElement('entry', null, array('id'=>'id', 'data-type'=>'system:date'));
 							$filter_entry->appendChild($title);
 							$filter_entry->appendChild($label);
 							$filters->appendChild($filter_entry);
 						}
-						// find the field IDs of the current section
-						$section = $sectionManager->fetch($properties['section']);
-						if(is_object($section)){
-							$section_fields = $section->fetchFields();
-							foreach ($section_fields as $field) {
-								$field_ids[] = $field->get('id');
-							}
-							// only add filters to the duplicator if the field id
-							// belongs to the current section
-							if(is_numeric($filter) && in_array($filter, $field_ids)){
-								$filter_obj = $fieldManager->fetch($filter);
-								if(is_object($filter_obj)){
-									$filter_entry = new XMLElement('entry', null, array('id'=>$filter, 'data-type'=>$fieldManager->fetch($filter)->handle()));
-
-									$fieldManager->fetch($filter)->displayDatasourceFilterPanel($filter_entry, $val, $errors, $properties['section']);
-									$filters->appendChild($filter_entry);
+						// Section Only
+						if(is_numeric($properties['source'])){
+							$section = $sectionManager->fetch($properties['source']);
+							if(is_object($section)){
+								$section_fields = $section->fetchFields();
+								foreach ($section_fields as $field) {
+									$field_ids[] = $field->get('id');
 								}
+								// only add filters to the duplicator if the field id
+								// belongs to the current section
+								if(is_numeric($filter) && in_array($filter, $field_ids)){
+									$filter_obj = $fieldManager->fetch($filter);
+									if(is_object($filter_obj)){
+										$filter_entry = new XMLElement('entry', null, array('id'=>$filter, 'data-type'=>$fieldManager->fetch($filter)->handle()));
+										$fieldManager->fetch($filter)->displayDatasourceFilterPanel($filter_entry, $val, $errors, $properties['section']);
+										$filters->appendChild($filter_entry);
+									}
+								}
+							}
+						}
+						// Author only
+						if($properties['source'] == 'authors'){
+							$filter_names = array('username'=>'Username', 'first_name'=>'First Name', 'last_name'=>'Last Name', 'email'=>'Email Address', 'user_type'=>'User Type');
+							if(in_array($filter, array_keys($filter_names))){
+								$title = new XMLElement('h4', $filter_names[$filter]);
+								$label = Widget::Label(__('Value'));
+								$label->appendChild(Widget::Input('fields[filter]['.$properties['source'].'][username]', General::sanitize($val)));
+								$filter_entry = new XMLElement('entry', null, array('id'=>'id', 'data-type'=>'username'));
+								$filter_entry->appendChild($title);
+								$filter_entry->appendChild($label);
+								$filters->appendChild($filter_entry);
 							}
 						}
 					}
