@@ -67,25 +67,23 @@
 							Checking for strings in @name attributes looks rather dangerous;
 							unfortunately that is the only way to go with the current XML.
 						-->
-						<xsl:for-each select="/data/recipientgroups/entry/filters/entry[
-							@data-type = 'id' and
-							contains(label/input/@name, concat('[', current()/id,']'))]">
-							<li class="unique" data-type="id">
-								<xsl:copy-of select="*"/>
-							</li>
-						</xsl:for-each>
-						<xsl:for-each select="/data/recipientgroups/entry/filters/entry[
-							@data-type = 'system:date' and
-							contains(label/input/@name, concat('[', current()/id,']'))]">
-							<li class="unique" data-type="system:date">
-								<xsl:copy-of select="*"/>
-							</li>
-						</xsl:for-each>
-						<xsl:for-each select="/data/recipientgroups/entry/filters/entry[@id = current()/field/id]">
-							<li class="unique" data-type="{@data-type}">
-								<xsl:copy-of select="*"/>
-							</li>
-						</xsl:for-each>
+						<xsl:choose>
+							<xsl:when test="/data/post-fields">
+								<xsl:for-each select="/data/recipientgroups/entry/filters/entry[contains(label/input/@name, concat('[', current()/id,']'))]">
+									<li class="unique" data-type="{@data-type}">
+										<xsl:copy-of select="*"/>
+									</li>
+								</xsl:for-each>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:for-each select="/data/recipientgroups/entry/filters/entry[contains(label/input/@name, concat('[', current()/id,']'))]">
+									<li class="unique" data-type="{@data-type}">
+										<xsl:copy-of select="*"/>
+									</li>
+								</xsl:for-each>
+							</xsl:otherwise>
+						</xsl:choose>
+						
 						<li class="unique template" data-type="id">
 							<h4>System ID</h4>
 							<label>

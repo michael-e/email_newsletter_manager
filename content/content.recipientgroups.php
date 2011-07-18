@@ -123,6 +123,12 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 					$entry->appendChild($fields);
 				}
 
+				// Hack to make sure filter data is preserved in the UI when there is an error in the form.
+				// For next versions: always do the local/user differentiation in php, rather than xslt.
+				// This will make the xslt cleaner and easier to understand and debug.
+				if(!empty($_POST['fields'])){
+					$properties['filters'] = $_POST['fields']['filter'][0];
+				}
 				if(!empty($properties['filters'])){
 					$filters = new XMLElement('filters');
 					$fieldManager = new FieldManager($this);
@@ -160,7 +166,7 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 									$filter_obj = $fieldManager->fetch($filter);
 									if(is_object($filter_obj)){
 										$filter_entry = new XMLElement('entry', null, array('id'=>$filter, 'data-type'=>$fieldManager->fetch($filter)->handle()));
-										$filter_obj->displayDatasourceFilterPanel($filter_entry, $val, $errors, 1);
+										$filter_obj->displayDatasourceFilterPanel($filter_entry, $val, $errors, is_numeric($properties['source'])?$properties['source']:1);
 										$filters->appendChild($filter_entry);
 									}
 								}
