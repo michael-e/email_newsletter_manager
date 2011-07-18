@@ -80,10 +80,10 @@
 		</xsl:if>
 		<td>
 			<xsl:choose>
-				<xsl:when test="source = 'system:authors'">
+				<xsl:when test="../source = 'system:authors'">
 					<a href="{concat($root, '/symphony/system/authors/edit/', id)}"><xsl:value-of select="name" /></a>
 				</xsl:when>
-				<xsl:when test="source = 'system:static_recipients'"><xsl:value-of select="name" /></xsl:when>
+				<xsl:when test="../source = 'system:static_recipients'"><xsl:value-of select="name" /></xsl:when>
 				<xsl:otherwise>
 					<a href="{concat($root, '/symphony/publish/', ../source, '/edit/', id)}"><xsl:value-of select="name" /></a>
 				</xsl:otherwise>
