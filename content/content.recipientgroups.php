@@ -160,7 +160,7 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 									$filter_obj = $fieldManager->fetch($filter);
 									if(is_object($filter_obj)){
 										$filter_entry = new XMLElement('entry', null, array('id'=>$filter, 'data-type'=>$fieldManager->fetch($filter)->handle()));
-										$fieldManager->fetch($filter)->displayDatasourceFilterPanel($filter_entry, $val, $errors, $properties['section']);
+										$filter_obj->displayDatasourceFilterPanel($filter_entry, $val, $errors, 1);
 										$filters->appendChild($filter_entry);
 									}
 								}

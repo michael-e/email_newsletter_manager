@@ -80,6 +80,7 @@ Class RecipientSourceSection extends RecipientSource{
 	 */
 	public function grab(){
 		$where_and_joins = $this->getWhereAndJoins();
+		var_dump($where_and_joins);
 		$entryManager = new EntryManager($this->_Parent);
 		$entries = $entryManager->fetchByPage(
 			($this->dsParamPAGINATERESULTS == 'yes' && $this->dsParamSTARTPAGE > 0 ? $this->dsParamSTARTPAGE : 1),
