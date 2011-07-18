@@ -147,19 +147,21 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 						}
 						// find the field IDs of the current section
 						$section = $sectionManager->fetch($properties['section']);
-						$section_fields = $section->fetchFields();
-						foreach ($section_fields as $field) {
-							$field_ids[] = $field->get('id');
-						}
-						// only add filters to the duplicator if the field id
-						// belongs to the current section
-						if(is_numeric($filter) && in_array($filter, $field_ids)){
-							$filter_obj = $fieldManager->fetch($filter);
-							if(is_object($filter_obj)){
-								$filter_entry = new XMLElement('entry', null, array('id'=>$filter, 'data-type'=>$fieldManager->fetch($filter)->handle()));
+						if(is_object($section)){
+							$section_fields = $section->fetchFields();
+							foreach ($section_fields as $field) {
+								$field_ids[] = $field->get('id');
+							}
+							// only add filters to the duplicator if the field id
+							// belongs to the current section
+							if(is_numeric($filter) && in_array($filter, $field_ids)){
+								$filter_obj = $fieldManager->fetch($filter);
+								if(is_object($filter_obj)){
+									$filter_entry = new XMLElement('entry', null, array('id'=>$filter, 'data-type'=>$fieldManager->fetch($filter)->handle()));
 
-								$fieldManager->fetch($filter)->displayDatasourceFilterPanel($filter_entry, $val, $errors, $properties['section']);
-								$filters->appendChild($filter_entry);
+									$fieldManager->fetch($filter)->displayDatasourceFilterPanel($filter_entry, $val, $errors, $properties['section']);
+									$filters->appendChild($filter_entry);
+								}
 							}
 						}
 					}
