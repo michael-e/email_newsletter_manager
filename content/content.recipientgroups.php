@@ -194,13 +194,14 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 
 	function __actionEdit($new = false){
 		$fields = $_POST['fields'];
-
+		$recipientGroupManager = new RecipientGroupManager($this->_Parent);
 		if(isset($_POST['action']['delete'])){
-			if(true){
+			if($recipientGroupManager->delete($this->_context[1])){
+				redirect(SYMPHONY_URL . '/extension/email_newsletter_manager/recipientgroups');
 			}
 			else{
 				$this->pageAlert(
-					__('Could not delete: ' . Symphony::Database()->getLastError()),
+					__('Could not delete, please check file permissions'),
 					Alert::ERROR
 				);
 				return true;
