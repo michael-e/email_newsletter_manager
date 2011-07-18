@@ -209,9 +209,7 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 		}
 
 		$post_fields = new XMLElement('post-fields');
-		foreach($fields as $name => $value){
-			$post_fields->appendChild(new XMLElement($name, '<![CDATA['.$value.']]>'));
-		}
+		General::array_to_xml($post_fields, $fields);
 		$this->_XML->appendChild($post_fields);
 
 		$errors = new XMLElement('errors');

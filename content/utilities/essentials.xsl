@@ -17,7 +17,7 @@
 					<input type="text" name="fields[name]">
 						<xsl:attribute name="value">
 							<xsl:choose>
-								<xsl:when test="/data/post-fields/name">
+								<xsl:when test="/data/post-fields">
 									<xsl:value-of select="/data/post-fields/name"/>
 								</xsl:when>
 								<xsl:otherwise>
@@ -39,7 +39,7 @@
 							<xsl:for-each select="/data/sections/entry">
 								<option value="{id}">
 									<xsl:choose>
-										<xsl:when test="/data/post-fields/source">
+										<xsl:when test="/data/post-fields">
 											<xsl:if test="/data/post-fields/source = current()/id">
 												<xsl:attribute name="selected">
 													<xsl:text>selected</xsl:text>
@@ -61,7 +61,7 @@
 						<optgroup label="System">
 							<option value="authors">
 								<xsl:choose>
-									<xsl:when test="/data/post-fields/source">
+									<xsl:when test="/data/post-fields">
 										<xsl:if test="/data/post-fields/source = 'authors'">
 											<xsl:attribute name="selected">
 												<xsl:text>selected</xsl:text>
@@ -82,7 +82,7 @@
 						<optgroup label="Static">
 							<option value="static_recipients">
 								<xsl:choose>
-									<xsl:when test="/data/post-fields/source">
+									<xsl:when test="/data/post-fields">
 										<xsl:if test="/data/post-fields/source = 'static_recipients'">
 											<xsl:attribute name="selected">
 												<xsl:text>selected</xsl:text>

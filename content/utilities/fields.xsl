@@ -15,9 +15,18 @@
 							<optgroup label="{name}">
 								<xsl:for-each select="field/elements">
 									<option value="{item}">
-										<xsl:if test="/data/recipientgroups/entry/fields/email = item">
-											<xsl:attribute name="selected">selected</xsl:attribute>
-										</xsl:if>
+										<xsl:choose>
+											<xsl:when test="/data/post-fields">
+												<xsl:if test="/data/post-fields/email-field = item">
+													<xsl:attribute name="selected">selected</xsl:attribute>
+												</xsl:if>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:if test="/data/recipientgroups/entry/fields/email = item">
+													<xsl:attribute name="selected">selected</xsl:attribute>
+												</xsl:if>
+											</xsl:otherwise>
+											</xsl:choose>
 										<xsl:value-of select="item"/>
 									</option>
 								</xsl:for-each>
@@ -39,9 +48,18 @@
 								<optgroup label="{name}">
 									<xsl:for-each select="field/elements">
 										<option value="{item}">
-											<xsl:if test="/data/recipientgroups/entry/fields/name/fields/item = item">
-												<xsl:attribute name="selected">selected</xsl:attribute>
-											</xsl:if>
+											<xsl:choose>
+												<xsl:when test="/data/post-fields">
+													<xsl:if test="/data/post-fields/name-fields/item = item">
+														<xsl:attribute name="selected">selected</xsl:attribute>
+													</xsl:if>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:if test="/data/recipientgroups/entry/fields/name/fields/item = item">
+														<xsl:attribute name="selected">selected</xsl:attribute>
+													</xsl:if>
+												</xsl:otherwise>
+											</xsl:choose>
 											<xsl:value-of select="item"/>
 										</option>
 									</xsl:for-each>
