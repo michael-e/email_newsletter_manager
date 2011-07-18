@@ -57,6 +57,7 @@ Class RecipientSourceSection extends RecipientSource{
 			}
 			$name = trim($xsltproc->process($element->generate(), $this->nameXslt));
 			$return[] = array(
+				'id'	=> $entry->get('id'),
 				'email' => $email,
 				'name'	=> $name,
 				'valid' => preg_match($validators['email'], $email)?true:false

@@ -235,6 +235,7 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 		$this->setPageType('index');
 		$this->setTitle(__("Symphony - Newsletter Recipient Groups Preview"));
 		$groupManager = new RecipientgroupManager($this);
+		$sectionManager = new SectionManager($this);
 		try{
 			$source = $groupManager->create($this->_context[1]);
 		}
@@ -244,9 +245,11 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 		if($_GET['pg']){
 			$source->dsParamSTARTPAGE = (int)$_GET['pg'];
 		}
+		$source->dsParamLIMIT = 17;
 		$elements = $source->getSlice();
 		$recipients = new XMLElement('recipients');
 		General::array_to_xml($recipients, $source->about());
+		General::array_to_xml($recipients, array('source' => is_numeric($section = $source->getSource())?$sectionManager->fetch($source->getSource())->get('handle'):'system:'.$source->getSource()));
 		General::array_to_xml($recipients, $elements);
 		$context = new XMLElement('context');
 		General::array_to_xml($context, $this->_context);

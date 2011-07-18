@@ -13,11 +13,11 @@
 		<a href="{concat($root, '/symphony/extension/email_newsletter_manager/recipientgroups/edit/', /data/context/item[@index = 2])}" class="button">Edit Recipient Source</a>
 	</h2>
 	<form method="post" action="{$current-url}">
-		<table class="selectable">
+		<table>
 			<thead>
 				<tr>
 					<th scope="col">Name</th>
-					<th scope="col">Email</th>
+					<th scope="col">Email Adress</th>
 					<th scope="col">Valid</th>
 				</tr>
 			</thead>
@@ -79,7 +79,16 @@
 			</xsl:attribute>
 		</xsl:if>
 		<td>
-			<xsl:value-of select="name"/>
+			<xsl:choose>
+				<xsl:when test="source = 'system:authors'">
+					<a href="{concat($root, '/symphony/system/authors/edit/', id)}"><xsl:value-of select="name" /></a>
+				</xsl:when>
+				<xsl:when test="source = 'system:static_recipients'"><xsl:value-of select="name" /></xsl:when>
+				<xsl:otherwise>
+					<a href="{concat($root, '/symphony/publish/', ../source, '/edit/', id)}"><xsl:value-of select="name" /></a>
+				</xsl:otherwise>
+			</xsl:choose>
+			
 		</td>
 		<td>
 			<xsl:value-of select="email"/>
