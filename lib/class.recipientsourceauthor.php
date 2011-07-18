@@ -22,7 +22,7 @@ Class RecipientSourceAuthor extends RecipientSource{
 		$return['remaining-pages'] = max(0, (int)$return['total-pages'] - (int)$this->dsParamSTARTPAGE);
 		$return['remaining-entries'] = max(0, ((int)$return['total-entries'] - ((int)$this->dsParamSTARTPAGE * (int)$this->dsParamLIMIT)));
 		$return['entries-per-page'] = $this->dsParamLIMIT;
-		$return['start'] = (((int)$this->dsParamSTARTPAGE - 1) * (int)$this->dsParamLIMIT);
+		$return['start'] = (((int)$this->dsParamSTARTPAGE - 1) * (int)$this->dsParamLIMIT) + 1;
 		$return['current-page'] = (int)$this->dsParamSTARTPAGE;
 		
 		require_once(TOOLKIT . '/util.validators.php');

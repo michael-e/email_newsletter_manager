@@ -26,13 +26,13 @@ Class RecipientSourceSection extends RecipientSource{
 	 */
 	public function getSlice(){
 		$entries = $this->grab();
-		$return['total-entries'] = $entries['total-entries'];
-		$return['total-pages'] = $entries['total-pages'];
-		$return['remaining-pages'] = $entries['remaining-pages'];
-		$return['remaining-entries'] = $entries['remaining-entries'];
-		$return['entries-per-page'] = $entries['limit'];
-		$return['start'] = $entries['start'];
-		$return['current-page'] = $this->dsParamSTARTPAGE;
+		$return['total-entries'] = (string)$entries['total-entries'];
+		$return['total-pages'] = (string)$entries['total-pages'];
+		$return['remaining-pages'] = (string)$entries['remaining-pages'];
+		$return['remaining-entries'] = (string)$entries['remaining-entries'];
+		$return['entries-per-page'] = (string)$entries['limit'];
+		$return['start'] = (string)$entries['start'];
+		$return['current-page'] = (string)$this->dsParamSTARTPAGE;
 		$field_ids = array();
 		$entryManager = new EntryManager($this->_Parent);
 		$xsltproc = new XsltProcess();

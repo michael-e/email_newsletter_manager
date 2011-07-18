@@ -189,6 +189,10 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 					$entry->appendChild($filters);
 				}
 
+				if($properties['source'] == 'static_recipients'){
+					$entry->appendChild(new XMLElement('static_recipients', '<![CDATA[' . $group->recipients . ']]>'));
+				}
+
 				$recipientgroups->appendChild($entry);
 				$this->_XML->appendChild($recipientgroups);
 			}

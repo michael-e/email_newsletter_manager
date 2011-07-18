@@ -182,15 +182,20 @@ Class RecipientgroupManager extends Manager{
 			}
 		}
 
+		// Section and Author sources
 		$template = str_replace('<!-- CLASS NAME -->' , self::__getClassName(Lang::createHandle($data['name'], 255, '_')), $template);
 		$template = str_replace('<!-- NAME -->' , addcslashes($data['name'], "'"), $template);
 		$template = str_replace('<!-- HANDLE -->' , Lang::createHandle($data['name'], 255, '_'), $template);
 		$template = str_replace('<!-- SOURCE -->' , addcslashes($data['source'], "'"), $template);
 		$template = str_replace('<!-- FILTERS -->' , var_export($filters, true), $template);
-		$template = str_replace('<!-- REQUIRED_PARAM -->' , addcslashes($data['required_url_param'], "'"), $template);
+
+		// Section Source
 		$template = str_replace('<!-- NAME_FIELDS -->' , var_export((array)$data['name-fields'], true), $template);
 		$template = str_replace('<!-- EMAIL_FIELD -->' , addcslashes($data['email-field'], "'"), $template);
 		$template = str_replace('<!-- NAME_XSLT -->' , addcslashes($data['name-xslt'], "'"), $template);
+
+		// Static Recipients
+		$template = str_replace('<!-- STATIC_RECIPIENTS -->' , var_export((string)$data['static_recipients'], true), $template);
 
 		return $template;
 	}

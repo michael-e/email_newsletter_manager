@@ -56,7 +56,14 @@ class extension_email_newsletter_manager extends extension{
 	public function install(){
 		$etm = Symphony::ExtensionManager()->getInstance('email_template_manager');
 		if($etm instanceof Extension){
-			return true;
+			try{
+				if(mkdir(WORKSPACE . '/email-newsletters')){
+					return true;
+				}
+			}
+			catch(Exception $e){
+				throw new Exception(__('Failed to create newsletters directory:') . ' ' . $e->getMessage());
+			}
 		}
 		else{
 			throw new Exception(__('The Email Template Manager is required for this extension to work.'));
