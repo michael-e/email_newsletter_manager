@@ -38,20 +38,67 @@
 						<optgroup label="Sections">
 							<xsl:for-each select="/data/sections/entry">
 								<option value="{id}">
-									<xsl:if test="/data/recipientgroups/entry/source = current()/id">
-										<xsl:attribute name="selected">
-											<xsl:text>selected</xsl:text>
-										</xsl:attribute>
-									</xsl:if>
+									<xsl:choose>
+										<xsl:when test="/data/post-fields/source">
+											<xsl:if test="/data/post-fields/source = current()/id">
+												<xsl:attribute name="selected">
+													<xsl:text>selected</xsl:text>
+												</xsl:attribute>
+											</xsl:if>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:if test="/data/recipientgroups/entry/source = current()/id">
+												<xsl:attribute name="selected">
+													<xsl:text>selected</xsl:text>
+												</xsl:attribute>
+											</xsl:if>
+										</xsl:otherwise>
+									</xsl:choose>
 									<xsl:value-of select="name"/>
 								</option>
 							</xsl:for-each>
 						</optgroup>
 						<optgroup label="System">
-							<option value="authors">Authors</option>
+							<option value="authors">
+								<xsl:choose>
+									<xsl:when test="/data/post-fields/source">
+										<xsl:if test="/data/post-fields/source = 'authors'">
+											<xsl:attribute name="selected">
+												<xsl:text>selected</xsl:text>
+											</xsl:attribute>
+										</xsl:if>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:if test="/data/recipientgroups/entry/source = 'authors'">
+											<xsl:attribute name="selected">
+												<xsl:text>selected</xsl:text>
+											</xsl:attribute>
+										</xsl:if>
+									</xsl:otherwise>
+								</xsl:choose>
+								Authors
+							</option>
 						</optgroup>
 						<optgroup label="Static">
-							<option value="static_recipients">Static Recipients</option>
+							<option value="static_recipients">
+								<xsl:choose>
+									<xsl:when test="/data/post-fields/source">
+										<xsl:if test="/data/post-fields/source = 'static_recipients'">
+											<xsl:attribute name="selected">
+												<xsl:text>selected</xsl:text>
+											</xsl:attribute>
+										</xsl:if>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:if test="/data/recipientgroups/entry/source = 'static_recipients'">
+											<xsl:attribute name="selected">
+												<xsl:text>selected</xsl:text>
+											</xsl:attribute>
+										</xsl:if>
+									</xsl:otherwise>
+								</xsl:choose>
+								Static Recipients
+							</option>
 						</optgroup>
 					</select>
 				</label>
