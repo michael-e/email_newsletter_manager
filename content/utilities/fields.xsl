@@ -62,7 +62,7 @@
 						<textarea class="code" name="fields[name-xslt]" rows="11">
 							<xsl:variable name="name-xslt">
 								<xsl:choose>
-									<xsl:when test="/data/context/item[@index=1] = 'new'">
+									<xsl:when test="/data/context/item[@index=1] = 'new' or (not(/data/post-fields/name-xslt) and not(/data/recipientgroups/entry/fields/name/xslt))">
 <xsl:text><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">

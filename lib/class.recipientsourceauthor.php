@@ -71,14 +71,14 @@ Class RecipientSourceAuthor extends RecipientSource{
 				if(!is_array($value) && trim($value) == ''){
 					continue;
 				}
-				if(!is_array($filter)){
-					$bits = preg_split('/,\s*/', $filter, -1, PREG_SPLIT_NO_EMPTY);
+				if(!is_array($value)){
+					$bits = preg_split('/,\s*/', $value, -1, PREG_SPLIT_NO_EMPTY);
 					$bits = array_map('trim', $bits);
 				}
 				else{
-					$bits = $filter;
+					$bits = $value;
 				}
-				$where[] = $field."` IN ('".implode("', '", $bits)."')";
+				$where[] = "`".$field."` IN ('".implode("', '", $bits)."')";
 			}
 		}
 		if(!empty($where)){

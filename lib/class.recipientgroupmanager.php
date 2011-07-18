@@ -161,7 +161,15 @@ Class RecipientgroupManager extends Manager{
 	}
 
 	protected function _parseTemplate($data){
-		$template = file_get_contents(ENMDIR . '/content/templates/tpl/recipientSourceSection.tpl');
+		if(is_numeric($data['source'])){
+			$template = file_get_contents(ENMDIR . '/content/templates/tpl/recipientSourceSection.tpl');
+		}
+		elseif($data['source'] == 'authors'){
+			$template = file_get_contents(ENMDIR . '/content/templates/tpl/recipientSourceAuthor.tpl');
+		}
+		elseif($data['source'] == 'static_recipients'){
+			$template = file_get_contents(ENMDIR . '/content/templates/tpl/recipientSourceStatic.tpl');
+		}
 
 		// flatten the duplicator array
 		$filters = array();
