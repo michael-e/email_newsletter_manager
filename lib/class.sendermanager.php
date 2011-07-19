@@ -167,7 +167,7 @@ Class SenderManager extends Manager{
 		$template = str_replace('<!-- REPLY_TO_NAME -->' , addcslashes($data['reply-to-name'], "'"), $template);
 		$template = str_replace('<!-- REPLY_TO_EMAIL -->' , addcslashes($data['reply-to-email'], "'"), $template);	
 		$template = str_replace('<!-- GATEWAY_SETTINGS -->' , '\''.$data['gateway'] . '\' => ' . var_export($data['email_' . $data['gateway']], true), $template);	
-		$template = str_replace('<!-- ADDITIONAL_HEADERS -->' , var_export(array(), true), $template);	
+		$template = str_replace('<!-- ADDITIONAL_HEADERS -->' , var_export($data['additional_headers'], true), $template);	
 		$template = str_replace('<!-- THROTTLE_EMAILS -->' , (int)addcslashes($data['throttle-emails'], "'"), $template);	
 		$template = str_replace('<!-- THROTTLE_TIME -->' , (int)addcslashes($data['throttle-time'], "'"), $template);	
 

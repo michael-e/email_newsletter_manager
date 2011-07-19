@@ -130,6 +130,7 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 		$senderManager = new SenderManager($this->_Parent);
 		try{
 			$result = $senderManager->create($this->_context[1]);
+			$fields['additional_headers'] = $result->additional_headers;
 		}
 		catch(Exception $e){
 		}
