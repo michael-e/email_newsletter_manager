@@ -17,9 +17,6 @@
 			<thead>
 				<tr>
 					<th scope="col">Name</th>
-					<th scope="col">Email</th>
-					<th scope="col">Reply-To Name</th>
-					<th scope="col">Reply-To Email Address</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -48,33 +45,8 @@
 <xsl:template match="senders/entry">
 	<tr>
 		<td>
-			<a href="{concat($root, '/symphony/extension/email_newsletter_manager/senders/edit/', id)}"><xsl:value-of select="name"/></a>
+			<a href="{concat($root, '/symphony/extension/email_newsletter_manager/senders/edit/', handle)}"><xsl:value-of select="name"/></a>
 			<input name="items[{id}]" type="checkbox" />
-		</td>
-		<td>
-			<xsl:value-of select="email"/>
-		</td>
-		<td>
-			<xsl:if test="/data/senders/entry/reply-to-name">
-				<xsl:value-of select="reply-to-name"/>
-			</xsl:if>
-			<xsl:if test="not(/data/senders/entry/reply-to-name)">
-				<xsl:attribute name="class">
-					<xsl:text>inactive</xsl:text>
-				</xsl:attribute>
-				<xsl:text>Use Default</xsl:text>
-			</xsl:if>
-		</td>
-		<td>
-			<xsl:if test="/data/senders/entry/reply-to-email">
-				<xsl:value-of select="reply-to-email"/>
-			</xsl:if>
-			<xsl:if test="not(/data/senders/entry/reply-to-email)">
-				<xsl:attribute name="class">
-					<xsl:text>inactive</xsl:text>
-				</xsl:attribute>
-				<xsl:text>Use Default</xsl:text>
-			</xsl:if>
 		</td>
 	</tr>
 </xsl:template>

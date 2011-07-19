@@ -8,6 +8,8 @@ if(!class_exists('ExtensionPage')){
 }
 
 require_once(TOOLKIT . '/class.xsltprocess.php');
+require_once(TOOLKIT . '/class.emailgatewaymanager.php');
+require_once(ENMDIR . '/lib/class.sendermanager.php');
 
 Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 	
@@ -28,7 +30,8 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 	function __viewIndex(){
 		$this->setPageType('index');
 		$this->setTitle(__("Symphony - Email Senders"));
-		$results = Symphony::Database()->fetch('SELECT * from `tbl_email_newsletter_manager_senders` ORDER BY name ASC');
+		$senderManager = new SenderManager($this->_Parent);
+		$results = $senderManager->listAll();
 		$senders = new XMLElement('senders');
 		foreach($results as $result){
 			$entry = new XMLElement('entry');
@@ -44,9 +47,9 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 		$this->__viewEdit(true);
 	}
 
-	function __viewEdit(){
+	function __viewEdit($new = false){
 		$this->setPageType('form');
-
+		$senderManager = new SenderManager($this->_Parent);
 		if($this->_context[2] == 'saved' || $this->_context[3] == 'saved'){
 			$this->pageAlert(
 				__(
@@ -61,11 +64,55 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 			);
 		}
 
-		$result = Symphony::Database()->fetch('SELECT * from `tbl_email_newsletter_manager_senders` WHERE id = "' . Symphony::Database()->cleanValue($this->_context[1]) . '"');
 		$senders = new XMLElement('senders');
-		$entry = new XMLElement('entry');
-		General::array_to_xml($entry, (array)$result[0]);
-		$senders->appendChild($entry);
+
+		if(!$new){
+			$sender = $senderManager->create($this->_context[1]);
+			
+			// Make sure the POSTED values are always shown when present.
+			// This will make sure the form is always up-to-date, even where there are errors.
+			if(!empty($_POST['fields']) && !empty($_POST['settings'])){
+				$posted_array = $_POST['fields'];
+				$posted_array[$_POST['settings']['gateway']] = $_POST['settings']['email_' . $_POST['settings']['gateway']];
+			}
+			$about = (empty($_POST['fields']) && empty($_POST['settings']))?(array)$sender->about():$posted_array;
+			$about['handle'] = Lang::createHandle($about['name']);
+			$entry = new XMLElement('entry');
+			General::array_to_xml($entry, $about);
+			$senders->appendChild($entry);
+		}
+		
+		$el_gateways = new XMLElement('gateways');
+		$emailGatewayManager = new EmailGatewayManager($this->_Parent);
+		$gateways = $emailGatewayManager->listAll();
+		foreach($gateways as $gateway){
+			// to be removed in later versions. Right now only smtp and sendmail are supported.
+			if(in_array($gateway['handle'], array('smtp', 'sendmail'))){
+				$gw = $emailGatewayManager->create($gateway['handle']);
+				if(!empty($about[$gateway['handle']])){
+					$config = $about[$gateway['handle']];
+					if($gateway['handle'] == 'smtp'){
+						$gw->setFrom($config['from_address'], $config['from_name']);
+						$gw->setHost($config['host']);
+						$gw->setPort($config['port']);
+						$gw->setAuth($config['auth']);
+						$gw->setUser($config['username']);
+						$gw->setPass($config['password']);
+					}
+					if($gateway['handle'] == 'sendmail'){
+						$gw->setFrom($config['from-email'], $config['from-name']);
+					}
+				}
+				$entry = new XMLElement('entry');
+				General::array_to_xml($entry, $gateway);
+				$config_panel = new XMLElement('config_panel');
+				$config_panel->appendChild($gw->getPreferencesPane());
+				$entry->appendChild($config_panel);
+				$el_gateways->appendChild($entry);
+			}
+		}
+		$senders->appendChild($el_gateways);
+		
 		$this->_XML->appendChild($senders);
 	}
 
@@ -78,16 +125,21 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 	}
 
 	function __actionEdit($new = false){
-		$fields = $_POST['fields'];
+		$fields = array_merge($_POST['fields'], $_POST['settings']);
 
-		$result = Symphony::Database()->fetch('SELECT id FROM `tbl_email_newsletter_manager_senders` where id = "' . Symphony::Database()->cleanValue($this->_context[1]) . '"');
+		$senderManager = new SenderManager($this->_Parent);
+		try{
+			$result = $senderManager->create($this->_context[1]);
+		}
+		catch(Exception $e){
+		}
 		if(empty($result) && !$new){
 			redirect(SYMPHONY_URL . '/extension/email_newsletter_manager/senders/');
 			return false;
 		}
 
 		if(isset($_POST['action']['delete'])){
-			if(Symphony::Database()->query('DELETE FROM `tbl_email_newsletter_manager_senders` where `id` = "' . Symphony::Database()->cleanValue($this->_context[1]) . '" LIMIT 1')){
+			if($senderManager->delete($this->_context[1])){
 				redirect(SYMPHONY_URL . '/extension/email_newsletter_manager/senders/');
 				return;
 			}
@@ -102,25 +154,12 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 
 		$errors = new XMLElement('errors');
 		require_once(TOOLKIT . '/util.validators.php');
-		if(!empty($fields['name']) && !empty($fields['email']) && General::validateString($fields['email'], $validators['email'])){
-			unset($fields['id']);
-			if(!$new){
-				Symphony::Database()->update($fields, 'tbl_email_newsletter_manager_senders', 'id = "' . Symphony::Database()->cleanValue($this->_context[1]) . '"');
-			}
-			else{
-				Symphony::Database()->insert($fields, 'tbl_email_newsletter_manager_senders', false);
-				$this->_context[1] = Symphony::Database()->getInsertId();
-			}
-			redirect(SYMPHONY_URL . '/extension/email_newsletter_manager/senders/edit/' . Symphony::Database()->cleanValue($this->_context[1]) . '/saved');
+		if(!empty($fields['name'])){
+			$senderManager->save($this->_context[1], $fields);
+			redirect(SYMPHONY_URL . '/extension/email_newsletter_manager/senders/edit/' . Lang::createHandle($fields['name']) . '/saved');
 		}
 		if(empty($fields['name'])){
 			$errors->appendChild(new XMLElement('name', __('This field can not be empty.')));
-		}
-		if(empty($fields['email'])){
-			$errors->appendChild(new XMLElement('email', __('This field can not be empty.')));
-		}
-		if(!General::validateString($fields['email'], $validators['email'])){
-			$errors->appendChild(new XMLElement('email', __('This is not a valid email address.')));
 		}
 		$this->_XML->appendChild($errors);
 	}

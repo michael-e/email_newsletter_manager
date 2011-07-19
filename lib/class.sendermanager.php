@@ -47,19 +47,13 @@ Class SenderManager extends Manager{
 					$classname = $this->__getClassName($f);
 					$path = $this->__getDriverPath($f);
 
-					$can_parse = false;
-					$type = null;
+					$can_parse = true;
 
 					if(method_exists($classname,'allowEditorToParse')) {
 						$can_parse = call_user_func(array($classname, 'allowEditorToParse'));
 					}
 
-					if(method_exists($classname,'getSource')) {
-						$type = call_user_func(array($classname, 'getSource'));
-					}
-
 					$about['can_parse'] = $can_parse;
-					$about['type'] = $type;
 					$result[$f] = $about;
 				}
 			}
@@ -92,20 +86,6 @@ Class SenderManager extends Manager{
 	}
 
 	public function &create($handle){
-		$env =  array(
-			'today' => DateTimeObj::get('Y-m-d'),
-			'current-time' => DateTimeObj::get('H:i'),
-			'this-year' => DateTimeObj::get('Y'),
-			'this-month' => DateTimeObj::get('m'),
-			'this-day' => DateTimeObj::get('d'),
-			'timezone' => DateTimeObj::get('P'),
-			'website-name' => Symphony::Configuration()->get('sitename', 'general'),
-			'root' => URL,
-			'workspace' => URL . '/workspace',
-			'upload-limit' => min($upload_size_php, $upload_size_sym),
-			'symphony-version' => Symphony::Configuration()->get('version', 'symphony'),
-		);
-
 		$classname = $this->__getClassName($handle);
 		$path = $this->__getDriverPath($handle);
 
@@ -120,7 +100,15 @@ Class SenderManager extends Manager{
 
 		if(!class_exists($classname)) require_once($path);
 
-		return new $classname($this->_Parent, $env, $process_params);
+		if(class_exists($classname)){
+			return new $classname($this->_Parent);
+		}
+		throw new Exception(
+			__(
+				'The Newsletter Sender <code>%s</code> has an invalid format. Please check the documentation for details on class names.',
+				array($handle)
+			)
+		);
 
 	}
 
@@ -176,13 +164,12 @@ Class SenderManager extends Manager{
 
 		$template = str_replace('<!-- CLASS NAME -->' , self::__getClassName(Lang::createHandle($data['name'], 255, '_')), $template);
 		$template = str_replace('<!-- NAME -->' , addcslashes($data['name'], "'"), $template);
-		$template = str_replace('<!-- HANDLE -->' , Lang::createHandle($data['name'], 255, '_'), $template);
-		$template = str_replace('<!-- SOURCE -->' , addcslashes($data['source'], "'"), $template);
-		$template = str_replace('<!-- FILTERS -->' , var_export($filters, true), $template);
-		$template = str_replace('<!-- REQUIRED_PARAM -->' , addcslashes($data['required_url_param'], "'"), $template);
-		$template = str_replace('<!-- NAME_FIELDS -->' , var_export((array)$data['name-fields'], true), $template);
-		$template = str_replace('<!-- EMAIL_FIELD -->' , addcslashes($data['email-field'], "'"), $template);
-		$template = str_replace('<!-- NAME_XSLT -->' , addcslashes($data['name-xslt'], "'"), $template);
+		$template = str_replace('<!-- REPLY_TO_NAME -->' , addcslashes($data['reply-to-name'], "'"), $template);
+		$template = str_replace('<!-- REPLY_TO_EMAIL -->' , addcslashes($data['reply-to-email'], "'"), $template);	
+		$template = str_replace('<!-- GATEWAY_SETTINGS -->' , '\''.$data['gateway'] . '\' => ' . var_export($data['email_' . $data['gateway']], true), $template);	
+		$template = str_replace('<!-- ADDITIONAL_HEADERS -->' , var_export(array(), true), $template);	
+		$template = str_replace('<!-- THROTTLE_EMAILS -->' , (int)addcslashes($data['throttle-emails'], "'"), $template);	
+		$template = str_replace('<!-- THROTTLE_TIME -->' , (int)addcslashes($data['throttle-time'], "'"), $template);	
 
 		return $template;
 	}

@@ -14,7 +14,7 @@
 	<form method="post">
 		<fieldset class="settings">
 			<legend>Sender Properties</legend>
-			<div class="group">
+			<div>
 				<div>
 					<xsl:if test="/data/errors/name">
 						<xsl:attribute name="class">
@@ -38,30 +38,30 @@
 						<p><xsl:value-of select="/data/errors/name"/></p>
 					</xsl:if>
 				</div>
-				<div>
-					<xsl:if test="/data/errors/email">
-						<xsl:attribute name="class">
-							<xsl:text>invalid</xsl:text>
-						</xsl:attribute>
-					</xsl:if>
-					<label>
-						<xsl:text>Email</xsl:text>
-						<input type="text" name="fields[email]">
-							<xsl:attribute name="value">
-								<xsl:if test="/data/fields">
-									<xsl:value-of select="/data/fields/email"/>
-								</xsl:if>
-								<xsl:if test="not(/data/fields) and /data/senders/entry/email">
-									<xsl:value-of select="/data/senders/entry/email"/>
-								</xsl:if>
-							</xsl:attribute>
-						</input>
-					</label>
-					<xsl:if test="/data/errors/email">
-						<p><xsl:value-of select="/data/errors/email"/></p>
-					</xsl:if>
-				</div>
 			</div>
+		</fieldset>
+		<fieldset class="settings picker">
+			<legend>Email Gateway</legend>
+			<label>
+				<select name="settings[gateway]">
+					<xsl:for-each select="/data/senders/gateways/entry">
+						<option value="{handle}">
+							<xsl:if test="/data/senders/entry/*[name() = current()/handle]">
+								<xsl:attribute name="selected">
+									<xsl:text>selected</xsl:text>
+								</xsl:attribute>
+							</xsl:if>
+							<xsl:value-of select="name"/>
+						</option>
+					</xsl:for-each>
+				</select>
+			</label>
+		</fieldset>
+		<xsl:for-each select="/data/senders/gateways/entry">
+			<xsl:copy-of select="config_panel/node()" />
+		</xsl:for-each>
+		<fieldset class="settings">
+			<legend>Advanced Settings</legend>
 			<div class="group">
 				<div>
 					<label>
@@ -78,7 +78,6 @@
 							</xsl:attribute>
 						</input>
 					</label>
-					<p class="help">If Reply-To Name or Reply-To Email is left empty, the defaults from the preferences page will be used.</p>
 				</div>
 				<div>
 					<label>
@@ -95,6 +94,48 @@
 							</xsl:attribute>
 						</input>
 					</label>
+				</div>
+			</div>
+			<div class="group">
+				<div>
+					<label>
+						<xsl:text>Emails per batch</xsl:text>
+						<i>optional</i>
+						<input type="text" name="fields[throttle-emails]">
+							<xsl:attribute name="value">
+								<xsl:if test="/data/fields">
+									<xsl:value-of select="/data/fields/throttle-emails"/>
+								</xsl:if>
+								<xsl:if test="not(/data/fields) and /data/senders/entry/throttle-emails">
+									<xsl:value-of select="/data/senders/entry/throttle-emails"/>
+								</xsl:if>
+								<xsl:if test="not(/data/fields) and not(/data/senders/entry/throttle-emails)">
+									<xsl:text>10</xsl:text>
+								</xsl:if>
+							</xsl:attribute>
+						</input>
+					</label>
+					<p class="help">The amount of emails the system should send per batch. A value of 10 or lower is recommended.</p>
+				</div>
+				<div>
+					<label>
+						<xsl:text>Time per batch</xsl:text>
+						<i>optional</i>
+						<input type="text" name="fields[throttle-time]">
+							<xsl:attribute name="value">
+								<xsl:if test="/data/fields">
+									<xsl:value-of select="/data/fields/throttle-time"/>
+								</xsl:if>
+								<xsl:if test="not(/data/fields) and /data/senders/entry/throttle-time">
+									<xsl:value-of select="/data/senders/entry/throttle-time"/>
+								</xsl:if>
+								<xsl:if test="not(/data/fields) and not(/data/senders/entry/throttle-time)">
+									<xsl:text>10</xsl:text>
+								</xsl:if>
+							</xsl:attribute>
+						</input>
+					</label>
+					<p class="help">The time reserved for each batch. Do not(!) set this value higher than the timeout value of php.</p>
 				</div>
 			</div>
 		</fieldset>
