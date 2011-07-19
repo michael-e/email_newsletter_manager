@@ -10,7 +10,7 @@
 			<label>Recipients
 				<textarea class="code" name="fields[static_recipients]" rows="12" cols="50">
 					<xsl:choose>
-						<xsl:when test="not(/data/recipientgroups/entry/static_recipients = '')">
+						<xsl:when test="/data/recipientgroups/entry/static_recipients and not(/data/recipientgroups/entry/static_recipients = '')">
 							<xsl:value-of select="/data/recipientgroups/entry/static_recipients" />
 						</xsl:when>
 						<xsl:otherwise>
