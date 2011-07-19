@@ -57,8 +57,8 @@ Class RecipientSourceStatic extends RecipientSource{
 	
 	protected function _parseNameAndEmail($string){
 		$string = trim($string);
-		$name = trim(strstr($string, '<', true), '" \t\n\r\0\x0B');
-		$email = trim(strstr($string, '<'), '<> \t\n\r\0\x0B');
+		$name = trim(strstr($string, '<', true), "\" \t\n\r\0\x0B");
+		$email = trim(strstr($string, '<'), "<> \t\n\r\0\x0B");
 		return array(
 			'name'	=> $name,
 			'email' => $email,
