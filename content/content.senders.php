@@ -100,7 +100,7 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 						$gw->setPass($config['password']);
 					}
 					if($gateway['handle'] == 'sendmail'){
-						$gw->setFrom($config['from-email'], $config['from-name']);
+						$gw->setFrom($config['from_address'], $config['from_name']);
 					}
 				}
 				$entry = new XMLElement('entry');
