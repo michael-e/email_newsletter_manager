@@ -76,7 +76,7 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 				$posted_array[$_POST['settings']['gateway']] = $_POST['settings']['email_' . $_POST['settings']['gateway']];
 			}
 			$about = (empty($_POST['fields']) && empty($_POST['settings']))?(array)$sender->about():$posted_array;
-			$about['handle'] = Lang::createHandle($about['name']);
+			$about['handle'] = Lang::createHandle($about['name'], 225, '_');
 			$entry = new XMLElement('entry');
 			General::array_to_xml($entry, $about);
 			$senders->appendChild($entry);
@@ -157,7 +157,7 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 		require_once(TOOLKIT . '/util.validators.php');
 		if(!empty($fields['name'])){
 			$senderManager->save($this->_context[1], $fields);
-			redirect(SYMPHONY_URL . '/extension/email_newsletter_manager/senders/edit/' . Lang::createHandle($fields['name']) . '/saved');
+			redirect(SYMPHONY_URL . '/extension/email_newsletter_manager/senders/edit/' . Lang::createHandle($fields['name'], 225, '_') . '/saved');
 		}
 		if(empty($fields['name'])){
 			$errors->appendChild(new XMLElement('name', __('This field can not be empty.')));
