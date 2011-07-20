@@ -17,6 +17,8 @@
 			<thead>
 				<tr>
 					<th scope="col">Name</th>
+					<th scope="col">From Name</th>
+					<th scope="col">From Email</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -47,6 +49,12 @@
 		<td>
 			<a href="{concat($root, '/symphony/extension/email_newsletter_manager/senders/edit/', handle)}"><xsl:value-of select="name"/></a>
 			<input name="items[{id}]" type="checkbox" />
+		</td>
+		<td>
+			<xsl:value-of select="current()//from-name"/>
+		</td>
+		<td>
+			<xsl:value-of select="current()//from-address"/>
 		</td>
 	</tr>
 </xsl:template>
