@@ -24,8 +24,8 @@ Class RecipientSourceSection extends RecipientSource{
 	 * @todo bugtesting and error handling
 	 * @return array
 	 */
-	public function getSlice(){
-		$entries = $this->grab();
+	public function getSlice($newsletter_id = 10){
+		$entries = $this->grab($newsletter_id);
 		$return['total-entries'] = (string)$entries['total-entries'];
 		$return['total-pages'] = (string)$entries['total-pages'];
 		$return['remaining-pages'] = (string)$entries['remaining-pages'];
@@ -78,13 +78,14 @@ Class RecipientSourceSection extends RecipientSource{
 	 * @todo bugtesting and error handling
 	 * @return array
 	 */
-	public function grab(){
-		$where_and_joins = $this->getWhereAndJoins();
+	public function grab($newsletter_id = NULL){
+		$where_and_joins = $this->getWhereJoinsAndGroup();
 		$entryManager = new EntryManager($this->_Parent);
+		
 		$entries = $entryManager->fetchByPage(
-			($this->dsParamPAGINATERESULTS == 'yes' && $this->dsParamSTARTPAGE > 0 ? $this->dsParamSTARTPAGE : 1),
+			($this->dsParamSTARTPAGE > 0 ? $this->dsParamSTARTPAGE : 1),
 			$this->getSource(),
-			($this->dsParamPAGINATERESULTS == 'yes' && $this->dsParamLIMIT >= 0 ? $this->dsParamLIMIT : NULL),
+			($this->dsParamLIMIT >= 0 ? $this->dsParamLIMIT : NULL),
 			$where_and_joins['where'],
 			$where_and_joins['joins'],
 			false,
@@ -102,8 +103,13 @@ Class RecipientSourceSection extends RecipientSource{
 	 */
 	public function getCount(){
 		$entryManager = new EntryManager($this->_Parent);
-		$where_and_joins = $this->getWhereAndJoins();
+		$where_and_joins = $this->getWhereJoinsAndGroup();
+		// I want the total count, not the remaining count, so I do not want the additional joins.
+		$newsletter_id = $this->newsletter_id;
+		$this->newsletter_id = null;
 		$count = $entryManager->fetchCount($this->getSource(), $where_and_joins['where'], $where_and_joins['joins']);
+		// Saving the newsletter back, so nobody will ever notice this hack.
+		$this->newsletter_id = $newsletter_id;
 		return $count;
 	}
 
@@ -116,7 +122,7 @@ Class RecipientSourceSection extends RecipientSource{
 	 *
 	 * @return array
 	 */
-	public function getWhereAndJoins(){
+	public function getWhereJoinsAndGroup(){
 		$where = null;
 		$joins = null;
 		$entryManager = new EntryManager($this->_Parent);
@@ -167,8 +173,19 @@ Class RecipientSourceSection extends RecipientSource{
 				}
 			}
 		}
+		$joins .= 'LEFT JOIN (
+				SELECT `d`.`entry_id` , `d`.value
+				FROM tbl_entries_data_2 AS `d`';
+
+		if($this->newsletter_id !== NULL){
+			$joins .= 'LEFT OUTER JOIN tbl_email_newsletters_sent_'.$this->newsletter_id.' AS `n` ON `d`.`value` = `n`.`email`
+						WHERE `n`.`email` IS NULL ORDER BY `d`.`entry_id` DESC'.($this->dsParamSTARTPAGE > 0 ? '  LIMIT ' . $this->dsParamSTARTPAGE * $this->dsParamLIMIT * 2:'');
+		}
+		
+		$joins .= ') AS `f` ON `e`.`id` = `f`.`entry_id`';
+
 		return array(
-			'where' => $where,
+			'where' => $where . 'AND `f`.`value` IS NOT NULL GROUP BY `f`.`value`',
 			'joins'	=> $joins
 		);
 	}

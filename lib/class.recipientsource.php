@@ -4,22 +4,15 @@ require_once(TOOLKIT . '/class.datasource.php');
 
 Class RecipientSource extends DataSource{
 
-	// custom field -> static recipients
-	// public $recipientList = null;
+	// Used to filter out addresses that have been sent to already.
+	public $newsletter_id;
 
-	// fields taken from datasource. Overwrite these in your group file.
-	public $dsParamREQUIREDPARAM;
+	// Fields taken from datasource. Overwrite these in your group file.
 	public $dsParamFILTERS;
-	public $dsParamROOTELEMENT;
-
-	// fields taken from datasources. Do not change these.
 	public $dsParamLIMIT = '10';
 	public $dsParamSTARTPAGE = '1';
-	public $dsParamREDIRECTONEMPTY = 'no';
-	public $dsParamORDER = 'desc';
-	public $dsParamSORT = 'id';
 	
-	// properties.
+	// Properties.
 	protected $_count = null;
 	protected $_param_pool = array();
 	protected $_XSLTProc;

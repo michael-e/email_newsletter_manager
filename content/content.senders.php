@@ -10,6 +10,7 @@ if(!class_exists('ExtensionPage')){
 require_once(TOOLKIT . '/class.xsltprocess.php');
 require_once(TOOLKIT . '/class.emailgatewaymanager.php');
 require_once(ENMDIR . '/lib/class.sendermanager.php');
+require_once(ENMDIR . '/lib/class.emailnewslettermanager.php');
 
 Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 	
@@ -28,6 +29,9 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 	}
 
 	function __viewIndex(){
+		$enmanager = new EmailNewsletterManager($this->_Parent);
+		var_dump($enmanager->create(10)->start());
+		die();
 		$this->setPageType('index');
 		$this->setTitle(__("Symphony - Email Senders"));
 		$senderManager = new SenderManager($this->_Parent);
@@ -119,7 +123,7 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 	function __actionIndex(){
 		if($_POST['with-selected'] == 'delete'){
 			foreach((array)$_POST['items'] as $item=>$status){
-				Symphony::Database()->query('DELETE FROM `tbl_email_newsletter_manager_senders` where `id` = "' . Symphony::Database()->cleanValue($item) . '" LIMIT 1');
+				$senderManager->delete($item);
 			}
 		}
 	}
