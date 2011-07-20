@@ -29,9 +29,6 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 	}
 
 	function __viewIndex(){
-		$enmanager = new EmailNewsletterManager($this->_Parent);
-		var_dump($enmanager->create(10)->start());
-		die();
 		$this->setPageType('index');
 		$this->setTitle(__("Symphony - Email Senders"));
 		$senderManager = new SenderManager($this->_Parent);
