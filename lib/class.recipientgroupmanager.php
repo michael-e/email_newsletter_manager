@@ -6,7 +6,7 @@ if(!defined('ENMDIR')) define('ENMDIR', EXTENSIONS . "/email_newsletter_manager"
 Class RecipientgroupManager extends Manager{
 
 	public function __getHandleFromFilename($filename){
-		$result = sscanf($filename, 'group.%[^.].php');
+		$result = sscanf($filename, 'recipients.%[^.].php');
 		return $result[0];
 	}
 
@@ -15,13 +15,13 @@ Class RecipientgroupManager extends Manager{
 	}
 
 	public function __getClassPath($handle, $new = false){
-		if(is_file(WORKSPACE . "/email-newsletters/group.$handle.php") || $new == true) return WORKSPACE . '/email-newsletters';
+		if(is_file(WORKSPACE . "/email-newsletters/recipients.$handle.php") || $new == true) return WORKSPACE . '/email-newsletters';
 		else{
 			$extensions = Symphony::ExtensionManager()->listInstalledHandles();
 
 			if(is_array($extensions) && !empty($extensions)){
 				foreach($extensions as $e){
-					if(is_file(EXTENSIONS . "/$e/email-newsletters/group.$handle.php")) return EXTENSIONS . "/$e/email-newsletters";
+					if(is_file(EXTENSIONS . "/$e/email-newsletters/recipients.$handle.php")) return EXTENSIONS . "/$e/email-newsletters";
 				}
 			}
 		}
@@ -30,13 +30,13 @@ Class RecipientgroupManager extends Manager{
 	}
 
 	public function __getDriverPath($handle){
-		return self::__getClassPath($handle, true) . "/group.$handle.php";
+		return self::__getClassPath($handle, true) . "/recipients.$handle.php";
 	}
 
 	public function listAll(){
 		$result = array();
 
-		$structure = General::listStructure(WORKSPACE . '/email-newsletters', '/group.[\\w-]+.php/', false, 'ASC', WORKSPACE . '/email-newsletters');
+		$structure = General::listStructure(WORKSPACE . '/email-newsletters', '/recipients.[\\w-]+.php/', false, 'ASC', WORKSPACE . '/email-newsletters');
 
 		if(is_array($structure['filelist']) && !empty($structure['filelist'])){
 			foreach($structure['filelist'] as $f){
@@ -71,7 +71,7 @@ Class RecipientgroupManager extends Manager{
 			foreach($extensions as $e){
 				if(!is_dir(EXTENSIONS . "/$e/email-newsletters")) continue;
 
-				$tmp = General::listStructure(EXTENSIONS . "/$e/email-newsletters", '/group.[\\w-]+.php/', false, 'ASC', EXTENSIONS . "/$e/email-newsletters");
+				$tmp = General::listStructure(EXTENSIONS . "/$e/email-newsletters", '/recipients.[\\w-]+.php/', false, 'ASC', EXTENSIONS . "/$e/email-newsletters");
 
 				if(is_array($tmp['filelist']) && !empty($tmp['filelist'])){
 					foreach($tmp['filelist'] as $f){

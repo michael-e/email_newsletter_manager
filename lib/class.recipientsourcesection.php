@@ -57,7 +57,6 @@ Class RecipientSourceSection extends RecipientSource{
 					$email = $data['value'];
 				}
 			}
-			var_dump($element->generate());
 			$name = trim($xsltproc->process($element->generate(), $this->nameXslt));
 			$return[] = array(
 				'id'	=> $entry->get('id'),
