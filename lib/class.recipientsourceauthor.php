@@ -78,11 +78,8 @@ Class RecipientSourceAuthor extends RecipientSource{
 				else{
 					$bits = $value;
 				}
-				$wheres = "`".$field."` IN ('".implode("', '", $bits)."')";
+				$where .= "AND `".$field."` IN ('".implode("', '", $bits)."')";
 			}
-		}
-		if(!empty($wheres)){
-			$where = implode(' AND ', $wheres);
 		}
 		if(!is_null($this->newsletter_id)){
 			$joins .= ' LEFT OUTER JOIN `tbl_email_newsletters_sent_' . $this->newsletter_id . '` as `s` ON `s`.`email` = `a`.`email`';
