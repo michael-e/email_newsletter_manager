@@ -1,6 +1,8 @@
 <?php
 
 require_once('class.recipientsource.php');
+require_once(TOOLKIT . '/class.entrymanager.php');
+require_once(TOOLKIT . '/class.xsltprocess.php');
 
 Class RecipientSourceSection extends RecipientSource{
 	
@@ -37,9 +39,9 @@ Class RecipientSourceSection extends RecipientSource{
 		$entryManager = new EntryManager($this->_Parent);
 		$xsltproc = new XsltProcess();
 		foreach($this->nameFields as $nameField){
-			$field_ids[] = $entryManager->fieldManager->fetchFieldIDFromElementName($nameField);
+			$field_ids[] = $entryManager->fieldManager->fetchFieldIDFromElementName($nameField, $this->getSource());
 		}
-		$email_field_id = $entryManager->fieldManager->fetchFieldIDFromElementName($this->emailField);
+		$email_field_id = $entryManager->fieldManager->fetchFieldIDFromElementName($this->emailField, $this->getSource());
 		require_once(TOOLKIT . '/util.validators.php');
 		foreach((array)$entries['records'] as $entry){
 			$entry_data = $entry->getData();
@@ -55,6 +57,7 @@ Class RecipientSourceSection extends RecipientSource{
 					$email = $data['value'];
 				}
 			}
+			var_dump($element->generate());
 			$name = trim($xsltproc->process($element->generate(), $this->nameXslt));
 			$return[] = array(
 				'id'	=> $entry->get('id'),
