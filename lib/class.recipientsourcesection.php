@@ -102,12 +102,17 @@ Class RecipientSourceSection extends RecipientSource{
 	 * @return int
 	 */
 	public function getCount(){
+		// To get the exact count for the newsletter requires a very slow query.
+		// This value is not used anywhere, so for performance reasons count will not return anything.
+		if($this->newsletter_id !== NULL){
+			return -1;
+		}
 		$entryManager = new EntryManager($this->_Parent);
-		$where_and_joins = $this->getWhereJoinsAndGroup();
 		// I want the total count, not the remaining count, so I do not want the additional joins.
 		$newsletter_id = $this->newsletter_id;
 		$this->newsletter_id = null;
-		$count = $entryManager->fetchCount($this->getSource(), $where_and_joins['where'], $where_and_joins['joins']);
+		$where_and_joins = $this->getWhereJoinsAndGroup();
+		$count = $entryManager->fetchCount($this->getSource(), $where_and_joins['where'], $where_and_joins['joins'], true);
 		// Saving the newsletter back, so nobody will ever notice this hack.
 		$this->newsletter_id = $newsletter_id;
 		return $count;
@@ -173,19 +178,26 @@ Class RecipientSourceSection extends RecipientSource{
 				}
 			}
 		}
+
+		$where .= ' AND `f`.`value` IS NOT NULL';
+		
 		$joins .= 'LEFT JOIN (
 				SELECT `d`.`entry_id` , `d`.value
 				FROM tbl_entries_data_2 AS `d`';
 
 		if($this->newsletter_id !== NULL){
+			$where .= ' GROUP BY `f`.`value`';
 			$joins .= 'LEFT OUTER JOIN tbl_email_newsletters_sent_'.$this->newsletter_id.' AS `n` ON `d`.`value` = `n`.`email`
 						WHERE `n`.`email` IS NULL ORDER BY `d`.`entry_id` DESC'.($this->dsParamSTARTPAGE > 0 ? '  LIMIT ' . $this->dsParamSTARTPAGE * $this->dsParamLIMIT * 2:'');
 		}
-		
+		else{
+			$joins .= 'GROUP BY `d`.`value`';
+		}
+
 		$joins .= ') AS `f` ON `e`.`id` = `f`.`entry_id`';
 
 		return array(
-			'where' => $where . 'AND `f`.`value` IS NOT NULL GROUP BY `f`.`value`',
+			'where' => $where,
 			'joins'	=> $joins
 		);
 	}
