@@ -41,7 +41,7 @@ Class RecipientSourceAuthor extends RecipientSource{
 
 	public function grab(){
 		$author_ids = $this->_getAuthorIds();
-		$authors = AuthorManager::fetchByID(array_values($author_ids), true, $this->dsParamORDER, $this->dsParamLIMIT, ($this->dsParamSTARTPAGE - 1) * $this->dsParamLIMIT));
+		$authors = AuthorManager::fetchByID(array_values($author_ids), true, $this->dsParamORDER, $this->dsParamLIMIT, ($this->dsParamSTARTPAGE - 1) * $this->dsParamLIMIT);
 		return (array)$authors;
 	}
 
