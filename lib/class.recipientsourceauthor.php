@@ -40,13 +40,8 @@ Class RecipientSourceAuthor extends RecipientSource{
 	}
 
 	public function grab(){
-		if(is_array($this->dsParamFILTERS) && !empty($this->dsParamFILTERS)){
-			$author_ids = $this->_getAuthorIds();
-			$authors = AuthorManager::fetchByID(array_values($author_ids), $this->dsParamSORT, $this->dsParamORDER, $this->dsParamLIMIT, ($dsParamSTARTPAGE - 1) * $this->dsParamLIMIT);
-		}
-		else{
-			$authors = AuthorManager::fetch($this->dsParamSORT, $this->dsParamORDER, $this->dsParamLIMIT, ($this->dsParamSTARTPAGE - 1) * $this->dsParamLIMIT);
-		}
+		$author_ids = $this->_getAuthorIds();
+		$authors = AuthorManager::fetchByID(array_values($author_ids), 'id', $this->dsParamORDER, $this->dsParamLIMIT, ($dsParamSTARTPAGE - 1) * $this->dsParamLIMIT);
 		return (array)$authors;
 	}
 
@@ -56,16 +51,21 @@ Class RecipientSourceAuthor extends RecipientSource{
 	 * @return int
 	 */
 	public function getCount(){
-		$count = Symphony::Database()->fetchCol('count', "SELECT count(id) as `count` FROM `tbl_authors`" . $this->_getWhere());
+		if(!is_null($this->newsletter_id)){
+			return -1;
+		}
+		$where_and_joins = $this->_getWhereAndJoins();
+		$count = Symphony::Database()->fetchCol('count', "SELECT count(`a`.`id`) as `count` FROM `tbl_authors` as `a` " . $where_and_joins['joins'] . ' WHERE 1 ' . $where_and_joins['where']);
 		return $count[0];
 	}
 
 	protected function _getAuthorIds(){
-		return Symphony::Database()->fetchCol('id', "SELECT `id` FROM `tbl_authors`" . $this->_getWhere());
+		$where_and_joins = $this->_getWhereAndJoins();
+		return Symphony::Database()->fetchCol('id', "SELECT `a`.`id` FROM `tbl_authors` as `a` " . $where_and_joins['joins'] . ' WHERE 1 ' . $where_and_joins['where']);
 	}
 
-	protected function _getWhere(){
-		$where = array();
+	protected function _getWhereAndJoins(){
+		$wheres = array();
 		if(is_array($this->dsParamFILTERS) && !empty($this->dsParamFILTERS)){
 			foreach($this->dsParamFILTERS as $field => $value){
 				if(!is_array($value) && trim($value) == ''){
@@ -78,14 +78,19 @@ Class RecipientSourceAuthor extends RecipientSource{
 				else{
 					$bits = $value;
 				}
-				$where[] = "`".$field."` IN ('".implode("', '", $bits)."')";
+				$wheres = "`".$field."` IN ('".implode("', '", $bits)."')";
 			}
 		}
-		if(!empty($where)){
-			return ' WHERE ' . implode(' AND ', $where);
+		if(!empty($wheres)){
+			$where = implode(' AND ', $wheres);
 		}
-		else{
-			return NULL;
+		if(!is_null($this->newsletter_id)){
+			$joins .= ' LEFT OUTER JOIN `tbl_email_newsletters_sent_' . $this->newsletter_id . '` as `s` ON `s`.`email` = `a`.`email`';
+			$where .= 'AND `s`.`email` IS NULL';
 		}
+		return array(
+			'where' => $where,
+			'joins' => $joins
+		);
 	}
 }
