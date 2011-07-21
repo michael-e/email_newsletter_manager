@@ -17,7 +17,7 @@
 			<thead>
 				<tr>
 					<th scope="col">Name</th>
-					<th scope="col">Recipients</th>
+					<th scope="col">Unique Recipients</th>
 					<th scope="col">Preview</th>
 				</tr>
 			</thead>
