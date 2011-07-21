@@ -28,7 +28,7 @@ Class RecipientSourceStatic extends RecipientSource{
 		$recipients = $this->grab();
 		$return['total-entries'] = $this->getCount();
 		$pages = ((int)$return['total-entries']/(int)$this->dsParamLIMIT);
-		$return['total-pages'] = (int)round($pages);
+		$return['total-pages'] = (int)ceil($pages);
 		$return['remaining-pages'] = max(0, (int)$return['total-pages'] - (int)$this->dsParamSTARTPAGE);
 		$return['remaining-entries'] = max(0, ((int)$return['total-entries'] - ((int)$this->dsParamSTARTPAGE * (int)$this->dsParamLIMIT)));
 		$return['entries-per-page'] = $this->dsParamLIMIT;
@@ -70,11 +70,11 @@ Class RecipientSourceStatic extends RecipientSource{
 			return -1;
 		}
 		$this->_createTempTable();
-		$rows = Symphony::Database()->fetchCol('count','SELECT count(DISTINCT email) as count from ' . $this->_tempTable);
+		$rows = Symphony::Database()->fetchCol('count','SELECT count(email) as count from ' . $this->_tempTable);
 		return $rows[0];
 	}
 	
-	protected function _parseNameAndEmail($string){
+	protected function _parseNameAndEmail(&$string){
 		$string = trim($string);
 		
 		if(strstr($string, '<')){		
@@ -85,11 +85,16 @@ Class RecipientSourceStatic extends RecipientSource{
 			$email = trim($string, " \t\n\r\0\x0B");
 			$name = null;
 		}
-		return array(
-			'name'	=> $name,
-			'email' => $email,
-			'valid' => preg_match($this->_emailValidator, $email)?true:false
-		);
+		if(strlen($email) == 0){
+			unset($string);
+		}
+		else{
+			return array(
+				'name'	=> $name,
+				'email' => $email,
+				'valid' => preg_match($this->_emailValidator, $email)?true:false
+			);
+		}
 	}
 	
 	protected function _createTempTable(){
