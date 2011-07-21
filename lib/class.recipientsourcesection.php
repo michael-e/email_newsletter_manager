@@ -188,7 +188,7 @@ Class RecipientSourceSection extends RecipientSource{
 		if($this->newsletter_id !== NULL){
 			$where .= ' GROUP BY `f`.`value`';
 			$joins .= 'LEFT OUTER JOIN tbl_email_newsletters_sent_'.$this->newsletter_id.' AS `n` ON `d`.`value` = `n`.`email`
-						WHERE `n`.`email` IS NULL ORDER BY `d`.`entry_id` DESC'.($this->dsParamSTARTPAGE > 0 ? '  LIMIT ' . $this->dsParamSTARTPAGE * $this->dsParamLIMIT * 2:'');
+						WHERE `n`.`email` IS NULL ORDER BY `d`.`entry_id` '.($this->dsParamSTARTPAGE > 0 ? '  LIMIT ' . $this->dsParamSTARTPAGE * $this->dsParamLIMIT * 2:'');
 		}
 		else{
 			$joins .= 'GROUP BY `d`.`value`';
