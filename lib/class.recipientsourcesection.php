@@ -183,7 +183,7 @@ Class RecipientSourceSection extends RecipientSource{
 		
 		$joins .= 'LEFT JOIN (
 				SELECT `d`.`entry_id` , `d`.value
-				FROM tbl_entries_data_'.$this->getSource().' AS `d`';
+				FROM tbl_entries_data_'.$entryManager->fieldManager->fetchFieldIDFromElementName($this->emailField, $this->getSource()).' AS `d`';
 
 		if($this->newsletter_id !== NULL){
 			$where .= ' GROUP BY `f`.`value`';
