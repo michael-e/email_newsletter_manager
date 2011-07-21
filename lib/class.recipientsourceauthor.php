@@ -41,7 +41,7 @@ Class RecipientSourceAuthor extends RecipientSource{
 
 	public function grab(){
 		$author_ids = $this->_getAuthorIds();
-		$authors = AuthorManager::fetchByID(array_values($author_ids), true, $this->dsParamORDER, $this->dsParamLIMIT, ($this->dsParamSTARTPAGE - 1) * $this->dsParamLIMIT);
+		$authors = AuthorManager::fetchByID($author_ids, 'id', $this->dsParamORDER);
 		return (array)$authors;
 	}
 
@@ -61,7 +61,9 @@ Class RecipientSourceAuthor extends RecipientSource{
 
 	protected function _getAuthorIds(){
 		$where_and_joins = $this->_getWhereAndJoins();
-		return Symphony::Database()->fetchCol('id', "SELECT `a`.`id` FROM `tbl_authors` as `a` " . $where_and_joins['joins'] . ' WHERE 1 ' . $where_and_joins['where']);
+		$start = ($this->dsParamSTARTPAGE - 1) * $this->dsParamLIMIT;
+		$limit = $this->dsParamLIMIT;
+		return Symphony::Database()->fetchCol('id', "SELECT `a`.`id` FROM `tbl_authors` as `a` " . $where_and_joins['joins'] . ' WHERE 1 ' . $where_and_joins['where'] . (($limit) ? "LIMIT " . (($start) ? $start . ',':'') . $limit : ''));
 	}
 
 	protected function _getWhereAndJoins(){
