@@ -7,6 +7,7 @@ Class RecipientSourceStatic extends RecipientSource{
 	public $dsParamLIMIT = 10;
 	public $dsParamSTARTPAGE = 1;
 	protected $_emailValidator;
+	protected $_tempTable;
 	
 	public function __construct(){
 		require_once(TOOLKIT . '/util.validators.php');
@@ -42,27 +43,73 @@ Class RecipientSourceStatic extends RecipientSource{
 	 * @return array
 	 */
 	public function grab(){
-		$recipients = array_map(array(__CLASS__, '_parseNameAndEmail'), array_slice(explode(',', $this->recipients), (((int)$this->dsParamSTARTPAGE - 1) * (int)$this->dsParamLIMIT), (int)$this->dsParamLIMIT));
-		return $recipients;
+		$this->_createTempTable();
+		
+		if($this->newsletter_id !== NULL){
+			$where .= ' GROUP BY `f`.`email`';
+			$joins .= ' LEFT OUTER JOIN tbl_email_newsletters_sent_'.$this->newsletter_id.' AS `n` ON `d`.`email` = `n`.`email`
+						WHERE `n`.`email` IS NULL ORDER BY `d`.`id` '.($this->dsParamSTARTPAGE > 0 ? '  LIMIT ' . $this->dsParamSTARTPAGE * $this->dsParamLIMIT * 10:'');
+		}
+		else{
+			$joins .= 'GROUP BY `d`.`email`';
+		}
+		
+		$limit = ' LIMIT ' . ($this->dsParamSTARTPAGE - 1) * $this->dsParamLIMIT . ', ' . $this->dsParamLIMIT;
+		
+		$rows = Symphony::Database()->fetch('SELECT * FROM (SELECT `d`.`id`, `d`.`name`, `d`.`email`, `d`.`valid` from ' . $this->_tempTable . ' as `d` ' . $joins . ') as `f`' . $where . 'ORDER BY `f`.`id`' .  $limit);
+		return $rows;
 	}
 
 	/**
-	 * Fetch number of recipients, DIRTY!
+	 * Fetch number of recipients
 	 *
 	 * @return int
 	 */
 	public function getCount(){
-		return count(explode(',', $this->recipients));
+		if($this->newsletter_id !== NULL){
+			return -1;
+		}
+		$this->_createTempTable();
+		$rows = Symphony::Database()->fetchCol('count','SELECT count(DISTINCT email) as count from ' . $this->_tempTable);
+		return $rows[0];
 	}
 	
 	protected function _parseNameAndEmail($string){
 		$string = trim($string);
-		$name = trim(strstr($string, '<', true), "\" \t\n\r\0\x0B");
-		$email = trim(strstr($string, '<'), "<> \t\n\r\0\x0B");
+		
+		if(strstr($string, '<')){		
+			$name = trim(strstr($string, '<', true), "\" \t\n\r\0\x0B");
+			$email = trim(strstr($string, '<'), "<> \t\n\r\0\x0B");
+		}
+		else{
+			$email = trim($string, " \t\n\r\0\x0B");
+			$name = null;
+		}
 		return array(
 			'name'	=> $name,
 			'email' => $email,
 			'valid' => preg_match($this->_emailValidator, $email)?true:false
 		);
+	}
+	
+	protected function _createTempTable(){
+		if($this->_tempTable == NULL){
+			$name = 'email_newsletters_static_recipients_' . substr(md5(microtime()), 0, 10);
+			if(Symphony::Database()->query('CREATE TEMPORARY TABLE ' . $name . ' (`id` INT UNSIGNED NOT NULL AUTO_INCREMENT, PRIMARY KEY ( `id` ), email varchar(255), name varchar(255),`valid` BOOL NOT NULL)')){
+				if(count($this->recipients) > 0){
+					$rcpts = array_map(array(__CLASS__, '_parseNameAndEmail'), explode(',', $this->recipients));
+					foreach($rcpts as $recipient){
+						$values[] = '(\'' . $recipient['email'] . '\', \'' . $recipient['name'] . '\', '. ($recipient['valid']?1:0) . ')';
+					}
+					$value = implode(', ', $values);
+					Symphony::Database()->query("INSERT IGNORE INTO " . $name . " (email, name, valid) values " . $value);
+				}
+				$this->_tempTable = $name;
+				return true;
+			}
+			else{
+				throw new Exception(Symphony::Database()->getLastError());
+			}
+		}
 	}
 }
