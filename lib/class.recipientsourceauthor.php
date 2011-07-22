@@ -28,11 +28,11 @@ Class RecipientSourceAuthor extends RecipientSource{
 		require_once(TOOLKIT . '/util.validators.php');
 		
 		foreach($authors as $author){
-			$return[] = array(
+			$return['records'][] = array(
 				'id' => $author->get('id'),
 				'name' => $author->get('first_name') . ' ' . $author->get('last_name'),
 				'email' => $author->get('email'),
-				'valid' => preg_match($validators['email'], $author->get('email'))?true:false
+				'valid' => @preg_match($validators['email'], $author->get('email'))?true:false
 			);
 		}
 		
@@ -63,7 +63,7 @@ Class RecipientSourceAuthor extends RecipientSource{
 		$where_and_joins = $this->_getWhereAndJoins();
 		$start = ($this->dsParamSTARTPAGE - 1) * $this->dsParamLIMIT;
 		$limit = $this->dsParamLIMIT;
-		return Symphony::Database()->fetchCol('id', "SELECT `a`.`id` FROM `tbl_authors` as `a` " . $where_and_joins['joins'] . ' WHERE 1 ' . $where_and_joins['where'] . (($limit) ? "LIMIT " . (($start) ? $start . ',':'') . $limit : ''));
+		return Symphony::Database()->fetchCol('id', "SELECT `a`.`id` FROM `tbl_authors` as `a` " . $where_and_joins['joins'] . ' WHERE 1 ' . $where_and_joins['where'] . (($limit) ? " LIMIT " . (($start) ? $start . ',':'') . $limit : ''));
 	}
 
 	protected function _getWhereAndJoins(){

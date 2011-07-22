@@ -22,10 +22,10 @@
 				</tr>
 			</thead>
 			<tbody>
-				<xsl:if test="/data/recipients/item">
-					<xsl:apply-templates select="/data/recipients/item"/>
+				<xsl:if test="/data/recipients/records/item">
+					<xsl:apply-templates select="/data/recipients/records/item"/>
 				</xsl:if>
-				<xsl:if test="not(/data/recipients/item)">
+				<xsl:if test="not(/data/recipients/records/item)">
 					<tr>
 						<td class="inactive" colspan="3">
 							<xsl:text>None found</xsl:text>
@@ -71,7 +71,7 @@
 		</xsl:if>
 	</form>
 </xsl:template>
-<xsl:template match="recipients/item">
+<xsl:template match="recipients/records/item">
 	<tr>
 		<xsl:if test="not(valid)">
 			<xsl:attribute name="class">

@@ -5,10 +5,13 @@ Class EmailNewsletterBackgroundProcessException extends BackgroundProcessExcepti
 
 Class EmailNewsletterBackgroundProcess extends BackgroundProcess{
 
-	protected $batch_id;
+	protected $_newsletter_id;
+	protected $_newsletter;
 
-	public function __construct($batch_id){
-		$this->batch_id = $batch_id;
+	public function __construct($newsletter_id){
+		$this->_newsletter_id = $newsletter_id;
+		$nlm = new NewsLetterManager(Administration::instance());
+		$this->_newsletter = $nlm->create($this->_newsletter_id);
 	}
 
 	public function run(){

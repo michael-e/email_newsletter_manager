@@ -26,8 +26,8 @@ Class RecipientSourceSection extends RecipientSource{
 	 * @todo bugtesting and error handling
 	 * @return array
 	 */
-	public function getSlice($newsletter_id = 10){
-		$entries = $this->grab($newsletter_id);
+	public function getSlice(){
+		$entries = $this->grab();
 		$return['total-entries'] = (string)$entries['total-entries'];
 		$return['total-pages'] = (string)$entries['total-pages'];
 		$return['remaining-pages'] = (string)$entries['remaining-pages'];
@@ -58,12 +58,14 @@ Class RecipientSourceSection extends RecipientSource{
 				}
 			}
 			$name = trim($xsltproc->process($element->generate(), $this->nameXslt));
-			$return[] = array(
-				'id'	=> $entry->get('id'),
-				'email' => $email,
-				'name'	=> $name,
-				'valid' => preg_match($validators['email'], $email)?true:false
-			);
+			if(!empty($email)){
+				$return['records'][] = array(
+					'id'	=> $entry->get('id'),
+					'email' => $email,
+					'name'	=> $name,
+					'valid' => @preg_match($validators['email'], $email)?true:false
+				);
+			}
 		}
 		return $return;
 	}
@@ -80,7 +82,7 @@ Class RecipientSourceSection extends RecipientSource{
 	 * @todo bugtesting and error handling
 	 * @return array
 	 */
-	public function grab($newsletter_id = NULL){
+	public function grab(){
 		$where_and_joins = $this->getWhereJoinsAndGroup();
 		$entryManager = new EntryManager($this->_Parent);
 		

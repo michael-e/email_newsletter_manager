@@ -34,7 +34,7 @@ Class RecipientSourceStatic extends RecipientSource{
 		$return['entries-per-page'] = $this->dsParamLIMIT;
 		$return['start'] = (((int)$this->dsParamSTARTPAGE - 1) * (int)$this->dsParamLIMIT) + 1;
 		$return['current-page'] = (int)$this->dsParamSTARTPAGE;
-		return array_merge($return, $recipients);
+		return array_merge($return, array('records'=>$recipients));
 	}
 
 	/**
@@ -92,7 +92,7 @@ Class RecipientSourceStatic extends RecipientSource{
 			return array(
 				'name'	=> $name,
 				'email' => $email,
-				'valid' => preg_match($this->_emailValidator, $email)?true:false
+				'valid' => @preg_match($this->_emailValidator, $email)?true:false
 			);
 		}
 	}
