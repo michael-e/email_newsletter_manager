@@ -20,8 +20,8 @@ class extension_email_newsletter_manager extends extension{
 			)
 		);
 	}
-	
-	public function fetchNavigation() {
+
+	public function fetchNavigation(){
 		return array(
 			array(
 				'location'  => __('Blueprints'),
@@ -32,10 +32,10 @@ class extension_email_newsletter_manager extends extension{
 				'location'  => __('Blueprints'),
 				'name'      => __('Newsletter Senders'),
 				'link'      => '/senders/'
-			)			
+			)
 		);
 	}
-	
+
 	public function getSubscribedDelegates(){
 		return array(
 			array(
@@ -45,12 +45,11 @@ class extension_email_newsletter_manager extends extension{
 			)
 		);
 	}
-	
+
 	/**
 	 * Function to be executed on uninstallation
 	 */
-	public function uninstall()
-	{
+	public function uninstall(){
 		/*
 			TODO should we drop the newsletters table upon uninstallation of the extension?
 		*/
@@ -63,13 +62,13 @@ class extension_email_newsletter_manager extends extension{
 		*/
 	}
 
-	public function appendStyles($context) {
-			$callback = $context['parent']->getPageCallback();
+	public function appendStyles($context){
+		$callback = $context['parent']->getPageCallback();
 
-			if ($callback['driver'] == 'recipientgroups' && $callback['classname'] == 'contentExtensionEmail_newsletter_managerRecipientgroups' && $callback['context'][0] == 'preview')
-				$context['parent']->Page->addStylesheetToHead(URL . '/extensions/email_newsletter_manager/assets/email_newsletter_manager.recipientgroups.preview.css', 'screen', 1000);
-		}
-	
+		if ($callback['driver'] == 'recipientgroups' && $callback['classname'] == 'contentExtensionEmail_newsletter_managerRecipientgroups' && $callback['context'][0] == 'preview')
+			$context['parent']->Page->addStylesheetToHead(URL . '/extensions/email_newsletter_manager/assets/email_newsletter_manager.recipientgroups.preview.css', 'screen', 1000);
+	}
+
 	public function install(){
 		$etm = Symphony::ExtensionManager()->getInstance('email_template_manager');
 		if($etm instanceof Extension){
@@ -100,7 +99,7 @@ class extension_email_newsletter_manager extends extension{
 			throw new Exception(__('The Email Template Manager is required for this extension to work.'));
 		}
 	}
-	
+
 	public function uninstall(){
 		return true;
 	}
