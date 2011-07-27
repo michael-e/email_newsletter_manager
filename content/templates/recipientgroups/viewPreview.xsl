@@ -13,7 +13,7 @@
 		<a href="{concat($root, '/symphony/extension/email_newsletter_manager/recipientgroups/edit/', /data/context/item[@index = 2])}" class="button">Edit Recipient Source</a>
 	</h2>
 	<form method="post" action="{$current-url}">
-		<xsl:call-template name="debug" />
+		<!-- <xsl:call-template name="debug" /> -->
 		<table>
 			<thead>
 				<tr>
