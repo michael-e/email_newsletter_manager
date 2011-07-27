@@ -13,6 +13,7 @@
 		<a href="{concat($root, '/symphony/extension/email_newsletter_manager/recipientgroups/edit/', /data/context/item[@index = 2])}" class="button">Edit Recipient Source</a>
 	</h2>
 	<form method="post" action="{$current-url}">
+		<xsl:call-template name="debug" />
 		<table>
 			<thead>
 				<tr>
@@ -57,7 +58,7 @@
 					</xsl:if>
 					<xsl:if test="not(/data/recipients/remaining-pages &gt; 0)">
 						Next &#8594;
-					</xsl:if>					
+					</xsl:if>
 				</li>
 				<li>
 					<xsl:if test="/data/recipients/remaining-pages &gt; 0">
@@ -71,6 +72,7 @@
 		</xsl:if>
 	</form>
 </xsl:template>
+
 <xsl:template match="recipients/records/item">
 	<tr>
 		<xsl:if test="not(valid)">
@@ -88,7 +90,7 @@
 					<a href="{concat($root, '/symphony/publish/', ../source, '/edit/', id)}"><xsl:value-of select="name" /></a>
 				</xsl:otherwise>
 			</xsl:choose>
-			
+
 		</td>
 		<td>
 			<xsl:value-of select="email"/>
@@ -103,4 +105,11 @@
 		</td>
 	</tr>
 </xsl:template>
+
+<xsl:template name="debug">
+	<textarea rows="30" class="code">
+		<xsl:copy-of select="/" />
+	</textarea>
+</xsl:template>
+
 </xsl:stylesheet>
