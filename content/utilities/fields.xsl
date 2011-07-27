@@ -88,7 +88,7 @@
 <xsl:output method="text" />
 
 <xsl:template match="/entry">
-	<xsl:value-of select="."/>
+	<xsl:value-of select="name"/>
 </xsl:template>
 
 </xsl:stylesheet>]]></xsl:text>
