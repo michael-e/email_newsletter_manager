@@ -86,6 +86,35 @@ At the time of writing the following features are supposed to be built in separa
 Information about [installing and updating extensions](http://symphony-cms.com/learn/tasks/view/install-an-extension/) can be found in the Symphony documentation at <http://symphony-cms.com/learn/>.
 
 
+
+## Configuration
+
+Most of the configuration is really easy, because there is a Symphony-style user interface for recipient groups and senders alike. However, the recipient group has one special textarea to deal with, the "Name XSLT" textarea.
+
+The idea behin dit is rather simple: You might have the full name of your recpients in a single field of your section, but ou might as well have separate fields for the name, the family name, the gender, whatever. In these cases the simplest way to build a "full name" is to use XSLT. Here are some examples:
+
+* The full name is stored in field called `name`:
+
+		<xsl:template match="/entry">
+			<xsl:value-of select="name"/>
+		</xsl:template>
+
+* Two fields, `first name` and `last name`:
+
+		<xsl:template match="/entry">
+			<xsl:value-of select="concat(first-name, ' ', last-name)"/>
+		</xsl:template>
+
+
+### Static Recipients
+
+A Static Recipients group is the right choice if you only need to send to a handful of recipients which will not change dynamically (based on section data).
+
+Static Recipients use the [*mailbox syntax* as described in RFC2822](http://tools.ietf.org/html/rfc2822#section-3.4) (like many email clients do). Like so:
+
+	"John Doe" <john@example.com>, chief@example.com, "Jane" jane@example.com
+
+
 ## Legal
 
 This Symphony extension is released under the MIT/X11 license. The license file is included in the distribution.
