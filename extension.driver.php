@@ -46,22 +46,6 @@ class extension_email_newsletter_manager extends extension{
 		);
 	}
 
-	/**
-	 * Function to be executed on uninstallation
-	 */
-	public function uninstall(){
-		/*
-			TODO should we drop the newsletters table upon uninstallation of the extension?
-		*/
-
-		// // drop database table
-		// Symphony::Database()->query("DROP TABLE `sym_email_newsletters`");
-
-		/*
-			TODO shoud we remove the template files upon uninstallation of the extension?
-		*/
-	}
-
 	public function appendStyles($context){
 		$callback = $context['parent']->getPageCallback();
 
@@ -101,6 +85,17 @@ class extension_email_newsletter_manager extends extension{
 	}
 
 	public function uninstall(){
+		/*
+			TODO should we drop the newsletters table upon uninstallation of the extension?
+		*/
+
+		// // drop database table
+		// Symphony::Database()->query("DROP TABLE `sym_email_newsletters`");
+
+		/*
+			TODO shoud we remove the template files upon uninstallation of the extension?
+		*/
+
 		return true;
 	}
 }
