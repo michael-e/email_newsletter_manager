@@ -65,7 +65,7 @@ class EmailNewsletter{
 				`email` VARCHAR( 255 ) NOT NULL ,
 				`result` VARCHAR( 255 ) NULL ,
 				`date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-			)')){
+			) ENGINE=MyISAM;')){
 				return true;
 			}
 			else{

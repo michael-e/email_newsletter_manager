@@ -71,7 +71,7 @@ class extension_email_newsletter_manager extends extension{
 					  `started_by` int(10) unsigned NOT NULL,
 					  `flag` varchar(255) DEFAULT 'idle',
 					  PRIMARY KEY (`id`)
-					)");
+					) ENGINE=MyISAM;");
 					return true;
 				}
 			}
