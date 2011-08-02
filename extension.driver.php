@@ -76,7 +76,7 @@ class extension_email_newsletter_manager extends extension{
 				}
 			}
 			catch(Exception $e){
-				throw new Exception(__('Failed to create newsletters directory:') . ' ' . $e->getMessage());
+				throw new Exception(__('Installation failed:') . ' ' . $e->getMessage());
 			}
 		}
 		else{
