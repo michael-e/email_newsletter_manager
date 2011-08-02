@@ -1,0 +1,52 @@
+.field-email_newsletter_manager
+{
+	background: #e8e8e4;
+	border: 1px solid #e4e4de;
+	background: #f5f5f3;
+	padding: 1em 10px 0.5em 10px;
+	margin: 3em 0;
+}
+
+.field-email_newsletter_manager h3
+{
+	font-size: 110%;
+	margin-bottom: 1em;
+}
+
+.field-email_newsletter_manager p
+{
+	margin-bottom: 1em;
+}
+
+.field-email_newsletter_manager select
+{
+	margin-bottom: 1em;
+}
+
+.field-email_newsletter_manager .recipient-groups
+{
+	margin-bottom: 1em;
+}
+
+.field-email_newsletter_manager .recipient-group
+{
+	margin-bottom: 0.25em;
+}
+
+.field-email_newsletter_manager .recipient-group input[type=checkbox]
+{
+	margin-right: 0.5em;
+}
+
+.field-email_newsletter_manager table.status
+{
+	border-collapse: collapse;
+	margin-bottom: 1em;
+}
+
+.field-email_newsletter_manager table.status th,
+.field-email_newsletter_manager table.status td
+{
+	text-align: left;
+	padding-right: 10px;
+}
