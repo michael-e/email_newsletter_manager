@@ -100,7 +100,7 @@ class extension_email_newsletter_manager extends extension{
 		*/
 
 		// // drop database table
-		// Symphony::Database()->query("DROP TABLE `sym_email_newsletters`");
+		// Symphony::Database()->query("DROP TABLE tbl_email_newsletters`");
 
 		/*
 			TODO shoud we remove the template files upon uninstallation of the extension?
