@@ -59,6 +59,9 @@ class extension_email_newsletter_manager extends extension{
 	}
 
 	public function initEmailNewsletter(){
+		if(@array_key_exists('save', $_POST['action']) && substr($_POST['action']['save'], 0, 9) == 'enm-send:'){
+
+		}
 	}
 
 	public function install(){
