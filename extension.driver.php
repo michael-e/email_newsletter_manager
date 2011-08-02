@@ -92,6 +92,9 @@ class extension_email_newsletter_manager extends extension{
 	}
 
 	public function uninstall(){
+		// drop database table
+		Symphony::Database()->query("DROP TABLE `tbl_fields_email_newsletter_manager`");
+
 		/*
 			TODO should we drop the newsletters table upon uninstallation of the extension?
 		*/
