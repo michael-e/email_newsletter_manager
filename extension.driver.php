@@ -63,6 +63,9 @@ class extension_email_newsletter_manager extends extension{
 		// start using the 'action' string, which seems to be the only way.
 		if(@array_key_exists('save', $_POST['action']) && substr($_POST['action']['save'], 0, 9) == 'enm-send:'){
 
+			// save the newsletter
+
+			// start the newsletter
 		}
 	}
 
