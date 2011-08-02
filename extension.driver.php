@@ -58,6 +58,13 @@ class extension_email_newsletter_manager extends extension{
 		if($etm instanceof Extension){
 			try{
 				if(@mkdir(WORKSPACE . '/email-newsletters') || is_dir(WORKSPACE . '/email-newsletters')){
+					Symphony::Database()->query("CREATE TABLE IF NOT EXISTS `tbl_fields_email_newsletter_manager` (
+					  `id` int(11) unsigned NOT NULL auto_increment,
+					  `field_id` int(11) unsigned NOT NULL,
+					  PRIMARY KEY  (`id`),
+					  KEY `field_id` (`field_id`)
+					) ENGINE=MyISAM;");
+
 					Symphony::Database()->query("CREATE TABLE IF NOT EXISTS `tbl_email_newsletters` (
 					  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 					  `template` varchar(255) NOT NULL,
