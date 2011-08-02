@@ -91,6 +91,10 @@ class extension_email_newsletter_manager extends extension{
 		}
 	}
 
+	public function update($previousVersion){
+		return true;
+	}
+
 	public function uninstall(){
 		// drop database table
 		Symphony::Database()->query("DROP TABLE `tbl_fields_email_newsletter_manager`");
