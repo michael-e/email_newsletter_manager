@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * Field: Email Newsletter
+	 * Field: Email Newsletter Manager
 	 *
 	 * @package Email Newsletter Manager
 	 **/
@@ -32,13 +32,13 @@
 		 */
 		public function displaySettingsPanel(&$wrapper, $errors=NULL)
 		{
-			## initialize field settings based on class defaults (name, placement)
+			// initialize field settings based on class defaults (name, placement)
 			parent::displaySettingsPanel($wrapper, $errors);
 
-			## get current section id
+			// get current section id
 			$section_id = Administration::instance()->Page->_context[1];
 
-			## configuration (XML)
+			// configuration (XML)
 			$label = Widget::Label(__('Configuration (XML)'));
 			$label->appendChild(Widget::Textarea('fields['.$this->get('sortorder').'][config_xml]', 12, 50, General::sanitize($this->get('config_xml')), array('class' => 'code')));
 			if(isset($errors['config_xml']))
@@ -73,20 +73,20 @@
 		*/
 		public function commit()
 		{
-			## prepare commit
+			// prepare commit
 			if(!parent::commit()) return false;
 			$id = $this->get('id');
 			if($id === false) return false;
 
-			## set up fields
+			// set up fields
 			$fields = array();
 			$fields['field_id'] = $id;
 			if($this->get('config_xml')) $fields['config_xml'] = $this->get('config_xml');
 
-			## delete old field settings
+			// delete old field settings
 			Symphony::Database()->query("DELETE FROM `tbl_fields_" . $this->handle()."` WHERE `field_id` = '$id' LIMIT 1");
 
-			## save new field setting
+			// save new field setting
 			return Symphony::Database()->insert($fields, 'tbl_fields_' . $this->handle());
 		}
 
@@ -188,8 +188,8 @@
 			$section_handle = Administration::instance()->Page->_context['section_handle'];
 			$this->_section_id = Symphony::Database()->fetchVar('id', 0, "SELECT id FROM `tbl_sections` WHERE `handle` = '".$section_handle."' LIMIT 1");
 
-			## post action 'cancel';
-			## status must not be 'error' (which will be the final status after cancelling) to prohibit problems caused by page reload
+			// post action 'cancel';
+			// status must not be 'error' (which will be the final status after cancelling) to prohibit problems caused by page reload
 			$status = !empty($this->_entry_id) ? Symphony::Database()->fetchVar('status', 0, "SELECT status FROM `tbl_entries_data_".$this->_field_id."` WHERE `entry_id` = $this->_entry_id LIMIT 1") : NULL;
 			if(isset($_POST['action']['en-cancel-'.$this->_field_id]) && $status != 'error')
 			{
@@ -198,7 +198,7 @@
 				));
 			}
 
-			## post action 'retry'
+			// post action 'retry'
 			if(isset($_POST['action']['en-retry-'.$this->_field_id]))
 			{
 				$this->__updateEntryData(array(
@@ -216,10 +216,10 @@
 				));
 			}
 
-			## get field configuration data
+			// get field configuration data
 			$field_data = Symphony::Database()->fetchRow(0, "SELECT * FROM `tbl_fields_email_newsletter` WHERE `field_id` = $this->_field_id LIMIT 1");
 
-			## get entry data
+			// get entry data
 			$entry_data = !empty($this->_entry_id) ? Symphony::Database()->fetchRow(0, "SELECT * FROM `tbl_entries_data_".$this->_field_id."` WHERE `entry_id` = $this->_entry_id LIMIT 1") : NULL;
 
 			$config                 = simplexml_load_string($field_data['config_xml']);
@@ -240,7 +240,7 @@
 			$page_text_url_appendix = (string)$config->content->{'page-text'}['url-appendix'];
 			$subject_field_label    = (string)$config->{'subject-field-label'};
 
-			## find the newsletter subject
+			// find the newsletter subject
 			$subject_field_handle = Lang::createHandle($subject_field_label);
 			$subject_field_id = $subject_field_handle ? Symphony::Database()->fetchVar('id', 0, "SELECT id FROM `tbl_fields` WHERE `element_name` = '".$subject_field_handle."' AND `parent_section` = '".$this->_section_id."' LIMIT 1") : NULL;
 			if($subject_field_id != $this->_field_id)
@@ -248,15 +248,15 @@
 				$subject = $subject_field_id ? Symphony::Database()->fetchVar('value', 0, "SELECT value FROM `tbl_entries_data_".$subject_field_id."` WHERE `entry_id` = '".$this->_entry_id."' LIMIT 1 ") : NULL;
 			}
 
-			## build header
+			// build header
 			$header = new XMLElement('h3', $this->get('label'));
 			$wrapper->appendChild($header);
 
-			## build GUI element
+			// build GUI element
 			$gui = new XMLElement('div');
 			$gui->setAttribute('class', 'email-newsletters-gui');
 
-			## build the hidden fields
+			// build the hidden fields
 			$gui->appendChild(Widget::Input('fields['.$element_name.'][author_id]', $author_id, 'hidden'));
 			if($status !== NULL)
 			{
@@ -271,15 +271,15 @@
 			}
 			$gui->appendChild(Widget::Input('fields['.$element_name.'][subject]', General::sanitize($subject), 'hidden'));
 
-			## switch status
+			// switch status
 			switch ($status)
 			{
 				case "processing":
 					$gui->setAttribute('class', 'email-newsletters-gui reloadable');
 					$gui->appendChild(new XMLElement('p', __('Processing...')));
-					## calculate estimated time to run if throttling is active
-					## make sure that the first slice has been sent
-					## otherwise the initial value would definitely be wrong if the first slice sends all the emails
+					// calculate estimated time to run if throttling is active
+					// make sure that the first slice has been sent
+					// otherwise the initial value would definitely be wrong if the first slice sends all the emails
 					$mailer_params['throttle_number'] = (string)$config->throttling->{"emails-per-time-period"};
 					$mailer_params['throttle_period'] = (string)$config->throttling->{"time-period-in-seconds"};
 					$throttling_active = intval($mailer_params['throttle_number']) && intval($mailer_params['throttle_period']) ? true : false;
@@ -290,7 +290,7 @@
 						$time_to_run = ceil(($entry_data['stats_rec_total'] - $entry_data['stats_rec_sent'] - $entry_data['stats_rec_errors']) / intval($mailer_params['throttle_number'])) * intval($mailer_params['throttle_period']);
 						$gui->appendChild(new XMLElement('p', __('Estimated time left: ') . gmdate('H:i:s', $time_to_run)));
 					}
-					## standards
+					// standards
 					if(!empty($sender_id) && count($senders) > 1)
 					{
 						$sender = $config->xpath("senders/item[@id = $sender_id]");
@@ -406,7 +406,7 @@
 					}
 					if(isset($this->_entry_id))
 					{
-						## content links
+						// content links
 						$page_html_url = URL . '/' . Administration::instance()->resolvePagePath($page_html_id) . '/' . ltrim($this->__replaceParamsInString($page_html_url_appendix), '/');
 						$page_text_url = URL . '/' . Administration::instance()->resolvePagePath($page_text_id) . '/' . ltrim($this->__replaceParamsInString($page_text_url_appendix), '/');
 						$content_html_link = $page_html_id ? '<a href="'.$page_html_url.'" target="_blank">HTML</a>' : NULL;
@@ -416,7 +416,7 @@
 						$p = new XMLElement('p');
 						$p->appendChild(new XMLElement('button', __('Send'), array('name' => 'action[save]', 'type' => 'submit', 'value' => 'en-send:'.$this->_field_id.':'.$this->_entry_id.':'.DOMAIN.':'.$live_mode, 'class' => 'send', 'id' => 'savesend')));
 						$gui->appendChild($p);
-						## append 'no live mode' information
+						// append 'no live mode' information
 						if($live_mode !== true)
 						{
 							$gui->appendChild(new XMLElement('p', __('Live Mode has not been set. No emails will be sent.')));
@@ -517,9 +517,9 @@
 			$node->setAttribute('errors', $data['stats_rec_errors']);
 			$node->appendChild(new XMLElement('subject', $data['subject']));
 
-			## load configuration;
-			## use saved (entry) config XML if available (i.e.: if the email newsletter has been sent);
-			## fallback: the field's configuration XML
+			// load configuration;
+			// use saved (entry) config XML if available (i.e.: if the email newsletter has been sent);
+			// fallback: the field's configuration XML
 			if(!empty($data['config_xml']))
 			{
 				$config = simplexml_load_string($data['config_xml']);
@@ -530,7 +530,7 @@
 				$config = simplexml_load_string($field_data['config_xml']);
 			}
 
-			## sender
+			// sender
 			$sender = new XMLElement('sender');
 			$sender_id = $data['sender_id'];
 			if(!empty($sender_id))
@@ -541,7 +541,7 @@
 			}
 			$node->appendChild($sender);
 
-			## recipients
+			// recipients
 			$rec_groups = $config->xpath('recipients/group');
 			$recipient_group_ids = explode(',', $data['rec_group_ids']);
 			$recipients = new XMLElement('recipients');
@@ -564,7 +564,7 @@
 		 */
 		public function getExampleFormMarkup()
 		{
-			## nothing to show here
+			// nothing to show here
 			return;
 		}
 
