@@ -167,7 +167,7 @@
 			// delete old field settings
 			Symphony::Database()->query("DELETE FROM `tbl_fields_" . $this->handle()."` WHERE `field_id` = '$id' LIMIT 1");
 
-			// save new field setting
+			// save new field settings
 			return Symphony::Database()->insert($fields, 'tbl_fields_' . $this->handle());
 		}
 
