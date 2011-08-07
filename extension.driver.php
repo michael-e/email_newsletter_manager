@@ -78,8 +78,8 @@ class extension_email_newsletter_manager extends extension{
 					  `id` int(11) unsigned NOT NULL auto_increment,
 					  `field_id` int(11) unsigned NOT NULL,
 					  `template` varchar(255),
-					  `recipient_groups` text,
 					  `sender` varchar(255),
+					  `recipient_groups` text,
 					  PRIMARY KEY  (`id`),
 					  KEY `field_id` (`field_id`)
 					) ENGINE=MyISAM;");
