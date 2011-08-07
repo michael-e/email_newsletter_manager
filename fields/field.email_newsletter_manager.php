@@ -38,20 +38,73 @@
 			// initialize field settings based on class defaults (name, placement)
 			parent::displaySettingsPanel($wrapper, $errors);
 
-			// get current section id
-			$section_id = Administration::instance()->Page->_context[1];
+			// build selector for email template (display all, select one)
+			require_once(EXTENSIONS . '/email_template_manager/lib/class.emailtemplatemanager.php');
+			$email_template_manager = new EmailTemplateManager(Symphony::Engine());
+			$templates = $email_template_manager->listAll();
 
-			// configuration (XML)
-			$label = Widget::Label(__('Configuration (XML)'));
-			$label->appendChild(Widget::Textarea('fields['.$this->get('sortorder').'][config_xml]', 12, 50, General::sanitize($this->get('config_xml')), array('class' => 'code')));
-			if(isset($errors['config_xml']))
-			{
-				$wrapper->appendChild(Widget::wrapFormElementWithError($label, $errors['config_xml']));
+			$options = array();
+			if(!empty($templates) && is_array($templates)){
+				foreach($templates as $template) {
+					$about = $template->about;
+					$options[] = array($template->getHandle(), ($this->get('template') == $template->getHandle()), $about['name']);
+				}
 			}
-			else
-			{
-				$wrapper->appendChild($label);
+			$group = new XMLElement('div', NULL, array('class' => 'group'));
+			$label = Widget::Label(__('Email Template'));
+			$label->appendChild(Widget::Select('fields['.$this->get('sortorder').'][template]', $options));
+
+			if(isset($errors['sender'])) {
+				$group->appendChild(Widget::wrapFormElementWithError($label, $errors['sender']));
 			}
+			else {
+				$group->appendChild($label);
+			}
+
+			// build selector for sender (display all, select one)
+			require_once(EXTENSIONS . '/email_newsletter_manager/lib/class.sendermanager.php');
+			$sender_manager = new SenderManager(Symphony::Engine());
+			$senders = $sender_manager->listAll();
+
+			$options = array();
+			if(!empty($senders) && is_array($senders)){
+				foreach($senders as $sender) {
+					$options[] = array($sender['handle'], ($this->get('sender') == $sender), $sender['name']);
+				}
+			}
+			$label = Widget::Label(__('Newsletter Sender'));
+			$label->appendChild(Widget::Select('fields['.$this->get('sortorder').'][sender]', $options));
+			if(isset($errors['sender'])) {
+				$group->appendChild(Widget::wrapFormElementWithError($label, $errors['sender']));
+			}
+			else {
+				$group->appendChild($label);
+			}
+			$wrapper->appendChild($group);
+
+			// build selector for recipient groups (display all, select multiple)
+			require_once(EXTENSIONS . '/email_newsletter_manager/lib/class.recipientgroupmanager.php');
+			$recipient_group_manager = new RecipientgroupManager(Symphony::Engine());
+			$recipient_groups = $recipient_group_manager->listAll();
+
+			$options = array();
+			if(!empty($senders) && is_array($senders)){
+				foreach($recipient_groups as $recipient_group) {
+					$options[] = array($recipient_group['handle'], ($this->get('recipient_groups') == $recipient_group), $recipient_group['name']);
+				}
+			}
+			$group = new XMLElement('div', NULL, array('class' => 'group'));
+			$label = Widget::Label(__('Newsletter Recipient Groups'));
+			$label->appendChild(Widget::Select('fields['.$this->get('sortorder').'][recipient_groups]', $options, array('multiple'=>'multiple')));
+			if(isset($errors['recipient_groups'])) {
+				$group->appendChild(Widget::wrapFormElementWithError($label, $errors['recipient_groups']));
+			}
+			else {
+				$group->appendChild($label);
+			}
+			$wrapper->appendChild($group);
+
+			// append 'show column' checkbox
 			$this->appendShowColumnCheckbox($wrapper);
 		}
 
