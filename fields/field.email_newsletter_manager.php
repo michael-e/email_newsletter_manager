@@ -62,6 +62,11 @@
 				$group->appendChild($label);
 			}
 
+			/*
+				TODO change this to 'display all, select multiple';
+				stupid ME...
+				tracked as issue #15
+			*/
 			// build selector for sender (display all, select one)
 			require_once(EXTENSIONS . '/email_newsletter_manager/lib/class.sendermanager.php');
 			$sender_manager = new SenderManager(Symphony::Engine());
