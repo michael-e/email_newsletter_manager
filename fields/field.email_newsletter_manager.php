@@ -47,7 +47,11 @@
 			if(!empty($templates) && is_array($templates)){
 				foreach($templates as $template) {
 					$about = $template->about;
-					$options[] = array($template->getHandle(), ($this->get('template') == $template->getHandle()), $about['name']);
+					$options[] = array(
+						$template->getHandle(),
+						$this->get('template') == $template->getHandle(),
+						$about['name']
+					);
 				}
 			}
 			$group = new XMLElement('div', NULL, array('class' => 'group'));
@@ -69,7 +73,11 @@
 			$options = array();
 			if(!empty($senders) && is_array($senders)){
 				foreach($senders as $sender) {
-					$options[] = array($sender['handle'], ($this->get('sender') == $sender), $sender['name']);
+					$options[] = array(
+						$sender['handle'],
+						$this->get('sender') == $sender['handle'],
+						$sender['name']
+					);
 				}
 			}
 			$label = Widget::Label(__('Newsletter Sender'));
@@ -88,14 +96,23 @@
 			$recipient_groups = $recipient_group_manager->listAll();
 
 			$options = array();
-			if(!empty($senders) && is_array($senders)){
+			if(!empty($recipient_groups) && is_array($recipient_groups)){
+				$recgs = $this->get('recipient_groups');
+				if(is_array($recgs)){
+					$recgs = implode(',',$recgs);
+				}
 				foreach($recipient_groups as $recipient_group) {
-					$options[] = array($recipient_group['handle'], ($this->get('recipient_groups') == $recipient_group), $recipient_group['name']);
+					$count += 1;
+					$options[] = array(
+						$recipient_group['handle'],
+						in_array($recipient_group['handle'], explode(',', $recgs)),
+						$recipient_group['name']
+					);
 				}
 			}
 			$group = new XMLElement('div', NULL, array('class' => 'group'));
 			$label = Widget::Label(__('Newsletter Recipient Groups'));
-			$label->appendChild(Widget::Select('fields['.$this->get('sortorder').'][recipient_groups]', $options, array('multiple'=>'multiple')));
+			$label->appendChild(Widget::Select('fields['.$this->get('sortorder').'][recipient_groups][]', $options, array('multiple'=>'multiple')));
 			if(isset($errors['recipient_groups'])) {
 				$group->appendChild(Widget::wrapFormElementWithError($label, $errors['recipient_groups']));
 			}
@@ -117,9 +134,9 @@
 		public function checkFields(&$errors, $checkForDuplicates=true)
 		{
 			if(!is_array($errors)) $errors = array();
-			if(@simplexml_load_string($this->get('config_xml')) == false)
-			{
-				$errors['config_xml'] = __('XML is invalid');
+			$recipient_groups = $this->get('recipient_groups');
+			if(empty($recipient_groups)){
+				$errors['recipient_groups'] = __('This is a required field.');
 			}
 			parent::checkFields($errors, $checkForDuplicates);
 		}
@@ -137,7 +154,15 @@
 			// set up fields
 			$fields = array();
 			$fields['field_id'] = $id;
-			if($this->get('config_xml')) $fields['config_xml'] = $this->get('config_xml');
+			if($this->get('template')){
+				$fields['template'] = $this->get('template');
+			}
+			if($this->get('sender')){
+				$fields['sender'] = $this->get('sender');
+			}
+			if($this->get('recipient_groups')){
+				$fields['recipient_groups'] = implode(",", $this->get('recipient_groups'));
+			}
 
 			// delete old field settings
 			Symphony::Database()->query("DELETE FROM `tbl_fields_" . $this->handle()."` WHERE `field_id` = '$id' LIMIT 1");
