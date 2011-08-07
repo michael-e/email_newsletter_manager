@@ -8,8 +8,7 @@
 	 *
 	 * @package Email Newsletter Manager
 	 **/
-	class fieldEmail_Newsletter_Manager extends Field
-	{
+	class fieldEmail_Newsletter_Manager extends Field{
 		protected $_field_id;
 		protected $_entry_id;
 		protected $_section_id;
@@ -17,8 +16,7 @@
 		/**
 		 * Initialize as unrequired field
 		 */
-		function __construct(&$parent)
-		{
+		function __construct(&$parent){
 			parent::__construct($parent);
 			$this->_name = __('Email Newsletter Manager');
 			$this->_required = false;
@@ -33,8 +31,7 @@
 		 * @param XMLElement $wrapper - parent element wrapping the field
 		 * @param array $errors - array with field errors, $errors['name-of-field-element']
 		 */
-		public function displaySettingsPanel(&$wrapper, $errors=NULL)
-		{
+		public function displaySettingsPanel(&$wrapper, $errors=NULL){
 			// initialize field settings based on class defaults (name, placement)
 			parent::displaySettingsPanel($wrapper, $errors);
 
@@ -45,7 +42,7 @@
 
 			$options = array();
 			if(!empty($templates) && is_array($templates)){
-				foreach($templates as $template) {
+				foreach($templates as $template){
 					$about = $template->about;
 					$options[] = array(
 						$template->getHandle(),
@@ -58,10 +55,10 @@
 			$label = Widget::Label(__('Email Template'));
 			$label->appendChild(Widget::Select('fields['.$this->get('sortorder').'][template]', $options));
 
-			if(isset($errors['sender'])) {
+			if(isset($errors['sender'])){
 				$group->appendChild(Widget::wrapFormElementWithError($label, $errors['sender']));
 			}
-			else {
+			else{
 				$group->appendChild($label);
 			}
 
@@ -72,7 +69,7 @@
 
 			$options = array();
 			if(!empty($senders) && is_array($senders)){
-				foreach($senders as $sender) {
+				foreach($senders as $sender){
 					$options[] = array(
 						$sender['handle'],
 						$this->get('sender') == $sender['handle'],
@@ -82,10 +79,10 @@
 			}
 			$label = Widget::Label(__('Newsletter Sender'));
 			$label->appendChild(Widget::Select('fields['.$this->get('sortorder').'][sender]', $options));
-			if(isset($errors['sender'])) {
+			if(isset($errors['sender'])){
 				$group->appendChild(Widget::wrapFormElementWithError($label, $errors['sender']));
 			}
-			else {
+			else{
 				$group->appendChild($label);
 			}
 			$wrapper->appendChild($group);
@@ -101,7 +98,7 @@
 				if(is_array($recgs)){
 					$recgs = implode(',',$recgs);
 				}
-				foreach($recipient_groups as $recipient_group) {
+				foreach($recipient_groups as $recipient_group){
 					$count += 1;
 					$options[] = array(
 						$recipient_group['handle'],
@@ -113,10 +110,10 @@
 			$group = new XMLElement('div', NULL, array('class' => 'group'));
 			$label = Widget::Label(__('Newsletter Recipient Groups'));
 			$label->appendChild(Widget::Select('fields['.$this->get('sortorder').'][recipient_groups][]', $options, array('multiple'=>'multiple')));
-			if(isset($errors['recipient_groups'])) {
+			if(isset($errors['recipient_groups'])){
 				$group->appendChild(Widget::wrapFormElementWithError($label, $errors['recipient_groups']));
 			}
-			else {
+			else{
 				$group->appendChild($label);
 			}
 			$wrapper->appendChild($group);
@@ -131,8 +128,7 @@
 		 * @param array $errors
 		 * @param boolean $checkForDuplicates
 		 */
-		public function checkFields(&$errors, $checkForDuplicates=true)
-		{
+		public function checkFields(&$errors, $checkForDuplicates=true){
 			if(!is_array($errors)) $errors = array();
 			$recipient_groups = $this->get('recipient_groups');
 			if(empty($recipient_groups)){
@@ -144,8 +140,7 @@
 		/**
 		* Save fields settings in section editor
 		*/
-		public function commit()
-		{
+		public function commit(){
 			// prepare commit
 			if(!parent::commit()) return false;
 			$id = $this->get('id');
@@ -174,8 +169,7 @@
 		/**
 		 * Create database table for entries
 		 */
-		public function createTable()
-		{
+		public function createTable(){
 			Symphony::Database()->query(
 				"CREATE TABLE IF NOT EXISTS `tbl_entries_data_".$this->get('id')."` (
 				  `id` int(11) unsigned NOT NULL auto_increment,
