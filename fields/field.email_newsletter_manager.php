@@ -178,24 +178,13 @@
 		{
 			Symphony::Database()->query(
 				"CREATE TABLE IF NOT EXISTS `tbl_entries_data_".$this->get('id')."` (
-				 `id` int(11) unsigned NOT NULL auto_increment,
-				 `entry_id` int(11) unsigned NOT NULL,
-				 `author_id` int(11) unsigned NOT NULL,
-				 `sender_id` int(11) unsigned default NULL,
-				 `rec_group_ids` varchar(255) default NULL,
-				 `config_xml` text,
-				 `status` enum('processing','cancel','error','sent') NULL default NULL,
-				 `error_message` varchar(255) default NULL,
-				 `log_file` varchar(255) default NULL,
-				 `subject` varchar(255) default NULL,
-				 `content_html` mediumtext,
-				 `content_text` mediumtext,
-				 `rec_mailto` mediumtext,
-				 `rec_invalid` mediumtext,
-				 `rec_replacements` mediumtext,
-				 `stats_rec_total` int(10) unsigned default NULL,
-				 `stats_rec_sent` int(10) unsigned default NULL,
-				 `stats_rec_errors` int(10) unsigned default NULL,
+				  `id` int(11) unsigned NOT NULL auto_increment,
+				  `entry_id` int(11) unsigned NOT NULL,
+				  `author_id` int(11) unsigned NOT NULL,
+				  `template` varchar(255),
+				  `sender` varchar(255),
+				  `recipient_groups` text,
+				  `newsletter_id` int(11) unsigned NOT NULL,
 				  PRIMARY KEY  (`id`),
 				  KEY `entry_id` (`entry_id`)
 				) ENGINE=MyISAM;"
