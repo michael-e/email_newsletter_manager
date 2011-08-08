@@ -32,38 +32,44 @@
 		 * @param array $errors - array with field errors, $errors['name-of-field-element']
 		 */
 		public function displaySettingsPanel(&$wrapper, $errors=NULL){
+
 			// initialize field settings based on class defaults (name, placement)
 			parent::displaySettingsPanel($wrapper, $errors);
 
-			// build selector for email template (display all, select one)
+			// build selector for email templates
 			require_once(EXTENSIONS . '/email_template_manager/lib/class.emailtemplatemanager.php');
 			$email_template_manager = new EmailTemplateManager(Symphony::Engine());
-			$templates = $email_template_manager->listAll();
+			$all_templates = $email_template_manager->listAll();
 
 			$options = array();
-			if(!empty($templates) && is_array($templates)){
-				foreach($templates as $template){
+			if(!empty($all_templates) && is_array($all_templates)){
+				$templates = $this->get('templates');
+				if(is_array($templates)){
+					$templates = implode(',',$templates);
+				}
+				foreach($all_templates as $template){
 					$about = $template->about;
+					$handle = $template->getHandle();
 					$options[] = array(
-						$template->getHandle(),
-						$this->get('template') == $template->getHandle(),
+						$handle,
+						in_array($handle, explode(',', $templates)),
 						$about['name']
 					);
 				}
 			}
 			$group = new XMLElement('div', NULL, array('class' => 'group'));
-			$label = Widget::Label(__('Email Template'));
-			$label->appendChild(Widget::Select('fields['.$this->get('sortorder').'][template]', $options));
+			$label = Widget::Label(__('Email Templates'));
+			$label->appendChild(Widget::Select('fields['.$this->get('sortorder').'][templates][]', $options, array('multiple'=>'multiple')));
 
-			if(isset($errors['template'])){
-				$group->appendChild(Widget::wrapFormElementWithError($label, $errors['template']));
+			if(isset($errors['templates'])){
+				$group->appendChild(Widget::wrapFormElementWithError($label, $errors['templates']));
 			}
 			else{
 				$group->appendChild($label);
 			}
 			$wrapper->appendChild($group);
 
-			// build selector for senders (display all, select multiple)
+			// build selector for senders
 			require_once(EXTENSIONS . '/email_newsletter_manager/lib/class.sendermanager.php');
 			$sender_manager = new SenderManager(Symphony::Engine());
 			$all_senders = $sender_manager->listAll();
@@ -77,7 +83,6 @@
 				foreach($all_senders as $sender){
 					$options[] = array(
 						$sender['handle'],
-						// $this->get('senders') == $sender['handle'],
 						in_array($sender['handle'], explode(',', $senders)),
 						$sender['name']
 					);
@@ -93,21 +98,21 @@
 				$group->appendChild($label);
 			}
 
-			// build selector for recipient groups (display all, select multiple)
+			// build selector for recipient groups
 			require_once(EXTENSIONS . '/email_newsletter_manager/lib/class.recipientgroupmanager.php');
 			$recipient_group_manager = new RecipientgroupManager(Symphony::Engine());
-			$recipient_groups = $recipient_group_manager->listAll();
+			$all_recipient_groups = $recipient_group_manager->listAll();
 
 			$options = array();
-			if(!empty($recipient_groups) && is_array($recipient_groups)){
-				$recgs = $this->get('recipient_groups');
-				if(is_array($recgs)){
-					$recgs = implode(',',$recgs);
+			if(!empty($all_recipient_groups) && is_array($all_recipient_groups)){
+				$recipient_groups = $this->get('recipient_groups');
+				if(is_array($recipient_groups)){
+					$recipient_groups = implode(',',$recipient_groups);
 				}
-				foreach($recipient_groups as $recipient_group){
+				foreach($all_recipient_groups as $recipient_group){
 					$options[] = array(
 						$recipient_group['handle'],
-						in_array($recipient_group['handle'], explode(',', $recgs)),
+						in_array($recipient_group['handle'], explode(',', $recipient_groups)),
 						$recipient_group['name']
 					);
 				}
@@ -134,6 +139,10 @@
 		 */
 		public function checkFields(&$errors, $checkForDuplicates=true){
 			if(!is_array($errors)) $errors = array();
+			$templates = $this->get('templates');
+			if(empty($templates)){
+				$errors['templates'] = __('This is a required field.');
+			}
 			$senders = $this->get('senders');
 			if(empty($senders)){
 				$errors['senders'] = __('This is a required field.');
@@ -157,8 +166,8 @@
 			// set up fields
 			$fields = array();
 			$fields['field_id'] = $id;
-			if($this->get('template')){
-				$fields['template'] = $this->get('template');
+			if($this->get('templates')){
+				$fields['templates'] = implode(',', $this->get('templates'));
 			}
 			if($this->get('senders')){
 				$fields['senders'] = implode(',', $this->get('senders'));
