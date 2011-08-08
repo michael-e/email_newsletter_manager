@@ -55,8 +55,8 @@
 			$label = Widget::Label(__('Email Template'));
 			$label->appendChild(Widget::Select('fields['.$this->get('sortorder').'][template]', $options));
 
-			if(isset($errors['sender'])){
-				$group->appendChild(Widget::wrapFormElementWithError($label, $errors['sender']));
+			if(isset($errors['template'])){
+				$group->appendChild(Widget::wrapFormElementWithError($label, $errors['template']));
 			}
 			else{
 				$group->appendChild($label);
