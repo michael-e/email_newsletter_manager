@@ -183,9 +183,6 @@
 				  `id` int(11) unsigned NOT NULL auto_increment,
 				  `entry_id` int(11) unsigned NOT NULL,
 				  `author_id` int(11) unsigned NOT NULL,
-				  `template` varchar(255),
-				  `senders` text,
-				  `recipient_groups` text,
 				  `newsletter_id` int(11) unsigned NOT NULL,
 				  PRIMARY KEY  (`id`),
 				  KEY `entry_id` (`entry_id`)
