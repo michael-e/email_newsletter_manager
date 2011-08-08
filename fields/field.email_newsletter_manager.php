@@ -61,36 +61,37 @@
 			else{
 				$group->appendChild($label);
 			}
+			$wrapper->appendChild($group);
 
-			/*
-				TODO change this to 'display all, select multiple';
-				stupid ME...
-				tracked as issue #15
-			*/
-			// build selector for sender (display all, select one)
+			// build selector for senders (display all, select multiple)
 			require_once(EXTENSIONS . '/email_newsletter_manager/lib/class.sendermanager.php');
 			$sender_manager = new SenderManager(Symphony::Engine());
-			$senders = $sender_manager->listAll();
+			$all_senders = $sender_manager->listAll();
 
 			$options = array();
-			if(!empty($senders) && is_array($senders)){
-				foreach($senders as $sender){
+			if(!empty($all_senders) && is_array($all_senders)){
+				$senders = $this->get('senders');
+				if(is_array($senders)){
+					$senders = implode(',',$senders);
+				}
+				foreach($all_senders as $sender){
 					$options[] = array(
 						$sender['handle'],
-						$this->get('sender') == $sender['handle'],
+						// $this->get('senders') == $sender['handle'],
+						in_array($sender['handle'], explode(',', $senders)),
 						$sender['name']
 					);
 				}
 			}
-			$label = Widget::Label(__('Newsletter Sender'));
-			$label->appendChild(Widget::Select('fields['.$this->get('sortorder').'][sender]', $options));
-			if(isset($errors['sender'])){
-				$group->appendChild(Widget::wrapFormElementWithError($label, $errors['sender']));
+			$group = new XMLElement('div', NULL, array('class' => 'group'));
+			$label = Widget::Label(__('Newsletter Senders'));
+			$label->appendChild(Widget::Select('fields['.$this->get('sortorder').'][senders][]', $options, array('multiple'=>'multiple')));
+			if(isset($errors['senders'])){
+				$group->appendChild(Widget::wrapFormElementWithError($label, $errors['senders']));
 			}
 			else{
 				$group->appendChild($label);
 			}
-			$wrapper->appendChild($group);
 
 			// build selector for recipient groups (display all, select multiple)
 			require_once(EXTENSIONS . '/email_newsletter_manager/lib/class.recipientgroupmanager.php');
@@ -111,7 +112,6 @@
 					);
 				}
 			}
-			$group = new XMLElement('div', NULL, array('class' => 'group'));
 			$label = Widget::Label(__('Newsletter Recipient Groups'));
 			$label->appendChild(Widget::Select('fields['.$this->get('sortorder').'][recipient_groups][]', $options, array('multiple'=>'multiple')));
 			if(isset($errors['recipient_groups'])){
@@ -134,6 +134,10 @@
 		 */
 		public function checkFields(&$errors, $checkForDuplicates=true){
 			if(!is_array($errors)) $errors = array();
+			$senders = $this->get('senders');
+			if(empty($senders)){
+				$errors['senders'] = __('This is a required field.');
+			}
 			$recipient_groups = $this->get('recipient_groups');
 			if(empty($recipient_groups)){
 				$errors['recipient_groups'] = __('This is a required field.');
@@ -156,11 +160,11 @@
 			if($this->get('template')){
 				$fields['template'] = $this->get('template');
 			}
-			if($this->get('sender')){
-				$fields['sender'] = $this->get('sender');
+			if($this->get('senders')){
+				$fields['senders'] = implode(',', $this->get('senders'));
 			}
 			if($this->get('recipient_groups')){
-				$fields['recipient_groups'] = implode(",", $this->get('recipient_groups'));
+				$fields['recipient_groups'] = implode(',', $this->get('recipient_groups'));
 			}
 
 			// delete old field settings
@@ -180,7 +184,7 @@
 				  `entry_id` int(11) unsigned NOT NULL,
 				  `author_id` int(11) unsigned NOT NULL,
 				  `template` varchar(255),
-				  `sender` varchar(255),
+				  `senders` text,
 				  `recipient_groups` text,
 				  `newsletter_id` int(11) unsigned NOT NULL,
 				  PRIMARY KEY  (`id`),
@@ -599,7 +603,7 @@
 			}
 
 			// sender
-			$sender = new XMLElement('sender');
+			$sender = new XMLElement('senders');
 			$sender_id = $data['sender_id'];
 			if(!empty($sender_id))
 			{
