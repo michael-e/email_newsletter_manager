@@ -104,7 +104,6 @@
 					$recgs = implode(',',$recgs);
 				}
 				foreach($recipient_groups as $recipient_group){
-					$count += 1;
 					$options[] = array(
 						$recipient_group['handle'],
 						in_array($recipient_group['handle'], explode(',', $recgs)),
