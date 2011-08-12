@@ -6,6 +6,7 @@
 	require_once(EXTENSIONS . '/email_template_manager/lib/class.emailtemplatemanager.php');
 	require_once(EXTENSIONS . '/email_newsletter_manager/lib/class.sendermanager.php');
 	require_once(EXTENSIONS . '/email_newsletter_manager/lib/class.recipientgroupmanager.php');
+	require_once(EXTENSIONS . '/email_newsletter_manager/lib/class.emailnewslettermanager.php');
 
 	/**
 	 * Field: Email Newsletter Manager
@@ -477,26 +478,33 @@
 				unwanted or invalid properties;
 			*/
 
-			if($entry_id) $entry_data = Symphony::Database()->fetchRow(0, "SELECT * FROM `tbl_entries_data_".$this->get('id')."` WHERE `entry_id` = $entry_id LIMIT 1");
+			$entry_data = array();
+			if($entry_id){
+				// grab existing entry data
+				$entry_data = Symphony::Database()->fetchRow(0, sprintf(
+					"SELECT *
+					 FROM `tbl_entries_data_%d`
+					 WHERE `entry_id` = %d
+					 LIMIT 1",
+					$this->get('id'),
+					$entry_id
+				));
+			}
+
+			$newsletterManager = new EmailNewsletterManager($this->_Parent);
+			$newsletter = $newsletterManager->save(array(
+				'id'               => $entry_data['newsletter_id'],
+				'template'         => $data['template'],
+				'recipients'       => implode(',', $data['recipient_groups']),
+				'sender'           => $data['sender'],
+				'started_by'       => Administration::instance()->Author->get('id'),
+			));
+			$properties = $newsletter->getProperties();
+			$newsletter_id = $properties['id'];
 
 			$result = array(
-				'author_id'        => $data['author_id'],
-				'sender_id'        => $data['sender_id'],
-				'rec_group_ids'    => $data['recipient_group_ids'] ? implode(',', $data['recipient_group_ids']) : NULL,
-				// Subject: strip excess whitespace
-				'subject'          => preg_replace('/\s\s+/', ' ', trim($data['subject'])),
-				'status'           => $entry_data['status'],
-				'error_message'    => $entry_data['error_message'],
-				'config_xml'       => $entry_data['config_xml'],
-				'log_file'         => $entry_data['log_file'],
-				'content_html'     => $entry_data['content_html'],
-				'content_text'     => $entry_data['content_text'],
-				'rec_mailto'       => $entry_data['rec_mailto'],
-				'rec_invalid'      => $entry_data['rec_invalid'],
-				'rec_replacements' => $entry_data['rec_replacements'],
-				'stats_rec_total'  => $entry_data['stats_rec_total'],
-				'stats_rec_sent'   => $entry_data['stats_rec_sent'],
-				'stats_rec_errors' => $entry_data['stats_rec_errors'],
+				'author_id' => Administration::instance()->Author->get('id'),
+				'newsletter_id' => $newsletter_id,
 			);
 			return $result;
 		}
@@ -604,8 +612,7 @@
 		 * @param array $entry_data
 		 * @return string HTML table
 		 */
-		private function __buildStatusTable($entry_data)
-		{
+		private function __buildStatusTable($entry_data){
 			$aTableHead = array(
 				array(__('Total'), 'col'),
 				array(__('Sent'), 'col'),
