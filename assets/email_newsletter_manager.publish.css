@@ -30,7 +30,8 @@
 
 .field-email_newsletter_manager .recipient-group
 {
-	margin-bottom: 0.25em;
+	margin-top: 0;
+	margin-bottom: 0.3em;
 }
 
 .field-email_newsletter_manager .recipient-group input[type=checkbox]
