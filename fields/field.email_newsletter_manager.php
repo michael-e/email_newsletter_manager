@@ -267,7 +267,7 @@
 			$status = NULL;
 
 			// get newsletter properties
-			$email_newsletter_manager = new EmailNewsletterManager($this->_Parent);
+			$email_newsletter_manager = new EmailNewsletterManager(Symphony::Engine());
 			$newsletter_properties = array();
 			if($data['newsletter_id']){
 				$newsletter = $email_newsletter_manager->get($data['newsletter_id']);
@@ -497,7 +497,7 @@
 				));
 			}
 
-			$newsletterManager = new EmailNewsletterManager($this->_Parent);
+			$newsletterManager = new EmailNewsletterManager(Symphony::Engine());
 			$newsletter = $newsletterManager->save(array(
 				'id'               => $entry_data['newsletter_id'],
 				'template'         => $data['template'],
