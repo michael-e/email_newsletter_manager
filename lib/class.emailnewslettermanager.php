@@ -9,7 +9,7 @@ class EmailNewsletterManagerException extends Exception{
 }
 
 Class EmailNewsletterManager extends Manager{
-	
+
 	public function listAll($start_page = 1, $limit = NULL){
 		if($start_page < 1){
 			$start_page = 1;
@@ -19,11 +19,11 @@ Class EmailNewsletterManager extends Manager{
 		}
 		else{
 			$limit_query = ' LIMIT ' . ((int)$start_page - 1) * (int)$limit . ', ' . (int)$limit;
-		}		
+		}
 		$newsletters = Symphony::Database()->fetch('SELECT * from `tbl_email_newsletters`' . $limit_query);
 		return $newsletters;
 	}
-	
+
 	public function &create($id = NULL){
 		$newsletter = Symphony::Database()->fetchRow(0, 'SELECT * from `tbl_email_newsletters` WHERE `id` = "' . $id . '" LIMIT 1');
 		if(!empty($newsletter)){
@@ -33,7 +33,6 @@ Class EmailNewsletterManager extends Manager{
 			throw new EmailNewsletterManagerException(__('Newsletter with id %s not found.', array($id)));
 		}
 	}
-	
 
 	public function get($id = NULL){
 		return $this->create($id);
@@ -41,7 +40,7 @@ Class EmailNewsletterManager extends Manager{
 
 	public function save($data){
 		if(Symphony::Database()->insert($data, 'tbl_email_newsletters', true)){
-			if($id = Symphony::Database()->getInsertID()){
+			if(($id = Symphony::Database()->getInsertID()) || ($id = $data['id'])){
 				return $this->create($id);
 			}
 		}
