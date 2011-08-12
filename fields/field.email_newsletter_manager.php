@@ -422,12 +422,15 @@
 						}
 						$gui->appendChild($p);
 					}
-					else{
+					elseif(count($recipient_groups_options) == 1){
 						$gui->appendChild(Widget::Input(
 							'fields['.$this->get('element_name').'][recipient_groups][]',
 							$recipient_groups_options[0][0],
 							'hidden')
 						);
+					}
+					else{
+						$gui->appendChild(new XMLElement('p', __('No recipient group has been configured.')));
 					}
 
 					// build 'save and send' button
