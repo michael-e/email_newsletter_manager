@@ -3,10 +3,12 @@
 // ini_set('display_errors', 'On');
 // error_reporting(E_ALL | E_STRICT);
 
-	require_once(EXTENSIONS . '/email_template_manager/lib/class.emailtemplatemanager.php');
-	require_once(EXTENSIONS . '/email_newsletter_manager/lib/class.sendermanager.php');
-	require_once(EXTENSIONS . '/email_newsletter_manager/lib/class.recipientgroupmanager.php');
-	require_once(EXTENSIONS . '/email_newsletter_manager/lib/class.emailnewslettermanager.php');
+	if(!defined('ETMDIR')) define('ENMDIR', EXTENSIONS . "/email_template_manager");
+	if(!defined('ENMDIR')) define('ENMDIR', EXTENSIONS . "/email_newsletter_manager");
+	require_once(ETMDIR . '/lib/class.emailtemplatemanager.php');
+	require_once(ENMDIR . '/lib/class.sendermanager.php');
+	require_once(ENMDIR . '/lib/class.recipientgroupmanager.php');
+	require_once(ENMDIR . '/lib/class.emailnewslettermanager.php');
 
 	/**
 	 * Field: Email Newsletter Manager
