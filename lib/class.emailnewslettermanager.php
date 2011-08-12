@@ -34,6 +34,11 @@ Class EmailNewsletterManager extends Manager{
 		}
 	}
 	
+
+	public function get($id = NULL){
+		return $this->create($id);
+	}
+
 	public function save($data){
 		if(Symphony::Database()->insert($data, 'tbl_email_newsletters', true)){
 			if($id = Symphony::Database()->getInsertID()){
