@@ -3,12 +3,17 @@
 // ini_set('display_errors', 'On');
 // error_reporting(E_ALL | E_STRICT);
 
+	require_once(EXTENSIONS . '/email_template_manager/lib/class.emailtemplatemanager.php');
+	require_once(EXTENSIONS . '/email_newsletter_manager/lib/class.sendermanager.php');
+	require_once(EXTENSIONS . '/email_newsletter_manager/lib/class.recipientgroupmanager.php');
+
 	/**
 	 * Field: Email Newsletter Manager
 	 *
 	 * @package Email Newsletter Manager
 	 **/
 	class fieldEmail_Newsletter_Manager extends Field{
+
 		protected $_field_id;
 		protected $_entry_id;
 		protected $_section_id;
@@ -37,7 +42,6 @@
 			parent::displaySettingsPanel($wrapper, $errors);
 
 			// build selector for email templates
-			require_once(EXTENSIONS . '/email_template_manager/lib/class.emailtemplatemanager.php');
 			$email_template_manager = new EmailTemplateManager(Symphony::Engine());
 			$all_templates = $email_template_manager->listAll();
 
@@ -70,7 +74,6 @@
 			$wrapper->appendChild($group);
 
 			// build selector for senders
-			require_once(EXTENSIONS . '/email_newsletter_manager/lib/class.sendermanager.php');
 			$sender_manager = new SenderManager(Symphony::Engine());
 			$all_senders = $sender_manager->listAll();
 
@@ -99,7 +102,6 @@
 			}
 
 			// build selector for recipient groups
-			require_once(EXTENSIONS . '/email_newsletter_manager/lib/class.recipientgroupmanager.php');
 			$recipient_group_manager = new RecipientgroupManager(Symphony::Engine());
 			$all_recipient_groups = $recipient_group_manager->listAll();
 
@@ -206,16 +208,13 @@
 		/**
 		 * Append newsletter status to entry table
 		 */
-		public function prepareTableValue($data, XMLElement $link=NULL)
-		{
+		public function prepareTableValue($data, XMLElement $link=NULL){
 			if(!is_array($data) || empty($data)) return;
 			$value = null;
-			if(isset($data['status']))
-			{
+			if(isset($data['status'])){
 				$value = $data['status'];
 			}
-			switch ($value)
-			{
+			switch ($value){
 				case 'processing':
 					$value = __('Processing...');
 					break;
@@ -239,8 +238,7 @@
 		 *
 		 * @return boolean
 		 */
-		public function isSortable()
-		{
+		public function isSortable(){
 			return true;
 		}
 
@@ -256,74 +254,65 @@
 		 * @param $fieldnamePrefix
 		 * @param $fieldnamePostfix
 		 */
-		public function displayPublishPanel(&$wrapper, $data=NULL, $flagWithError=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL)
-		{
-			Administration::instance()->Page->addScriptToHead(URL . '/extensions/email_newsletters/assets/email-newsletters.js', 1001);
-			Administration::instance()->Page->addStylesheetToHead(URL . '/extensions/email_newsletters/assets/email-newsletters.css', 'screen', 1000);
+		public function displayPublishPanel(&$wrapper, $data=NULL, $flagWithError=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL){
+			Administration::instance()->Page->addScriptToHead(URL . '/extensions/email_newsletter_manager/assets/email_newsletter_manager.publish.js', 1001);
+			Administration::instance()->Page->addStylesheetToHead(URL . '/extensions/email_newsletter_manager/assets/email_newsletter_manager.publish.css', 'screen', 1000);
 
 			$this->_field_id = $this->get('id');
 			$this->_entry_id = Administration::instance()->Page->_context['entry_id'];
-			$section_handle = Administration::instance()->Page->_context['section_handle'];
-			$this->_section_id = Symphony::Database()->fetchVar('id', 0, "SELECT id FROM `tbl_sections` WHERE `handle` = '".$section_handle."' LIMIT 1");
 
-			// post action 'cancel';
-			// status must not be 'error' (which will be the final status after cancelling) to prohibit problems caused by page reload
-			$status = !empty($this->_entry_id) ? Symphony::Database()->fetchVar('status', 0, "SELECT status FROM `tbl_entries_data_".$this->_field_id."` WHERE `entry_id` = $this->_entry_id LIMIT 1") : NULL;
-			if(isset($_POST['action']['en-cancel-'.$this->_field_id]) && $status != 'error')
-			{
-				$this->__updateEntryData(array(
-					'status' => 'cancel',
-				));
+
+			$status = NULL;
+
+
+			$email_template_manager = new EmailTemplateManager(Symphony::Engine());
+			$all_templates = $email_template_manager->listAll();
+
+			$templates_options = array();
+			if(!empty($all_templates) && is_array($all_templates)){
+				$templates = explode(',', $this->get('templates'));
+				foreach($all_templates as $template){
+					$about = $template->about;
+					$handle = $template->getHandle();
+					if(in_array($handle, $templates)){
+						$templates_options[] = array(
+							$handle,
+							$about['name'],
+						);
+					}
+				}
 			}
 
-			// post action 'retry'
-			if(isset($_POST['action']['en-retry-'.$this->_field_id]))
-			{
-				$this->__updateEntryData(array(
-					'status' => NULL,
-					'error_message' => NULL,
-					'config_xml' => NULL,
-					'content_html' => NULL,
-					'content_text' => NULL,
-					'rec_mailto' => NULL,
-					'rec_invalid' => NULL,
-					'rec_replacements' => NULL,
-					'stats_rec_total' => NULL,
-					'stats_rec_sent' => NULL,
-					'stats_rec_errors' => NULL,
-				));
+			$sender_manager = new SenderManager(Symphony::Engine());
+			$all_senders = $sender_manager->listAll();
+
+			$senders_options = array();
+			if(!empty($all_senders) && is_array($all_senders)){
+				$senders = explode(',', $this->get('senders'));
+				foreach($all_senders as $sender){
+					if(in_array($sender['handle'], $senders)){
+						$senders_options[] = array(
+							$sender['handle'],
+							$sender['name'],
+						);
+					}
+				}
 			}
 
-			// get field configuration data
-			$field_data = Symphony::Database()->fetchRow(0, "SELECT * FROM `tbl_fields_email_newsletter` WHERE `field_id` = $this->_field_id LIMIT 1");
+			$recipient_group_manager = new RecipientgroupManager(Symphony::Engine());
+			$all_recipient_groups = $recipient_group_manager->listAll();
 
-			// get entry data
-			$entry_data = !empty($this->_entry_id) ? Symphony::Database()->fetchRow(0, "SELECT * FROM `tbl_entries_data_".$this->_field_id."` WHERE `entry_id` = $this->_entry_id LIMIT 1") : NULL;
-
-			$config                 = simplexml_load_string($field_data['config_xml']);
-			$element_name           = $this->get('element_name');
-			$author_id              = Administration::instance()->Author->get('id');
-			$status                 = $entry_data['status'];
-			$sender_id              = $entry_data['sender_id'];
-			$senders                = $config->xpath('senders/item');
-			$live_mode              = (string)$config->{'live-mode'} == '1' ? true : false;
-			$debug_info             = (string)$config->{'debug-info'} == '1' ? true : false;
-			$is_developer           = Administration::instance()->Author->isDeveloper();
-			$debug                  = ($is_developer === true && $debug_info === true) ? true : false;
-			$rec_groups             = $config->xpath('recipients/group');
-			$recipient_group_ids    = explode(',',$entry_data['rec_group_ids']);
-			$page_html_id           = (string)$config->content->{'page-html'}['page-id'];
-			$page_text_id           = (string)$config->content->{'page-text'}['page-id'];
-			$page_html_url_appendix = (string)$config->content->{'page-html'}['url-appendix'];
-			$page_text_url_appendix = (string)$config->content->{'page-text'}['url-appendix'];
-			$subject_field_label    = (string)$config->{'subject-field-label'};
-
-			// find the newsletter subject
-			$subject_field_handle = Lang::createHandle($subject_field_label);
-			$subject_field_id = $subject_field_handle ? Symphony::Database()->fetchVar('id', 0, "SELECT id FROM `tbl_fields` WHERE `element_name` = '".$subject_field_handle."' AND `parent_section` = '".$this->_section_id."' LIMIT 1") : NULL;
-			if($subject_field_id != $this->_field_id)
-			{
-				$subject = $subject_field_id ? Symphony::Database()->fetchVar('value', 0, "SELECT value FROM `tbl_entries_data_".$subject_field_id."` WHERE `entry_id` = '".$this->_entry_id."' LIMIT 1 ") : NULL;
+			$recipient_groups_options = array();
+			if(!empty($all_recipient_groups) && is_array($all_recipient_groups)){
+				$recipient_groups = explode(',', $this->get('recipient_groups'));
+				foreach($all_recipient_groups as $recipient_group){
+					if(in_array($recipient_group['handle'], $recipient_groups)){
+						$recipient_groups_options[] = array(
+							$recipient_group['handle'],
+							$recipient_group['name'],
+						);
+					}
+				}
 			}
 
 			// build header
@@ -334,188 +323,156 @@
 			$gui = new XMLElement('div');
 			$gui->setAttribute('class', 'email-newsletters-gui');
 
-			// build the hidden fields
-			$gui->appendChild(Widget::Input('fields['.$element_name.'][author_id]', $author_id, 'hidden'));
-			if($status !== NULL)
-			{
-				$gui->appendChild(Widget::Input('fields['.$element_name.'][sender_id]', $sender_id, 'hidden'));
-				foreach($rec_groups as $rec_group)
-				{
-					if(in_array($rec_group['id'], $recipient_group_ids))
-					{
-						$gui->appendChild(Widget::Input('fields['.$element_name.'][recipient_group_ids][]', $rec_group['id'], 'hidden'));
-					}
-				}
-			}
-			$gui->appendChild(Widget::Input('fields['.$element_name.'][subject]', General::sanitize($subject), 'hidden'));
-
 			// switch status
-			switch ($status)
-			{
+			switch ($status){
 				case "processing":
-					$gui->setAttribute('class', 'email-newsletters-gui reloadable');
-					$gui->appendChild(new XMLElement('p', __('Processing...')));
-					// calculate estimated time to run if throttling is active
-					// make sure that the first slice has been sent
-					// otherwise the initial value would definitely be wrong if the first slice sends all the emails
-					$mailer_params['throttle_number'] = (string)$config->throttling->{"emails-per-time-period"};
-					$mailer_params['throttle_period'] = (string)$config->throttling->{"time-period-in-seconds"};
-					$throttling_active = intval($mailer_params['throttle_number']) && intval($mailer_params['throttle_period']) ? true : false;
-					$recipients_exist = !empty($entry_data['stats_rec_total']) ? true : false;
-					$first_slice_sent = (!empty($entry_data['stats_rec_sent']) || !empty($entry_data['stats_rec_errors'])) ? true : false;
-					if($throttling_active && $recipients_exist && $first_slice_sent)
-					{
-						$time_to_run = ceil(($entry_data['stats_rec_total'] - $entry_data['stats_rec_sent'] - $entry_data['stats_rec_errors']) / intval($mailer_params['throttle_number'])) * intval($mailer_params['throttle_period']);
-						$gui->appendChild(new XMLElement('p', __('Estimated time left: ') . gmdate('H:i:s', $time_to_run)));
-					}
-					// standards
-					if(!empty($sender_id) && count($senders) > 1)
-					{
-						$sender = $config->xpath("senders/item[@id = $sender_id]");
-						$gui->appendChild(new XMLElement('p', __('Sender: ') . (string)$sender[0]));
-					}
-					$rec_groups_used = array();
-					foreach($rec_groups as $rec_group)
-					{
-						if(in_array($rec_group['id'], $recipient_group_ids))
-						{
-							$rec_groups_used[] = $rec_group;
-						}
-					}
-					if(!empty($rec_groups_used) && (count($rec_groups) > 1 || $debug === true))
-					{
-						$gui->appendChild(new XMLElement('p', __('Recipient groups: ') . implode(', ', $rec_groups_used)));
-					}
-					$gui->appendChild($this->__buildStatusTable($entry_data));
-					$p = new XMLElement('p');
-					$p->appendChild(new XMLElement('button', __('Cancel'), array('name' => 'action[en-cancel-'.$this->_field_id.']', 'type' => 'submit', 'class' => 'send')));
-					$gui->appendChild($p);
 					break;
 
 				case "cancel":
-					$gui->setAttribute('class', 'email-newsletters-gui reloadable');
-					$gui->appendChild(new XMLElement('p', __('Cancelling...')));
 					break;
 
 				case "error":
-					$gui->appendChild(new XMLElement('p', __($entry_data['error_message'])));
-					$gui->appendChild($this->__buildStatusTable($entry_data));
-					$p = new XMLElement('p');
-					$p->appendChild(new XMLElement('button', __('Retry'), array('name' => 'action[en-retry-'.$this->_field_id.']', 'type' => 'submit', 'class' => 'send')));
-					$gui->appendChild($p);
 					break;
 
 				case "sent":
-					$gui->appendChild(new XMLElement('p', '<strong>' . __('Mailing complete.') . '</strong>'));
-					$senders = $config->xpath('senders/item');
-					if(!empty($sender_id) && count($senders) > 1)
-					{
-						$sender = $config->xpath("senders/item[@id = $sender_id]");
-						$gui->appendChild(new XMLElement('p', __('Sender: ') . (string)$sender[0]));
-					}
-					$rec_groups_used = array();
-					foreach($rec_groups as $rec_group)
-					{
-						if(in_array($rec_group['id'], $recipient_group_ids))
-						{
-							$rec_groups_used[] = $rec_group;
-						}
-					}
-					if(!empty($rec_groups_used) && (count($rec_groups) > 1 || $debug === true))
-					{
-						$gui->appendChild(new XMLElement('p', __('Recipient groups: ') . implode(', ', $rec_groups_used)));
-					}
-					$gui->appendChild($this->__buildStatusTable($entry_data));
-					if($live_mode !== true)
-					{
-						$p = new XMLElement('p');
-						$p->appendChild(new XMLElement('button', __('Retry'), array('name' => 'action[en-retry-'.$this->_field_id.']', 'type' => 'submit', 'class' => 'send')));
-						$gui->appendChild($p);
-					}
 					break;
 
 				default:
-					$senders = $config->xpath('senders/item');
-					if(count($senders) > 1)
-					{
+					// build selector for email templates
+					if(count($templates_options) > 1){
 						$p = new XMLElement('p');
+						$options = array();
 						$options[] = array(NULL, NULL, __('--- please select ---'));
-						foreach($senders as $sender)
-						{
-							$sender_name = (string)$sender;
-							$sender_id = $sender['id'];
-							$options[] = array($sender_id, $entry_data['sender_id'] == $sender_id, $sender_name);
+						foreach($templates_options as $template){
+							/*
+								TODO we have to find out if the value
+								has been saved to the newsletter table;
+								hope we can do this using the API.
+								For the moment we just make it "true".
+							*/
+							$options[] = array($template[0], true, $template[1]);
 						}
-						$p->appendChild(Widget::label(__('Sender: '), Widget::Select('fields['.$element_name.'][sender_id]', $options)));
+						$p->appendChild(
+							Widget::Label(__('Email Template: '),
+							Widget::Select('fields['.$this->get('element_name').'][template]', $options))
+						);
 						$gui->appendChild($p);
 					}
-					else
-					{
-						$sender_id = $senders[0]['id'];
-						$gui->appendChild(Widget::Input('fields['.$element_name.'][sender_id]', $sender_id, 'hidden'));
+					elseif(count($templates_options) == 1){
+						$gui->appendChild(Widget::Input(
+							'fields['.$this->get('element_name').'][template]',
+							$templates_options[0][0],
+							'hidden')
+						);
 					}
-					if(count($rec_groups) > 1 || $debug === true)
-					{
-						$p = new XMLElement('p', __('Recipient groups: '));
+					else{
+						$gui->appendChild(new XMLElement('p', __('No email template has been configured.')));
+					}
+
+					// build selector for senders
+					if(count($senders_options) > 1){
+						$p = new XMLElement('p');
+						$options = array();
+						$options[] = array(NULL, NULL, __('--- please select ---'));
+						foreach($senders_options as $sender){
+							/*
+								TODO we have to find out if the value
+								has been saved to the newsletter table;
+								For the moment we just make it "true".
+							*/
+							$options[] = array($sender[0], true, $sender[1]);
+						}
+						$p->appendChild(
+							Widget::Label(__('Sender: '),
+							Widget::Select('fields['.$this->get('element_name').'][sender]', $options))
+						);
+						$gui->appendChild($p);
+					}
+					elseif(count($senders_options) == 1){
+						$gui->appendChild(Widget::Input(
+							'fields['.$this->get('element_name').'][sender]',
+							$senders_options[0][0],
+							'hidden')
+						);
+					}
+					else{
+						$gui->appendChild(new XMLElement('p', __('No sender has been configured.')));
+					}
+
+					// build checkboxes for recipient groups
+					if(count($recipient_groups_options) > 1){
+						$p = new XMLElement('p', __('Recipient Groups: '));
 						$gui->appendChild($p);
 						$p = new XMLElement('p', NULL, array('class' => 'recipient-groups'));
-						foreach($rec_groups as $rec_group)
-						{
+						foreach($recipient_groups_options as $recipient_group){
 							$label = Widget::Label();
-							$recipients = Widget::Input('fields['.$element_name.'][recipient_group_ids][]', $rec_group['id'], 'checkbox', (!empty($rec_group['id']) && (in_array($rec_group['id'], $recipient_group_ids)) ? array('checked' => 'checked') : NULL));
-							if($debug === true)
-							{
-								$rec_group_id = (string)$rec_group['id'];
-								$recipients_page_id = (string)$rec_group['page-id'];
-								$recipients_page_path = Administration::instance()->resolvePagePath($recipients_page_id);
-								$recipients_page_url = URL . '/' . $recipients_page_path . '/' . $this->__replaceParamsInString($rec_group['url-appendix']);
-								$developer_info = $recipients_page_path ? ' '.'<a href="'.$recipients_page_url.'" target="_blank">'.'XML'.'</a>' : '';
-								$rec_group = $rec_group . $developer_info;
-							}
-							$label->setValue($recipients->generate() . $rec_group);
+							$recipients = Widget::Input(
+								'fields['.$this->get('element_name').'][recipient_groups][]',
+								$recipient_group[0],
+								'checkbox',
+								/*
+									TODO has this value been saved?
+									(The following is legacy code)
+								*/
+								(!empty($recipient_group[0]) && (in_array($recipient_group[0], $recipient_groups_options)) ? array('checked' => 'checked') : NULL)
+							);
+							$label->setValue($recipients->generate() . $recipient_group[1]);
 							$label->setAttribute('class', 'recipient-group');
 							$p->appendChild($label);
 						}
 						$gui->appendChild($p);
 					}
-					else
-					{
-						$gui->appendChild(Widget::Input('fields['.$element_name.'][recipient_group_ids][]', $rec_groups[0]['id'], 'hidden'));
+					else{
+						$gui->appendChild(Widget::Input(
+							'fields['.$this->get('element_name').'][recipient_groups][]',
+							$recipient_groups_options[0][0],
+							'hidden')
+						);
 					}
-					if(isset($this->_entry_id))
-					{
-						// content links
-						$page_html_url = URL . '/' . Administration::instance()->resolvePagePath($page_html_id) . '/' . ltrim($this->__replaceParamsInString($page_html_url_appendix), '/');
-						$page_text_url = URL . '/' . Administration::instance()->resolvePagePath($page_text_id) . '/' . ltrim($this->__replaceParamsInString($page_text_url_appendix), '/');
-						$content_html_link = $page_html_id ? '<a href="'.$page_html_url.'" target="_blank">HTML</a>' : NULL;
-						$content_text_link = $page_text_id ? '<a href="'.$page_text_url.'" target="_blank">TEXT</a>' : NULL;
-						$content_links = new XMLElement('p', __('Content: ') . $content_html_link . (($page_html_id && $page_text_id) ? ' | ' : '') . $content_text_link);
-						$gui->appendChild($content_links);
+
+					// build 'save and send' button
+					if(isset($this->_entry_id)){
 						$p = new XMLElement('p');
-						$p->appendChild(new XMLElement('button', __('Send'), array('name' => 'action[save]', 'type' => 'submit', 'value' => 'en-send:'.$this->_field_id.':'.$this->_entry_id.':'.DOMAIN.':'.$live_mode, 'class' => 'send', 'id' => 'savesend')));
+						$p->appendChild(new XMLElement(
+							'button',
+							__('Send'),
+							array(
+								'name' => 'action[save]',
+								'type' => 'submit',
+								'value' => 'en-send:'.$this->_field_id.':'.$this->_entry_id.':'.DOMAIN.':'.$live_mode,
+								'class' => 'send',
+								'id' => 'savesend'
+							)
+						));
 						$gui->appendChild($p);
-						// append 'no live mode' information
-						if($live_mode !== true)
-						{
-							$gui->appendChild(new XMLElement('p', __('Live Mode has not been set. No emails will be sent.')));
-						}
 					}
-					else
-					{
+					else{
 						$p = new XMLElement('p', __('The entry has not been created yet. No emails can be sent.'));
 						$gui->appendChild($p);
 					}
 			}
 			$wrapper->appendChild($gui);
+
+			// // standard:
+			// if($flagWithError != NULL) $wrapper->appendChild(Widget::wrapFormElementWithError($label, $flagWithError));
+			// else $wrapper->appendChild($label);
+
 		}
 
 		/**
 		 * Prepares field values for database.
 		 */
-		public function processRawFieldData($data, &$status, $simulate = false, $entry_id = null)
-		{
+		public function processRawFieldData($data, &$status, $simulate = false, $entry_id = null){
 			$status = self::__OK__;
 			if(empty($data)) return NULL;
+
+			/*
+				TODO when saving a newsletter, we __must__ check if
+				the properties are valid (i.e. configured in the
+				section editor);
+				otherwise it would be super-simple to send with
+				unwanted or invalid properties;
+			*/
 
 			if($entry_id) $entry_data = Symphony::Database()->fetchRow(0, "SELECT * FROM `tbl_entries_data_".$this->get('id')."` WHERE `entry_id` = $entry_id LIMIT 1");
 
@@ -548,8 +505,7 @@
 		 * Allow data source filtering?
 		 * @return: boolean
 		 */
-		public function canFilter()
-		{
+		public function canFilter(){
 			return false;
 		}
 
@@ -557,8 +513,7 @@
 		 * Allow data source parameter output?
 		 * @return: boolean
 		 */
-		public function allowDatasourceParamOutput()
-		{
+		public function allowDatasourceParamOutput(){
 			return true;
 		}
 
@@ -566,8 +521,7 @@
 		 * get param pool value
 		 * @return: string email newsletter sender ID
 		 */
-		public function getParameterPoolValue($data)
-		{
+		public function getParameterPoolValue($data){
 			return $data['sender_id'];
 		}
 
@@ -575,8 +529,7 @@
 		 * Fetch includable elements (DS editor)
 		 * @return: array() elements
 		 */
-		public function fetchIncludableElements()
-		{
+		public function fetchIncludableElements(){
 			return array(
 				$this->get('element_name')
 			);
@@ -585,8 +538,7 @@
 		/**
 		 * Append element to datasource output
 		 */
-		public function appendFormattedElement(&$wrapper, $data, $encode = false)
-		{
+		public function appendFormattedElement(&$wrapper, $data, $encode = false){
 			$node = new XMLElement($this->get('element_name'));
 			$node->setAttribute('author-id', $data['author_id']);
 			$node->setAttribute('status', $data['status']);
@@ -598,12 +550,10 @@
 			// load configuration;
 			// use saved (entry) config XML if available (i.e.: if the email newsletter has been sent);
 			// fallback: the field's configuration XML
-			if(!empty($data['config_xml']))
-			{
+			if(!empty($data['config_xml'])){
 				$config = simplexml_load_string($data['config_xml']);
 			}
-			else
-			{
+			else{
 				$field_data = Symphony::Database()->fetchRow(0, "SELECT * FROM `tbl_fields_email_newsletter` WHERE `field_id` = ".$this->get('id')." LIMIT 1");
 				$config = simplexml_load_string($field_data['config_xml']);
 			}
@@ -611,8 +561,7 @@
 			// sender
 			$sender = new XMLElement('senders');
 			$sender_id = $data['sender_id'];
-			if(!empty($sender_id))
-			{
+			if(!empty($sender_id)){
 				$sender_data = $config->xpath("senders/item[@id = $sender_id]");
 				$sender->setValue((string)$sender_data[0]);
 				$sender->setAttribute('id', $data['sender_id']);
@@ -623,10 +572,8 @@
 			$rec_groups = $config->xpath('recipients/group');
 			$recipient_group_ids = explode(',', $data['rec_group_ids']);
 			$recipients = new XMLElement('recipients');
-			foreach($rec_groups as $rec_group)
-			{
-				if(in_array($rec_group['id'], $recipient_group_ids))
-				{
+			foreach($rec_groups as $rec_group){
+				if(in_array($rec_group['id'], $recipient_group_ids)){
 					$group = new XMLElement('group', $rec_group);
 					$group->setAttribute('id', $rec_group['id']);
 					$recipients->appendChild($group);
@@ -640,8 +587,7 @@
 		/**
 		 * Provide example form markup
 		 */
-		public function getExampleFormMarkup()
-		{
+		public function getExampleFormMarkup(){
 			// nothing to show here
 			return;
 		}
@@ -649,57 +595,6 @@
 /*-------------------------------------------------------------------------
 	Helpers
 -------------------------------------------------------------------------*/
-		/**
-		 * Update entry data
-		 *
-		 * @return Symphony method
-		 **/
-		private function __updateEntryData($array)
-		{
-			return Symphony::Database()->update($array, 'tbl_entries_data_'.$this->_field_id, "`entry_id` = '".$this->_entry_id."'");
-		}
-
-		/**
-		 * Replace parameters in string
-		 *
-		 * @param string $string
-		 * @return string $string
-		 */
-		private function __replaceParamsInString($string)
-		{
-			$params = $this->__findParamsInString($string);
-			if(is_array($params) && !empty($params))
-			{
-				foreach($params as $value)
-				{
-					if($value == 'id')
-					{
-						$string = str_replace('{$'.$value.'}', $this->_entry_id, $string);
-					}
-					else if($field_id = Symphony::Database()->fetchVar('id', 0, "SELECT id FROM `tbl_fields` WHERE `element_name` = '".$value."' AND `parent_section` = '".$this->_section_id."' LIMIT 1"))
-					{
-						$field_handle = Symphony::Database()->fetchVar('handle', 0, "SELECT handle FROM `tbl_entries_data_".$field_id."` WHERE `entry_id` = '".$this->_entry_id."' LIMIT 1");
-						$string = str_replace('{$'.$value.'}', $field_handle, $string);
-					}
-				}
-			}
-			return $string;
-		}
-
-		/**
-		 * Find parameters in string
-		 *
-		 * @param string $string
-		 * @return array $params
-		 */
-		private function __findParamsInString($string)
-		{
-			preg_match_all('/{\$([^:}]+)(::handle)?}/', $string, $matches);
-			$params = array_unique($matches[1]);
-			if(!is_array($params) || empty($params)) return array();
-			return $params;
-		}
-
 		/**
 		 * Build the email newsletter status table (counts)
 		 *
