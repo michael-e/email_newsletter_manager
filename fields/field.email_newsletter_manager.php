@@ -413,7 +413,7 @@
 						$p = new XMLElement('p', NULL, array('class' => 'recipient-groups'));
 						foreach($recipient_groups_options as $recipient_group){
 							$label = Widget::Label();
-							$recipients = Widget::Input(
+							$input = Widget::Input(
 								'fields['.$this->get('element_name').'][recipient_groups][]',
 								$recipient_group[0],
 								'checkbox',
@@ -421,7 +421,7 @@
 								? array('checked' => 'checked')
 								: NULL
 							);
-							$label->setValue($recipients->generate() . $recipient_group[1]);
+							$label->setValue($input->generate() . $recipient_group[1]);
 							$label->setAttribute('class', 'recipient-group');
 							$p->appendChild($label);
 						}
