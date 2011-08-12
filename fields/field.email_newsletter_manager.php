@@ -17,7 +17,6 @@
 
 		protected $_field_id;
 		protected $_entry_id;
-		protected $_section_id;
 
 		/**
 		 * Initialize as unrequired field
@@ -265,7 +264,15 @@
 
 			$status = NULL;
 
+			// get newsletter properties
+			$email_newsletter_manager = new EmailNewsletterManager($this->_Parent);
+			$newsletter_properties = array();
+			if($data['newsletter_id']){
+				$newsletter = $email_newsletter_manager->get($data['newsletter_id']);
+				$newsletter_properties = $newsletter->getProperties();
+			}
 
+			// get configured templates
 			$email_template_manager = new EmailTemplateManager(Symphony::Engine());
 			$all_templates = $email_template_manager->listAll();
 
@@ -284,6 +291,7 @@
 				}
 			}
 
+			// get configured senders
 			$sender_manager = new SenderManager(Symphony::Engine());
 			$all_senders = $sender_manager->listAll();
 
@@ -300,6 +308,7 @@
 				}
 			}
 
+			// get configured recipient groups
 			$recipient_group_manager = new RecipientgroupManager(Symphony::Engine());
 			$all_recipient_groups = $recipient_group_manager->listAll();
 
@@ -345,13 +354,11 @@
 						$options = array();
 						$options[] = array(NULL, NULL, __('--- please select ---'));
 						foreach($templates_options as $template){
-							/*
-								TODO we have to find out if the value
-								has been saved to the newsletter table;
-								hope we can do this using the API.
-								For the moment we just make it "true".
-							*/
-							$options[] = array($template[0], true, $template[1]);
+							$options[] = array(
+								$template[0],
+								$template[0] == $newsletter_properties['template'],
+								$template[1]
+							);
 						}
 						$p->appendChild(
 							Widget::Label(__('Email Template: '),
@@ -376,12 +383,11 @@
 						$options = array();
 						$options[] = array(NULL, NULL, __('--- please select ---'));
 						foreach($senders_options as $sender){
-							/*
-								TODO we have to find out if the value
-								has been saved to the newsletter table;
-								For the moment we just make it "true".
-							*/
-							$options[] = array($sender[0], true, $sender[1]);
+							$options[] = array(
+								$sender[0],
+								$sender[0] == $newsletter_properties['sender'],
+								$sender[1]
+							);
 						}
 						$p->appendChild(
 							Widget::Label(__('Sender: '),
@@ -411,11 +417,9 @@
 								'fields['.$this->get('element_name').'][recipient_groups][]',
 								$recipient_group[0],
 								'checkbox',
-								/*
-									TODO has this value been saved?
-									(The following is legacy code)
-								*/
-								(!empty($recipient_group[0]) && (in_array($recipient_group[0], $recipient_groups_options)) ? array('checked' => 'checked') : NULL)
+								(!empty($recipient_group[0]) && in_array($recipient_group[0], explode(',', $newsletter_properties['recipients'])))
+								? array('checked' => 'checked')
+								: NULL
 							);
 							$label->setValue($recipients->generate() . $recipient_group[1]);
 							$label->setAttribute('class', 'recipient-group');
