@@ -3,7 +3,7 @@
 // ini_set('display_errors', 'On');
 // error_reporting(E_ALL | E_STRICT);
 
-	if(!defined('ETMDIR')) define('ENMDIR', EXTENSIONS . "/email_template_manager");
+	if(!defined('ETMDIR')) define('ETMDIR', EXTENSIONS . "/email_template_manager");
 	if(!defined('ENMDIR')) define('ENMDIR', EXTENSIONS . "/email_newsletter_manager");
 	require_once(ETMDIR . '/lib/class.emailtemplatemanager.php');
 	require_once(ENMDIR . '/lib/class.sendermanager.php');
