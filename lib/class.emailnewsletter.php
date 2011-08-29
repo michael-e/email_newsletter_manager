@@ -37,11 +37,9 @@ class EmailNewsletter{
 	public function __construct($properties){
 		$this->_properties = $properties;
 
-		$tplm = new EmailTemplateManager($this->_Parent);
-		$this->_template = $tplm->load($properties['template']);
+		$this->_template = EmailTemplateManager::load($properties['template']);
 
-		$sndrm = new SenderManager($this->_Parent);
-		$this->_sender = $sndrm->create($properties['sender']);
+		$this->_sender = SenderManager::create($properties['sender']);
 
 		$groups = array_map('trim', (array)explode(',', $properties['recipients']));
 		$sender_about = $this->_sender->about();

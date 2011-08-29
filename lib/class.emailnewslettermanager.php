@@ -35,13 +35,13 @@ Class EmailNewsletterManager{
 	}
 
 	public static function get($id = NULL){
-		return $this->create($id);
+		return self::create($id);
 	}
 
 	public static function save($data){
 		if(Symphony::Database()->insert($data, 'tbl_email_newsletters', true)){
 			if(($id = Symphony::Database()->getInsertID()) || ($id = $data['id'])){
-				return $this->create($id);
+				return self::create($id);
 			}
 		}
 		else{

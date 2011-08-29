@@ -44,8 +44,7 @@
 			parent::displaySettingsPanel($wrapper, $errors);
 
 			// build selector for email templates
-			$email_template_manager = new EmailTemplateManager(Symphony::Engine());
-			$all_templates = $email_template_manager->listAll();
+			$all_templates = EmailTemplateManager::listAll();
 
 			$options = array();
 			if(!empty($all_templates) && is_array($all_templates)){
@@ -76,8 +75,7 @@
 			$wrapper->appendChild($group);
 
 			// build selector for senders
-			$sender_manager = new SenderManager(Symphony::Engine());
-			$all_senders = $sender_manager->listAll();
+			$all_senders = SenderManager::listAll();
 
 			$options = array();
 			if(!empty($all_senders) && is_array($all_senders)){
@@ -267,16 +265,14 @@
 			$status = NULL;
 
 			// get newsletter properties
-			$email_newsletter_manager = new EmailNewsletterManager(Symphony::Engine());
 			$newsletter_properties = array();
 			if($data['newsletter_id']){
-				$newsletter = $email_newsletter_manager->get($data['newsletter_id']);
+				$newsletter = EmailNewsletterManager::get($data['newsletter_id']);
 				$newsletter_properties = $newsletter->getProperties();
 			}
 
 			// get configured templates
-			$email_template_manager = new EmailTemplateManager(Symphony::Engine());
-			$all_templates = $email_template_manager->listAll();
+			$all_templates = EmailTemplateManager::listAll();
 
 			$templates_options = array();
 			if(!empty($all_templates) && is_array($all_templates)){
@@ -294,8 +290,7 @@
 			}
 
 			// get configured senders
-			$sender_manager = new SenderManager(Symphony::Engine());
-			$all_senders = $sender_manager->listAll();
+			$all_senders = SenderManager::listAll();
 
 			$senders_options = array();
 			if(!empty($all_senders) && is_array($all_senders)){
@@ -311,8 +306,7 @@
 			}
 
 			// get configured recipient groups
-			$recipient_group_manager = new RecipientgroupManager(Symphony::Engine());
-			$all_recipient_groups = $recipient_group_manager->listAll();
+			$all_recipient_groups = RecipientgroupManager::listAll();
 
 			$recipient_groups_options = array();
 			if(!empty($all_recipient_groups) && is_array($all_recipient_groups)){
@@ -497,8 +491,7 @@
 				));
 			}
 
-			$newsletterManager = new EmailNewsletterManager(Symphony::Engine());
-			$newsletter = $newsletterManager->save(array(
+			$newsletter = EmailNewsletterManager::save(array(
 				'id'               => $entry_data['newsletter_id'],
 				'template'         => $data['template'],
 				'recipients'       => implode(',', $data['recipient_groups']),
