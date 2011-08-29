@@ -8,9 +8,9 @@ require_once(ENMDIR . '/lib/class.emailnewsletter.php');
 class EmailNewsletterManagerException extends Exception{
 }
 
-Class EmailNewsletterManager extends Manager{
+Class EmailNewsletterManager{
 
-	public function listAll($start_page = 1, $limit = NULL){
+	public static function listAll($start_page = 1, $limit = NULL){
 		if($start_page < 1){
 			$start_page = 1;
 		}
@@ -24,7 +24,7 @@ Class EmailNewsletterManager extends Manager{
 		return $newsletters;
 	}
 
-	public function &create($id = NULL){
+	public static function &create($id = NULL){
 		$newsletter = Symphony::Database()->fetchRow(0, 'SELECT * from `tbl_email_newsletters` WHERE `id` = "' . $id . '" LIMIT 1');
 		if(!empty($newsletter)){
 			return new EmailNewsLetter($newsletter);
@@ -34,11 +34,11 @@ Class EmailNewsletterManager extends Manager{
 		}
 	}
 
-	public function get($id = NULL){
+	public static function get($id = NULL){
 		return $this->create($id);
 	}
 
-	public function save($data){
+	public static function save($data){
 		if(Symphony::Database()->insert($data, 'tbl_email_newsletters', true)){
 			if(($id = Symphony::Database()->getInsertID()) || ($id = $data['id'])){
 				return $this->create($id);

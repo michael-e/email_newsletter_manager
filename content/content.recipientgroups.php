@@ -22,13 +22,12 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 	function __viewIndex(){
 		$this->setPageType('index');
 		$this->setTitle(__("Symphony - Newsletter Recipient Groups"));
-		$recipientgroupManager = new RecipientgroupManager($this);
-		$groups = $recipientgroupManager->listAll();
+		$groups = RecipientgroupManager::listAll();
 		$senders = new XMLElement('recipientgroups');
 		foreach($groups as $group){
 			$entry = new XMLElement('entry');
 			General::array_to_xml($entry, $group);
-			$count = new XMLElement('count', $recipientgroupManager->create($group['handle'])->getCount());
+			$count = new XMLElement('count', RecipientgroupManager::create($group['handle'])->getCount());
 			$entry->appendChild($count);
 			$senders->appendChild($entry);
 		}
@@ -38,7 +37,7 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 	function __actionIndex(){
 		if($_POST['with-selected'] == 'delete'){
 			foreach((array)$_POST['items'] as $item=>$status){
-				RecipientGroupManager::delete($item);
+				RecipientgroupManager::delete($item);
 			}
 		}
 	}
@@ -98,8 +97,7 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 			/*
 				TODO add POST values to XML
 			*/
-			$groupManager = new RecipientgroupManager($this);
-			$group = $groupManager->create($this->_context[1]);
+			$group = RecipientgroupManager::create($this->_context[1]);
 			if(is_object($group)){
 				$entry = new XMLElement('entry');
 				$properties = $group->getProperties();
@@ -204,9 +202,8 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 
 	function __actionEdit($new = false){
 		$fields = $_POST['fields'];
-		$recipientGroupManager = new RecipientGroupManager($this->_Parent);
 		if(isset($_POST['action']['delete'])){
-			if($recipientGroupManager->delete($this->_context[1])){
+			if(RecipientgroupManager::delete($this->_context[1])){
 				redirect(SYMPHONY_URL . '/extension/email_newsletter_manager/recipientgroups');
 			}
 			else{
@@ -260,10 +257,9 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 	function __viewPreview(){
 		$this->setPageType('index');
 		$this->setTitle(__("Symphony - Newsletter Recipient Groups Preview"));
-		$groupManager = new RecipientgroupManager($this);
 		$sectionManager = new SectionManager($this);
 		try{
-			$source = $groupManager->create($this->_context[1]);
+			$source = RecipientgroupManager::create($this->_context[1]);
 		}
 		catch(Exception $e){
 			Administration::instance()->errorPageNotFound();

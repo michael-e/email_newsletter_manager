@@ -3,18 +3,18 @@
 require_once(TOOLKIT . '/class.manager.php');
 if(!defined('ENMDIR')) define('ENMDIR', EXTENSIONS . "/email_newsletter_manager");
 
-Class SenderManager extends Manager{
+Class SenderManager{
 
-	public function __getHandleFromFilename($filename){
+	public static function __getHandleFromFilename($filename){
 		$result = sscanf($filename, 'sender.%[^.].php');
 		return $result[0];
 	}
 
-	public function __getClassName($handle){
+	public static function __getClassName($handle){
 		return sprintf('sender%s', ucfirst($handle));
 	}
 
-	public function __getClassPath($handle, $new = false){
+	public static function __getClassPath($handle, $new = false){
 		if(is_file(WORKSPACE . "/email-newsletters/sender.$handle.php") || $new == true) return WORKSPACE . '/email-newsletters';
 		else{
 			$extensions = Symphony::ExtensionManager()->listInstalledHandles();
@@ -29,11 +29,11 @@ Class SenderManager extends Manager{
 		return false;
 	}
 
-	public function __getDriverPath($handle){
+	public static function __getDriverPath($handle){
 		return self::__getClassPath($handle, true) . "/sender.$handle.php";
 	}
 
-	public function listAll(){
+	public static function listAll(){
 		$result = array();
 
 		$structure = General::listStructure(WORKSPACE . '/email-newsletters', '/sender.[\\w-]+.php/', false, 'ASC', WORKSPACE . '/email-newsletters');
@@ -42,10 +42,10 @@ Class SenderManager extends Manager{
 			foreach($structure['filelist'] as $f){
 				$f = self::__getHandleFromFilename($f);
 
-				if($about = $this->about($f)){
+				if($about = self::about($f)){
 
-					$classname = $this->__getClassName($f);
-					$path = $this->__getDriverPath($f);
+					$classname = self::__getClassName($f);
+					$path = self::__getDriverPath($f);
 
 					$can_parse = true;
 
@@ -71,7 +71,7 @@ Class SenderManager extends Manager{
 					foreach($tmp['filelist'] as $f){
 						$f = self::__getHandleFromFilename($f);
 
-						if($about = $this->about($f)){
+						if($about = self::about($f)){
 							$about['can_parse'] = false;
 							$about['type'] = null;
 							$result[$f] = $about;
@@ -85,9 +85,9 @@ Class SenderManager extends Manager{
 		return $result;
 	}
 
-	public function &create($handle){
-		$classname = $this->__getClassName($handle);
-		$path = $this->__getDriverPath($handle);
+	public static function &create($handle){
+		$classname = self::__getClassName($handle);
+		$path = self::__getDriverPath($handle);
 
 		if(!is_file($path)){
 			throw new Exception(
@@ -101,7 +101,7 @@ Class SenderManager extends Manager{
 		if(!class_exists($classname)) require_once($path);
 
 		if(class_exists($classname)){
-			return new $classname($this->_Parent);
+			return new $classname(Symphony::Engine());
 		}
 		throw new Exception(
 			__(
@@ -112,7 +112,7 @@ Class SenderManager extends Manager{
 
 	}
 
-	public function save($handle = null, $fields){
+	public static function save($handle = null, $fields){
 		if($handle == Lang::createHandle($fields['name'], 255, '_') || $handle == null){
 			return self::_writeSender(Lang::createHandle($fields['name'], 255, '_'), self::_parseTemplate($fields));
 		}
@@ -126,8 +126,26 @@ Class SenderManager extends Manager{
 		}
 	}
 	
-	public function delete($handle = null){
+	public static function delete($handle = null){
 		return @unlink(self::__getDriverPath($handle));
+	}
+
+	public static function about($name){
+
+		$classname = self::__getClassName($name);
+		$path = self::__getDriverPath($name);
+
+		if(!@file_exists($path)) return false;
+
+		require_once($path);
+
+		$handle = self::__getHandleFromFilename(basename($path));
+
+		if(is_callable(array($classname, 'about'))){
+			$about = call_user_func(array($classname, 'about'));
+			return array_merge($about, array('handle' => $handle));
+		}
+
 	}
 
 	protected function _writeSender($handle, $contents){

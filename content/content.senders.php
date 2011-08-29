@@ -31,8 +31,7 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 	function __viewIndex(){
 		$this->setPageType('index');
 		$this->setTitle(__("Symphony - Email Senders"));
-		$senderManager = new SenderManager($this->_Parent);
-		$results = $senderManager->listAll();
+		$results = SenderManager::listAll();
 		$senders = new XMLElement('senders');
 		foreach($results as $result){
 			$entry = new XMLElement('entry');
@@ -50,7 +49,6 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 
 	function __viewEdit($new = false){
 		$this->setPageType('form');
-		$senderManager = new SenderManager($this->_Parent);
 		if($this->_context[2] == 'saved' || $this->_context[3] == 'saved'){
 			$this->pageAlert(
 				__(
@@ -68,7 +66,7 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 		$senders = new XMLElement('senders');
 
 		if(!$new){
-			$sender = $senderManager->create($this->_context[1]);
+			$sender = SenderManager::create($this->_context[1]);
 			
 			// Make sure the POSTED values are always shown when present.
 			// This will make sure the form is always up-to-date, even where there are errors.
@@ -120,7 +118,7 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 	function __actionIndex(){
 		if($_POST['with-selected'] == 'delete'){
 			foreach((array)$_POST['items'] as $item=>$status){
-				$senderManager->delete($item);
+				SenderManager::delete($item);
 			}
 		}
 	}
@@ -128,9 +126,8 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 	function __actionEdit($new = false){
 		$fields = array_merge($_POST['fields'], $_POST['settings']);
 
-		$senderManager = new SenderManager($this->_Parent);
 		try{
-			$result = $senderManager->create($this->_context[1]);
+			$result = SenderManager::create($this->_context[1]);
 			$fields['additional_headers'] = $result->additional_headers;
 		}
 		catch(Exception $e){
@@ -141,7 +138,7 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 		}
 
 		if(isset($_POST['action']['delete'])){
-			if($senderManager->delete($this->_context[1])){
+			if(SenderManager::delete($this->_context[1])){
 				redirect(SYMPHONY_URL . '/extension/email_newsletter_manager/senders/');
 				return;
 			}
@@ -157,7 +154,7 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 		$errors = new XMLElement('errors');
 		require_once(TOOLKIT . '/util.validators.php');
 		if(!empty($fields['name'])){
-			$senderManager->save($this->_context[1], $fields);
+			SenderManager::save($this->_context[1], $fields);
 			redirect(SYMPHONY_URL . '/extension/email_newsletter_manager/senders/edit/' . Lang::createHandle($fields['name'], 225, '_') . '/saved');
 		}
 		if(empty($fields['name'])){

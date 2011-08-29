@@ -3,18 +3,18 @@
 require_once(TOOLKIT . '/class.manager.php');
 if(!defined('ENMDIR')) define('ENMDIR', EXTENSIONS . "/email_newsletter_manager");
 
-Class RecipientgroupManager extends Manager{
+class RecipientgroupManager{
 
-	public function __getHandleFromFilename($filename){
+	public static function __getHandleFromFilename($filename){
 		$result = sscanf($filename, 'recipients.%[^.].php');
 		return $result[0];
 	}
 
-	public function __getClassName($handle){
+	public static function __getClassName($handle){
 		return sprintf('recipientgroup%s', ucfirst($handle));
 	}
 
-	public function __getClassPath($handle, $new = false){
+	public static function __getClassPath($handle, $new = false){
 		if(is_file(WORKSPACE . "/email-newsletters/recipients.$handle.php") || $new == true) return WORKSPACE . '/email-newsletters';
 		else{
 			$extensions = Symphony::ExtensionManager()->listInstalledHandles();
@@ -29,11 +29,11 @@ Class RecipientgroupManager extends Manager{
 		return false;
 	}
 
-	public function __getDriverPath($handle){
+	public static function __getDriverPath($handle){
 		return self::__getClassPath($handle, true) . "/recipients.$handle.php";
 	}
 
-	public function listAll(){
+	public static function listAll(){
 		$result = array();
 
 		$structure = General::listStructure(WORKSPACE . '/email-newsletters', '/recipients.[\\w-]+.php/', false, 'ASC', WORKSPACE . '/email-newsletters');
@@ -42,10 +42,10 @@ Class RecipientgroupManager extends Manager{
 			foreach($structure['filelist'] as $f){
 				$f = self::__getHandleFromFilename($f);
 
-				if($about = $this->about($f)){
+				if($about = self::about($f)){
 
-					$classname = $this->__getClassName($f);
-					$path = $this->__getDriverPath($f);
+					$classname = self::__getClassName($f);
+					$path = self::__getDriverPath($f);
 
 					$can_parse = false;
 					$type = null;
@@ -77,7 +77,7 @@ Class RecipientgroupManager extends Manager{
 					foreach($tmp['filelist'] as $f){
 						$f = self::__getHandleFromFilename($f);
 
-						if($about = $this->about($f)){
+						if($about = self::about($f)){
 							$about['can_parse'] = false;
 							$about['type'] = null;
 							$result[$f] = $about;
@@ -91,7 +91,7 @@ Class RecipientgroupManager extends Manager{
 		return $result;
 	}
 
-	public function &create($handle){
+	public static function &create($handle){
 		$env =  array(
 			'today' => DateTimeObj::get('Y-m-d'),
 			'current-time' => DateTimeObj::get('H:i'),
@@ -106,8 +106,8 @@ Class RecipientgroupManager extends Manager{
 			'symphony-version' => Symphony::Configuration()->get('version', 'symphony'),
 		);
 
-		$classname = $this->__getClassName($handle);
-		$path = $this->__getDriverPath($handle);
+		$classname = self::__getClassName($handle);
+		$path = self::__getDriverPath($handle);
 
 		if(!is_file($path)){
 			throw new Exception(
@@ -120,11 +120,11 @@ Class RecipientgroupManager extends Manager{
 
 		if(!class_exists($classname)) require_once($path);
 
-		return new $classname($this->_Parent, $env, $process_params);
+		return new $classname(Symphony::Engine(), $env, $process_params);
 
 	}
 
-	public function save($handle = null, $fields){
+	public static function save($handle = null, $fields){
 		if($handle == Lang::createHandle($fields['name'], 255, '_') || $handle == null){
 			return self::_writeRecipientSource(Lang::createHandle($fields['name'], 255, '_'), self::_parseTemplate($fields));
 		}
@@ -138,7 +138,7 @@ Class RecipientgroupManager extends Manager{
 		}
 	}
 	
-	public function delete($handle = null){
+	public static function delete($handle = null){
 		return @unlink(self::__getDriverPath($handle));
 	}
 
@@ -158,6 +158,24 @@ Class RecipientgroupManager extends Manager{
 			throw new Exception("Directory $dir does not exist, or is not writeable.");
 			return false;
 		}
+	}
+	
+	public static function about($name){
+
+		$classname = self::__getClassName($name);
+		$path = self::__getDriverPath($name);
+
+		if(!@file_exists($path)) return false;
+
+		require_once($path);
+
+		$handle = self::__getHandleFromFilename(basename($path));
+
+		if(is_callable(array($classname, 'about'))){
+			$about = call_user_func(array($classname, 'about'));
+			return array_merge($about, array('handle' => $handle));
+		}
+
 	}
 
 	protected function _parseTemplate($data){

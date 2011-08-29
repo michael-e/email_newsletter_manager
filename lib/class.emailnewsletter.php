@@ -43,12 +43,11 @@ class EmailNewsletter{
 		$sndrm = new SenderManager($this->_Parent);
 		$this->_sender = $sndrm->create($properties['sender']);
 
-		$rcptm = new RecipientgroupManager($this->_Parent);
 		$groups = array_map('trim', (array)explode(',', $properties['recipients']));
 		$sender_about = $this->_sender->about();
 		$this->_limit_emails = $sender_about['throttle-emails'];
 		foreach($groups as $group){
-			$grp = $rcptm->create($group);
+			$grp = RecipientgroupManager::create($group);
 			$grp->dsParamLIMIT = max(1, $this->_limit_emails);
 			// Due to the way the recipientgroups fetch their data, the first page will always contain fresh data.
 			$grp->dsParamSTARTPAGE = 1;
