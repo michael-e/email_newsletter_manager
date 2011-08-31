@@ -48,6 +48,16 @@ class extension_email_newsletter_manager extends extension{
 				'delegate' => 'EntryPostEdit',
 				'callback' => 'initEmailNewsletter'
 			),
+			array(
+				'page' => '/extension/email_newsletter_manager/',
+				'delegate' => 'PostSenderSaved',
+				'callback' => 'senderSaved'
+			),
+			array(
+				'page' => '/extension/email_newsletter_manager/',
+				'delegate' => 'PostRecipientgroupSaved',
+				'callback' => 'groupSaved'
+			),
 		);
 	}
 
@@ -56,6 +66,14 @@ class extension_email_newsletter_manager extends extension{
 
 		if ($callback['driver'] == 'recipientgroups' && $callback['classname'] == 'contentExtensionEmail_newsletter_managerRecipientgroups' && $callback['context'][0] == 'preview')
 			$context['parent']->Page->addStylesheetToHead(URL . '/extensions/email_newsletter_manager/assets/email_newsletter_manager.recipientgroups.preview.css', 'screen', 1000);
+	}
+
+	public function senderSaved($context){
+		// Add logic to change sender in each newsletter field.
+	}
+
+	public function groupSaved($context){
+		// Add logic to change recipient group in each newsletter field.
 	}
 
 	public function initEmailNewsletter(){

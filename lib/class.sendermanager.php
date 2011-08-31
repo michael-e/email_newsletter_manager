@@ -114,11 +114,32 @@ Class SenderManager{
 
 	public static function save($handle = null, $fields){
 		if($handle == Lang::createHandle($fields['name'], 255, '_') || $handle == null){
-			return self::_writeSender(Lang::createHandle($fields['name'], 255, '_'), self::_parseTemplate($fields));
+			if(self::_writeSender(Lang::createHandle($fields['name'], 255, '_'), self::_parseTemplate($fields))){
+				Symphony::ExtensionManager()->notifyMembers(
+					'PostSenderSaved',
+					'/extension/email_newsletter_manager/',
+					array(
+						'handle'		=> $handle,
+						'fields' 		=> $fields
+					)
+				);
+				return true;
+			}
+			else{
+				return false;
+			}
 		}
 		elseif(false == self::__getClassPath(Lang::createHandle($fields['name'], 255, '_'))){
 			if(!self::_writeSender(Lang::createHandle($fields['name'], 255, '_'), self::_parseTemplate($fields))) return false;
 			if(!@unlink(self::__getDriverPath($handle))) return false;
+			Symphony::ExtensionManager()->notifyMembers(
+				'PostSenderSaved',
+				'/extension/email_newsletter_manager/',
+				array(
+					'handle'		=> $handle,
+					'fields' 		=> $fields
+				)
+			);
 			return true;
 		}
 		else{
@@ -127,7 +148,26 @@ Class SenderManager{
 	}
 	
 	public static function delete($handle = null){
-		return @unlink(self::__getDriverPath($handle));
+		Symphony::ExtensionManager()->notifyMembers(
+			'PreSenderDelete',
+			'/extension/email_newsletter_manager/',
+			array(
+				'handle'		=> $handle
+			)
+		);
+		if(@unlink(self::__getDriverPath($handle))){
+			Symphony::ExtensionManager()->notifyMembers(
+				'PostSenderDelete',
+				'/extension/email_newsletter_manager/',
+				array(
+					'handle'		=> $handle
+				)
+			);
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 
 	public static function about($name){
