@@ -68,12 +68,50 @@ class extension_email_newsletter_manager extends extension{
 			$context['parent']->Page->addStylesheetToHead(URL . '/extensions/email_newsletter_manager/assets/email_newsletter_manager.recipientgroups.preview.css', 'screen', 1000);
 	}
 
+	/**
+	 * Logic to change a sender in each newsletter field.
+	 *
+	 * @param string $context
+	 * @return void
+	 */
 	public function senderSaved($context){
-		// Add logic to change sender in each newsletter field.
+		$old_handle = $context['handle'];
+		$fields = $context['fields'];
+		$new_handle = Lang::createHandle($fields['name'], 255, '_');
+
+		$field_data = Symphony::Database()->fetch("SELECT * FROM `tbl_fields_email_newsletter_manager`");
+
+		foreach ($field_data as $f) {
+			$senders = preg_replace('/\b'.$old_handle.'\b/', $new_handle, $f['senders']);
+			Symphony::Database()->update(
+				array('senders' => $senders),
+				'tbl_fields_email_newsletter_manager',
+				'`id` = '.$f['id']
+			);
+		}
 	}
 
+	/**
+	 * Logic to change a recipient group in each newsletter field
+	 *
+	 * @param string $context
+	 * @return void
+	 */
 	public function groupSaved($context){
-		// Add logic to change recipient group in each newsletter field.
+		$old_handle = $context['handle'];
+		$fields = $context['fields'];
+		$new_handle = Lang::createHandle($fields['name'], 255, '_');
+
+		$field_data = Symphony::Database()->fetch("SELECT * FROM `tbl_fields_email_newsletter_manager`");
+
+		foreach ($field_data as $f) {
+			$recipient_groups = preg_replace('/\b'.$old_handle.'\b/', $new_handle, $f['recipient_groups']);
+			Symphony::Database()->update(
+				array('recipient_groups' => $recipient_groups),
+				'tbl_fields_email_newsletter_manager',
+				'`id` = '.$f['id']
+			);
+		}
 	}
 
 	public function initEmailNewsletter(){
