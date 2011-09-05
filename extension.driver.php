@@ -58,6 +58,11 @@ class extension_email_newsletter_manager extends extension{
 				'delegate' => 'PostRecipientgroupSaved',
 				'callback' => 'groupSaved'
 			),
+			array(
+				'page' => '/extension/email_template_manager/',
+				'delegate' => 'EmailTemplatePostSave',
+				'callback' => 'templateSaved'
+			),
 		);
 	}
 
@@ -108,6 +113,29 @@ class extension_email_newsletter_manager extends extension{
 			$recipient_groups = preg_replace('/\b'.$old_handle.'\b/', $new_handle, $f['recipient_groups']);
 			Symphony::Database()->update(
 				array('recipient_groups' => $recipient_groups),
+				'tbl_fields_email_newsletter_manager',
+				'`id` = '.$f['id']
+			);
+		}
+	}
+
+	/**
+	 * Logic to change a template in each newsletter field.
+	 *
+	 * @param string $context
+	 * @return void
+	 */
+	public function templateSaved($context){		
+		$old_handle = $context['old_handle'];
+		$fields = $context['config'];
+		$new_handle = Lang::createHandle($fields['name'], 255, '_');
+
+		$field_data = Symphony::Database()->fetch("SELECT * FROM `tbl_fields_email_newsletter_manager`");
+
+		foreach ($field_data as $f) {
+			$templates = preg_replace('/\b'.$old_handle.'\b/', $new_handle, $f['templates']);
+			Symphony::Database()->update(
+				array('templates' => $templates),
 				'tbl_fields_email_newsletter_manager',
 				'`id` = '.$f['id']
 			);
