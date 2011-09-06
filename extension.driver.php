@@ -74,71 +74,63 @@ class extension_email_newsletter_manager extends extension{
 	}
 
 	/**
-	 * Logic to change a sender in each newsletter field.
+	 * Callback function to change a sender handle in each newsletter field.
 	 *
 	 * @param string $context
 	 * @return void
 	 */
 	public function senderSaved($context){
 		$old_handle = $context['handle'];
-		$fields = $context['fields'];
-		$new_handle = Lang::createHandle($fields['name'], 255, '_');
-
-		$field_data = Symphony::Database()->fetch("SELECT * FROM `tbl_fields_email_newsletter_manager`");
-
-		foreach ($field_data as $f) {
-			$senders = preg_replace('/\b'.$old_handle.'\b/', $new_handle, $f['senders']);
-			Symphony::Database()->update(
-				array('senders' => $senders),
-				'tbl_fields_email_newsletter_manager',
-				'`id` = '.$f['id']
-			);
-		}
+		$new_handle = Lang::createHandle($context['fields']['name'], 255, '_');
+		$this->_updateHandle('senders', $old_handle, $new_handle);
 	}
 
 	/**
-	 * Logic to change a recipient group in each newsletter field
+	 * Callback function to change a recipient group handle in each newsletter field
 	 *
 	 * @param string $context
 	 * @return void
 	 */
 	public function groupSaved($context){
 		$old_handle = $context['handle'];
-		$fields = $context['fields'];
-		$new_handle = Lang::createHandle($fields['name'], 255, '_');
-
-		$field_data = Symphony::Database()->fetch("SELECT * FROM `tbl_fields_email_newsletter_manager`");
-
-		foreach ($field_data as $f) {
-			$recipient_groups = preg_replace('/\b'.$old_handle.'\b/', $new_handle, $f['recipient_groups']);
-			Symphony::Database()->update(
-				array('recipient_groups' => $recipient_groups),
-				'tbl_fields_email_newsletter_manager',
-				'`id` = '.$f['id']
-			);
-		}
+		$new_handle = Lang::createHandle($context['fields']['name'], 255, '_');
+		$this->_updateHandle('recipient_groups', $old_handle, $new_handle);
 	}
 
 	/**
-	 * Logic to change a template in each newsletter field.
+	 * Callback function to change a template handle in each newsletter field.
 	 *
 	 * @param string $context
 	 * @return void
 	 */
-	public function templateSaved($context){		
+	public function templateSaved($context){
 		$old_handle = $context['old_handle'];
-		$fields = $context['config'];
-		$new_handle = Lang::createHandle($fields['name'], 255, '_');
+		$new_handle = Lang::createHandle($context['config']['name'], 255, '_');
+		$this->_updateHandle('templates', $old_handle, $new_handle);
+	}
 
+	/**
+	 * Update handle in field data
+	 *
+	 * @param string $old_handle
+	 * @param string $new_handle
+	 * @param string $column
+	 * @return void
+	 */
+	protected function _updateHandle($column, $old_handle, $new_handle){
+		// Select all - we don't expect any memory problems here...
 		$field_data = Symphony::Database()->fetch("SELECT * FROM `tbl_fields_email_newsletter_manager`");
-
-		foreach ($field_data as $f) {
-			$templates = preg_replace('/\b'.$old_handle.'\b/', $new_handle, $f['templates']);
-			Symphony::Database()->update(
-				array('templates' => $templates),
-				'tbl_fields_email_newsletter_manager',
-				'`id` = '.$f['id']
-			);
+		foreach($field_data as $row){
+			// It should be safe to parse the comma-separated string using word boundaries
+			$c = preg_replace('/\b'.$old_handle.'\b/', $new_handle, $row[$column]);
+			// Only update if anything has changed
+			if($c !== $row[$column]){
+				Symphony::Database()->update(
+					array($column => $c),
+					'tbl_fields_email_newsletter_manager',
+					'`id` = '.$row['id']
+				);
+			}
 		}
 	}
 
