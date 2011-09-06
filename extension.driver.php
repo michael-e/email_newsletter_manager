@@ -162,10 +162,10 @@ class extension_email_newsletter_manager extends extension{
 
 					Symphony::Database()->query("CREATE TABLE IF NOT EXISTS `tbl_email_newsletters` (
 					  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-					  `template` varchar(255) NOT NULL,
-					  `recipients` text NOT NULL,
+					  `template` varchar(255),
+					  `recipients` text,
 					  `completed_recipients` text,
-					  `sender` varchar(255) NOT NULL,
+					  `sender` varchar(255),
 					  `total` int(11) DEFAULT '0',
 					  `sent` int(11) DEFAULT '0',
 					  `failed` int(11) DEFAULT '0',
