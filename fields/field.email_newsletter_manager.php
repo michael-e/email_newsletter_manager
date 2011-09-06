@@ -492,6 +492,9 @@
 				));
 			}
 
+			if(!is_array($data['recipient_groups'])){
+				$data['recipient_groups'] = array();
+			}
 			$newsletter = EmailNewsletterManager::save(array(
 				'id'               => $entry_data['newsletter_id'],
 				'template'         => $data['template'],
