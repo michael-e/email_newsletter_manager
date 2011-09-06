@@ -27,6 +27,7 @@
 			parent::__construct($parent);
 			$this->_name = __('Email Newsletter Manager');
 			$this->_required = false;
+			$this->set('location', 'sidebar');
 		}
 
 /*-------------------------------------------------------------------------
