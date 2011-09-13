@@ -158,12 +158,14 @@ class extension_email_newsletter_manager extends extension{
 					  `recipient_groups` text,
 					  PRIMARY KEY  (`id`),
 					  KEY `field_id` (`field_id`)
-					) ENGINE=MyISAM;");
+					) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
 					Symphony::Database()->query("CREATE TABLE IF NOT EXISTS `tbl_email_newsletters` (
 					  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-					  `template` varchar(255),
-					  `recipients` text,
+					  `pid` varchar(13),
+					  `pauth` varchar (23),
+					  `template` varchar(255) NOT NULL,
+					  `recipients` text NOT NULL,
 					  `completed_recipients` text,
 					  `sender` varchar(255),
 					  `total` int(11) DEFAULT '0',
@@ -171,9 +173,9 @@ class extension_email_newsletter_manager extends extension{
 					  `failed` int(11) DEFAULT '0',
 					  `started_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 					  `started_by` int(10) unsigned NOT NULL,
-					  `flag` varchar(255) DEFAULT 'idle',
+					  `status` varchar(255) DEFAULT 'idle',
 					  PRIMARY KEY (`id`)
-					) ENGINE=MyISAM;");
+					) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 					return true;
 				}
 			}
