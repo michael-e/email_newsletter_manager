@@ -25,9 +25,9 @@ Class EmailNewsletterManager{
 	}
 
 	public static function &create($id = NULL){
-		$newsletter = Symphony::Database()->fetchRow(0, 'SELECT * from `tbl_email_newsletters` WHERE `id` = "' . $id . '" LIMIT 1');
+		$newsletter = Symphony::Database()->fetchRow(0, 'SELECT id from `tbl_email_newsletters` WHERE `id` = "' . $id . '" LIMIT 1');
 		if(!empty($newsletter)){
-			return new EmailNewsLetter($newsletter);
+			return new EmailNewsLetter($id);
 		}
 		else{
 			throw new EmailNewsletterManagerException(__('Newsletter with id %s not found.', array($id)));

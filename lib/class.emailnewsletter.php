@@ -16,6 +16,7 @@ class EmailNewsletter{
 
 	protected $_id;
 	protected $_pid;
+	protected $_pauth;
 
 	protected $_template;
 	protected $_sender;
@@ -32,14 +33,30 @@ class EmailNewsletter{
 		return $this->_id;
 	}
 
-	public function getPid(){
+	public function getPId(){
 		if(empty($this->_pid)){
-			// get PID
+			$pid = Symphony::Database()->fetchCol('pid','SELECT pid from tbl_email_newsletters where id = \'' . $this->getId() .'\'');
+			$this->_pid = $pid[0];
 		}
 		return $this->_pid;
 	}
 
+	public function getPAuth(){
+		if(empty($this->_pauth)){
+			$auth = Symphony::Database()->fetchCol('pauth','SELECT pauth from tbl_email_newsletters where id = \'' . $this->getId() .'\'');
+			$this->_pauth = $auth[0];
+		}
+		return $this->_pauth;
+	}
+
 	public function start(){
+		$this->generatePAuth();
+		Symphony::Database()->query("CREATE TABLE IF NOT EXISTS `tbl_email_newsletters_sent_". $this->getId() . "` (
+		  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+		  `email` varchar(255),
+		  `result` varchar(255),
+		  PRIMARY KEY (`id`)
+		) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 	}
 
 	public function pause(){
@@ -48,11 +65,14 @@ class EmailNewsletter{
 	public function stop(){
 	}
 
-	public function sendEmail($pid){
-		if($this->getPid() != $pid){
-			throw new EmailNewsletterException('Incorrect PID used. This usually means there is more than one process running. Aborting.');
+	public function sendBatch($pauth){
+		if($this->getPAuth() != $pauth){
+			throw new EmailNewsletterException('Incorrect Process Auth used. This usually means there is more than one process running. Aborting.');
 		}
 		$recipients = $this->_getRecipients($this->limit);
+		if(count($recipients) == 0){
+			return false;
+		}
 		$template = $this->getTemplate();
 		foreach($recipients as $recipient){
 			try{
@@ -65,6 +85,7 @@ class EmailNewsletter{
 				$template->reply_to_email = 'TODO@need_to_add_logic.com';
 				$template->addParams(array('etm-reply-to-email' => 'TODO@need_to_add_logic.com'));
 
+				// TODO: add email sender preferences
 				$email = Email::create();
 
 				$xml = $template->processDatasources();
@@ -97,7 +118,7 @@ class EmailNewsletter{
 					$email->recipients = array($recipient['name'] => $recipient['email']);
 				}
 				else{
-					throw new EmailTemplateException("Email address invalid: $recipient['email']");
+					throw new EmailTemplateException("Email address invalid: ".$recipient['email']);
 				}
 
 				$email->send();
@@ -112,24 +133,28 @@ class EmailNewsletter{
 		}
 	}
 
-	public function getRecipientGroups(){
+	public function getRecipientGroups($filter_complete = false){
 		$gr = array();
-		$groups = Symphony::Database()->fetch('SELECT groups from tbl_email_newsletters where id = \' . '$this->getId() .'\'';
-		$groups_arr = array_map('trim', explode(', ', $groups));
+		$groups = Symphony::Database()->fetch('SELECT recipients, completed_recipients from tbl_email_newsletters where id = \'' . $this->getId() .'\'');
+		$groups_arr = array_map('trim', explode(', ', $groups[0]['recipients']));
 		foreach($groups_arr as $group){
-			try{
-				$gr[] = RecipientGroupManager::create($group);
-			}
-			catch(Exception $e){
+			if(!in_array($group, array_map('trim', explode(', ', $groups[0]['completed_recipients']))) || $filter_complete == false){ 
+				try{
+					$grp = RecipientGroupManager::create($group);
+					$grp->newsletter_id = $this->getId();
+					$gr[] = $grp;
+				}
+				catch(Exception $e){
+				}
 			}
 		}
 		return $gr;
 	}
 
 	public function getSender(){
-		$sender = Symphony::Database()->fetch('SELECT sender from tbl_email_newsletters where id = \' . '$this->getId() .'\'';
+		$sender = Symphony::Database()->fetchCol('sender','SELECT sender from tbl_email_newsletters where id = \'' . $this->getId() .'\'');
 		try{
-			$sndr = SenderManager::create($sender);
+			$sndr = SenderManager::create($sender[0]);
 		}
 		catch(Exception $e){
 		}
@@ -137,9 +162,9 @@ class EmailNewsletter{
 	}
 	
 	public function getTemplate(){
-		$tmpl = Symphony::Database()->fetch('SELECT template from tbl_email_newsletters where id = \' . '$this->getId() .'\'';
+		$tmpl = Symphony::Database()->fetchCol('template','SELECT template from tbl_email_newsletters where id = \'' . $this->getId() .'\'');
 		try{
-			$template = EmailTemplateManager::create($tmpl);
+			$template = EmailTemplateManager::load($tmpl[0]);
 		}
 		catch(Exception $e){
 		}
@@ -147,34 +172,61 @@ class EmailNewsletter{
 	}
 
 	protected function _getRecipients($limit = 10){
+		$recipientGroups = $this->getRecipientGroups(true);
+		$recipients = array();
+		foreach($recipientGroups as $group){
+			$group->dsParamLIMIT = $limit - count($recipients);
+			$rcpts = $group->getSlice();
+			$recipients = array_merge($recipients, (array)$rcpts['records']);
+			if(count($recipients) >= $limit){
+				break 2;
+			}
+			$this->_markRecipientGroup($group);
+		}
+		return $recipients;
 	}
 
 	protected function _markRecipient($recipient, $status = 'sent'){
+		Symphony::Database()->query('UPDATE `tbl_email_newsletters` SET sent = sent + ' . ($status == 'sent'?1:0) . ', failed = failed + ' . ($status == 'failed'?1:0) . ', total = total + 1 WHERE id = \'' . $this->getId() . '\'');
 		return Symphony::Database()->insert(array('email'=>$recipient, 'result'=>$status), 'tbl_email_newsletters_sent_' . $this->getId());
 	}
 
-	protected function _markRecipientGroup($group, $status = 'sent'){
-		$groups = $this->_getCompletedRecipientGroups();
-		$completed = array_merge(explode(', ', $groups), array($group));
+	protected function _markRecipientGroup($group){
+		$groups = $this->getCompletedRecipientGroups();
+		//lots of complicated stuff here. Because I do not assume this function will be called a lot (1000s of times), I have used quite a lot of filters to keep the completed_recipients output clean.
+		//what happens here is that the new group is merged, all empty values are cleared and all duplicates are removed. This should result in the cleanest possible value.
+		$completed = array_filter(array_unique(array_merge(array_map('trim', explode(', ', $groups)), array(is_object($group)?$group->dsParamROOTELEMENT:$group))), 'strlen');
 		return Symphony::Database()->update(array('completed_recipients'=>implode(', ', $completed)), 'tbl_email_newsletters', 'id = ' . $this->getId());
+	}
+
+	public function getCompletedRecipientGroups(){
+		$groups = Symphony::Database()->fetchCol('completed_recipients','SELECT completed_recipients from tbl_email_newsletters where id = \'' . $this->getId() .'\'');
+		return $groups[0];
 	}
 
 	public function setRecipientGroups($recipients){
 		if(!array($recipients)){
 			$recipients = array($recipients);
 		}
-		return Symphony::Database()->update(array('recipients', implode(', ', $recipients)), 'tbl_email_newsletters', 'id = \'' . $this->getId() . '\'');
+		foreach($recipients as $index => $recipient){
+			if(RecipientGroupManager::__getClassPath($recipient) == false){
+				unset($recipients[$index]);
+				throw new EmailNewsletterException('Can not add `' . $recipient . '` to the newsletter properties, because the group can not be found.');
+			}
+		}
+		return Symphony::Database()->update(array('recipients' => implode(', ', $recipients)), 'tbl_email_newsletters', 'id = \'' . $this->getId() . '\'');
 	}
 	
 	public function setSender($sender){
-		return Symphony::Database()->update(array('sender', $sender, 'tbl_email_newsletters', 'id = \'' . $this->getId() . '\'');
+		return Symphony::Database()->update(array('sender' => $sender), 'tbl_email_newsletters', 'id = ' . $this->getId());
 	}
 	
 	public function setTemplate($template){
-		return Symphony::Database()->update(array('sender', $template, 'tbl_email_newsletters', 'id = \'' . $this->getId() . '\'');
+		return Symphony::Database()->update(array('sender' => $template), 'tbl_email_newsletters', 'id = \'' . $this->getId() . '\'');
 	}
 	
-	protected function generatePid(){
-		return uniqueid();
+	protected function generatePAuth(){
+		$id = uniqid();
+		return Symphony::Database()->update(array('pauth' => $id), 'tbl_email_newsletters', 'id = \'' . $this->getId() . '\'');
 	}
 }
