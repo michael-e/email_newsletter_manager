@@ -27,6 +27,7 @@
 			parent::__construct($parent);
 			$this->_name = __('Email Newsletter Manager');
 			$this->_required = false;
+			$this->set('location', 'sidebar');
 		}
 
 /*-------------------------------------------------------------------------
@@ -491,6 +492,9 @@
 				));
 			}
 
+			if(!is_array($data['recipient_groups'])){
+				$data['recipient_groups'] = array();
+			}
 			$newsletter = EmailNewsletterManager::save(array(
 				'id'               => $entry_data['newsletter_id'],
 				'template'         => $data['template'],
