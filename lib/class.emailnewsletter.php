@@ -11,177 +11,170 @@ class EmailNewsletterException extends Exception{
 }
 
 class EmailNewsletter{
-	
-	const FLAG_START = 'start';
-	const FLAG_STOP = 'stop';
-	const FLAG_PAUSE = 'pause';
 
-	// signals all emails from the batch list have been sent (limited by the limit given by the sender).
-	const BATCH_DONE = 'batch_done';
-	// signals all emails have been sent. After this signal the background process should quit.
-	const PROC_DONE = 'process_done';
-	// signals the current email has been sent, but there are more emails in line. 
-	const OK = 'ok';
+	public $limit = 10;
 
-	protected $_properties;
-	
+	protected $_id;
+	protected $_pid;
+
 	protected $_template;
-	protected $_recipient_groups;
 	protected $_sender;
-	
-	protected $_batch = array();
-	
-	protected $_sent = 0;
-	protected $_limit_emails = 0;
+	protected $_recipientgroups = array();
 
-	public function __construct($properties){
-		$this->_properties = $properties;
+	public function __construct($id){
+		$this->_id = $id;
+		$this->getSender();
+		$this->getRecipientGroups();
+		$this->getTemplate();
+	}
 
-		$this->_template = EmailTemplateManager::load($properties['template']);
+	public function getId(){
+		return $this->_id;
+	}
 
-		$this->_sender = SenderManager::create($properties['sender']);
-
-		$groups = array_map('trim', (array)explode(',', $properties['recipients']));
-		$sender_about = $this->_sender->about();
-		$this->_limit_emails = $sender_about['throttle-emails'];
-		foreach($groups as $group){
-			$grp = RecipientgroupManager::create($group);
-			$grp->dsParamLIMIT = max(1, $this->_limit_emails);
-			// Due to the way the recipientgroups fetch their data, the first page will always contain fresh data.
-			$grp->dsParamSTARTPAGE = 1;
-			$grp->newsletter_id = $this->_properties['id'];
-			$this->_recipient_groups[] = $grp;
+	public function getPid(){
+		if(empty($this->_pid)){
+			// get PID
 		}
+		return $this->_pid;
 	}
 
 	public function start(){
-		if($this->getFlag() != 'start'){
-			$this->setFlag('start');
-			if(Symphony::Database()->query('CREATE TABLE IF NOT EXISTS `tbl_email_newsletters_sent_'.Symphony::Database()->cleanValue($this->_properties['id']).'` (
-				`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-				`email` VARCHAR( 255 ) NOT NULL ,
-				`result` VARCHAR( 255 ) NULL ,
-				`date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-			) ENGINE=MyISAM;')){
-				return true;
-			}
-			else{
-				throw new EmailNewsletterException(Symphony::Database()->getLastError());
-			}
-		}
-		else{
-			throw new EmailNewsletterException(__('Can not start an already running process.'));
-		}
-		
-	}
-
-	public function stop(){
-		$this->setFlag('stop');
-		if(Symphony::Database()->query('DROP TABLE `tbl_email_newsletters_sent_'.Symphony::Database()->cleanValue($this->_properties['id']))){
-			return true;
-		}
-		else{
-			throw new EmailNewsletterException(Symphony::Database()->getLastError());
-		}			
 	}
 
 	public function pause(){
-		$this->setFlag('pause');
 	}
 
-	public function sendNextEmail(){
-		if(empty($this->_batch)){
-			if($group = $this->getNextRecipientsGroup()){
-				$batch = $group->getSlice($this->_properties['id']);
-				if(count($batch['records']) == 0){
-					$about = $group->about();
-					$this->_markGroupAsCompleted($about['name']);
-					return $this->sendNextEmail();
+	public function stop(){
+	}
+
+	public function sendEmail($pid){
+		if($this->getPid() != $pid){
+			throw new EmailNewsletterException('Incorrect PID used. This usually means there is more than one process running. Aborting.');
+		}
+		$recipients = $this->_getRecipients($this->limit);
+		$template = $this->getTemplate();
+		foreach($recipients as $recipient){
+			try{
+				$template->recipients = '"'.$recipient['name'] . '" <' . $recipient['email'] . '>';
+				$template->addParams(array('etm-recipient' => $recipient['email']));
+
+				$template->reply_to_name = 'need_to_add_logic!';
+				$template->addParams(array('etm-reply-to-name' => 'need_to_add_logic!'));
+
+				$template->reply_to_email = 'TODO@need_to_add_logic.com';
+				$template->addParams(array('etm-reply-to-email' => 'TODO@need_to_add_logic.com'));
+
+				$email = Email::create();
+
+				$xml = $template->processDatasources();
+				$template->setXML($xml->generate());
+
+				$content = $template->render();
+
+				if(!empty($content['subject'])){
+					$email->subject = $content['subject'];
 				}
 				else{
-					$this->_batch = $batch['records'];
+					throw new EmailTemplateException("Can not send emails without a subject");
 				}
+
+				if(isset($content['reply-to-name'])){
+					$email->reply_to_name = $content['reply-to-name'];
+				}
+
+				if(isset($content['reply-to-email-address'])){
+					$email->reply_to_email_address = $content['reply-to-email-address'];
+				}
+
+				if(isset($content['plain']))
+					$email->text_plain = $content['plain'];
+				if(isset($content['html']))
+					$email->text_html = $content['html'];
+
+				require_once(TOOLKIT . '/util.validators.php');
+				if(General::validateString($recipient['email'], $validators['email'])){
+					$email->recipients = array($recipient['name'] => $recipient['email']);
+				}
+				else{
+					throw new EmailTemplateException("Email address invalid: $recipient['email']");
+				}
+
+				$email->send();
+				
+				$this->_markRecipient($recipient['email'], 'sent');
+			}
+			catch(EmailTemplateException $e){
+				Symphony::$Log->pushToLog(__('Email Newsletter Manager: ') . $e->getMessage(), null, true);
+				$this->_markRecipient($recipient['email'], 'failed');
+				continue;
 			}
 		}
-		if($recipient = @array_pop($this->_batch)){
-			if($recipient['valid'] != true){
-				$this->_markAsFailed($recipient['email']);
+	}
+
+	public function getRecipientGroups(){
+		$gr = array();
+		$groups = Symphony::Database()->fetch('SELECT groups from tbl_email_newsletters where id = \' . '$this->getId() .'\'';
+		$groups_arr = array_map('trim', explode(', ', $groups));
+		foreach($groups_arr as $group){
+			try{
+				$gr[] = RecipientGroupManager::create($group);
 			}
-			else{
-				$this->_markAsSent($recipient['email']);
-			}
-			$this->_sent++;
-			if($this->_sent >= $this->_limit_emails){
-				return self::BATCH_DONE;
-			}
-			else{
-				return self::OK;
+			catch(Exception $e){
 			}
 		}
-		return self::PROC_DONE;
+		return $gr;
 	}
 
-	public function getFlag(){
-		if($flag = Symphony::Database()->fetchCol('flag','SELECT flag from tbl_email_newsletters where `id` = ' . Symphony::Database()->cleanValue($this->_properties['id']))){
-			return $flag[0];
+	public function getSender(){
+		$sender = Symphony::Database()->fetch('SELECT sender from tbl_email_newsletters where id = \' . '$this->getId() .'\'';
+		try{
+			$sndr = SenderManager::create($sender);
 		}
-		else{
-			throw new EmailNewsletterException(Symphony::Database()->getLastError());
+		catch(Exception $e){
 		}
+		return $sndr;
 	}
-
-	public function getProperties(){
-		return $this->_properties;
-	}
-
-	public function getFinishedRecipientGroups(){
-		if($recipients = Symphony::Database()->fetch('SELECT completed_recipients  from tbl_email_newsletters where `id` = ' . Symphony::Database()->cleanValue($this->_properties['id']))){
-			return array_map('trim', explode(',',$recipients[0]['completed_recipients']));
+	
+	public function getTemplate(){
+		$tmpl = Symphony::Database()->fetch('SELECT template from tbl_email_newsletters where id = \' . '$this->getId() .'\'';
+		try{
+			$template = EmailTemplateManager::create($tmpl);
 		}
-		else{
-			throw new EmailNewsletterException(Symphony::Database()->getLastError());
+		catch(Exception $e){
 		}
+		return $template;
 	}
 
-	public function getNextRecipientsGroup(){
-		$finished = $this->getFinishedRecipientGroups();
-		$properties = $this->getproperties();
-		$groups = $this->_recipient_groups;
-		
-		foreach($groups as $group){
-			$about = $group->about();
-			$handle = Lang::createHandle($about['name'], 225, '_');
-			if(!in_array($handle, (array)$finished)){
-				return $group;
-			}
+	protected function _getRecipients($limit = 10){
+	}
+
+	protected function _markRecipient($recipient, $status = 'sent'){
+		return Symphony::Database()->insert(array('email'=>$recipient, 'result'=>$status), 'tbl_email_newsletters_sent_' . $this->getId());
+	}
+
+	protected function _markRecipientGroup($group, $status = 'sent'){
+		$groups = $this->_getCompletedRecipientGroups();
+		$completed = array_merge(explode(', ', $groups), array($group));
+		return Symphony::Database()->update(array('completed_recipients'=>implode(', ', $completed)), 'tbl_email_newsletters', 'id = ' . $this->getId());
+	}
+
+	public function setRecipientGroups($recipients){
+		if(!array($recipients)){
+			$recipients = array($recipients);
 		}
-		return false;
+		return Symphony::Database()->update(array('recipients', implode(', ', $recipients)), 'tbl_email_newsletters', 'id = \'' . $this->getId() . '\'');
 	}
-
-	protected function _markAsSent($email){
-		$this->_addToProcessedList($email, 'sent');
-		return Symphony::Database()->query("UPDATE `tbl_email_newsletters` set total = total+1, sent = sent+1 where id = " . Symphony::Database()->cleanValue($this->_properties['id']));
+	
+	public function setSender($sender){
+		return Symphony::Database()->update(array('sender', $sender, 'tbl_email_newsletters', 'id = \'' . $this->getId() . '\'');
 	}
-
-	protected function _markAsFailed($email){
-		$this->_addToProcessedList($email, 'failed');
-		return Symphony::Database()->query("UPDATE `tbl_email_newsletters` set total = total+1, failed = failed+1 where id = " . Symphony::Database()->cleanValue($this->_properties['id']));
+	
+	public function setTemplate($template){
+		return Symphony::Database()->update(array('sender', $template, 'tbl_email_newsletters', 'id = \'' . $this->getId() . '\'');
 	}
-
-	protected function _markGroupAsCompleted($group){
-		return Symphony::Database()->query("UPDATE `tbl_email_newsletters` set completed_recipients = CONCAT(completed_recipients, ', ".Symphony::Database()->cleanValue(Lang::createHandle($group,'_', 255))."') where id = " . Symphony::Database()->cleanValue($this->_properties['id']));
-	}
-
-	protected function _addToProcessedList($email, $result){
-		return Symphony::Database()->insert(array('email'=>Symphony::Database()->cleanValue($email), 'result'=>Symphony::Database()->cleanValue($result)), 'tbl_email_newsletters_sent_' . Symphony::Database()->cleanValue($this->_properties['id']));
-	}
-
-	protected function setFlag($value){
-		if(Symphony::Database()->update(array('flag' => Symphony::Database()->cleanValue($value)), 'tbl_email_newsletters', '`id` = ' . Symphony::Database()->cleanValue($this->_properties['id']))){
-			return true;
-		}
-		else{
-			throw new EmailNewsletterException(Symphony::Database()->getLastError());
-		}
+	
+	protected function generatePid(){
+		return uniqueid();
 	}
 }
