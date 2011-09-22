@@ -4,6 +4,7 @@ if(!defined('ENMDIR')) define('ENMDIR', EXTENSIONS . "/email_newsletter_manager"
 
 require_once(ENMDIR . '/lib/class.recipientgroupmanager.php');
 require_once(ENMDIR . '/lib/class.sendermanager.php');
+require_once(ENMDIR . '/lib/class.backgroundprocess.php');
 
 require_once(EXTENSIONS . '/email_template_manager/lib/class.emailtemplatemanager.php');
 
@@ -41,6 +42,12 @@ class EmailNewsletter{
 		return $this->_pid;
 	}
 
+	public function setPId($pid){
+		if(!empty($pid)){
+			return Symphony::Database()->update(array('pid' => $pid), 'tbl_email_newsletters','id = \'' . $this->getId() . '\'');
+		}
+	}
+
 	public function getPAuth(){
 		if(empty($this->_pauth)){
 			$auth = Symphony::Database()->fetchCol('pauth','SELECT pauth from tbl_email_newsletters where id = \'' . $this->getId() .'\'');
@@ -57,12 +64,17 @@ class EmailNewsletter{
 		  `result` varchar(255),
 		  PRIMARY KEY (`id`)
 		) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
+		$this->setStatus('sending');
+		EmailBackgroundProcess::spawnProcess($this->getId(), $this->getPAuth());
 	}
 
 	public function pause(){
+		EmailBackgroundProcess::killProcess($this->getPId());
+		$this->setStatus('paused');
 	}
 
 	public function stop(){
+		
 	}
 
 	public function sendBatch($pauth){
@@ -179,7 +191,7 @@ class EmailNewsletter{
 			$rcpts = $group->getSlice();
 			$recipients = array_merge($recipients, (array)$rcpts['records']);
 			if(count($recipients) >= $limit){
-				break 2;
+				break 1;
 			}
 			$this->_markRecipientGroup($group);
 		}
