@@ -4,7 +4,7 @@ if(!defined('ENMDIR')) define('ENMDIR', EXTENSIONS . "/email_newsletter_manager"
 
 require_once(ENMDIR . '/lib/class.recipientgroupmanager.php');
 require_once(ENMDIR . '/lib/class.sendermanager.php');
-require_once(ENMDIR . '/lib/class.backgroundprocess.php');
+require_once(ENMDIR . '/lib/class.emailbackgroundprocess.php');
 
 require_once(EXTENSIONS . '/email_template_manager/lib/class.emailtemplatemanager.php');
 
@@ -71,10 +71,15 @@ class EmailNewsletter{
 	public function pause(){
 		EmailBackgroundProcess::killProcess($this->getPId());
 		$this->setStatus('paused');
+		return true;
 	}
 
 	public function stop(){
-		
+		EmailBackgroundProcess::killProcess($this->getPId());
+		Symphony::Database()->query('DROP TABLE IF EXISTS `tbl_email_newsletters_sent_'. $this->getId() . '`');
+		Symphony::Database()->update(array('completed_recipients' => NULL), 'tbl_email_newsletters', 'id = ' . $this->getId());
+		$this->setStatus('stopped');
+		return true;
 	}
 
 	public function sendBatch($pauth){
@@ -236,7 +241,11 @@ class EmailNewsletter{
 	public function setTemplate($template){
 		return Symphony::Database()->update(array('sender' => $template), 'tbl_email_newsletters', 'id = \'' . $this->getId() . '\'');
 	}
-	
+
+	protected function setStatus($status){
+		return Symphony::Database()->update(array('status' => $status), 'tbl_email_newsletters', 'id = \'' . $this->getId() . '\'');
+	}
+
 	protected function generatePAuth(){
 		$id = uniqid();
 		return Symphony::Database()->update(array('pauth' => $id), 'tbl_email_newsletters', 'id = \'' . $this->getId() . '\'');

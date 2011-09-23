@@ -26,7 +26,7 @@ define_safe('ETM_DIR', DOCROOT . '/extensions/email_template_manager');
 require_once(ENM_DIR . '/lib/class.sendermanager.php');
 require_once(ENM_DIR . '/lib/class.recipientgroupmanager.php');
 require_once(ENM_DIR . '/lib/class.emailnewslettermanager.php');
-require_once(ENM_DIR . '/lib/class.backgroundprocess.php');
+require_once(ENM_DIR . '/lib/class.emailbackgroundprocess.php');
 
 $newsletter_id  = $_SERVER['argv'][1];
 $process_auth = $_SERVER['argv'][2];
