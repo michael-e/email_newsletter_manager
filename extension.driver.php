@@ -1,5 +1,9 @@
 <?php
 
+if(!defined('ENMDIR')) define('ENMDIR', EXTENSIONS . "/email_newsletter_manager");
+require_once(ENMDIR . '/lib/class.emailnewslettermanager.php');
+
+
 class extension_email_newsletter_manager extends extension{
 
 	public function about(){
@@ -82,7 +86,7 @@ class extension_email_newsletter_manager extends extension{
 	public function senderSaved($context){
 		$old_handle = $context['handle'];
 		$new_handle = Lang::createHandle($context['fields']['name'], 255, '_');
-		$this->_updateHandle('senders', $old_handle, $new_handle);
+		EmailNewsletterManager::updateSenderHandle($old_handle, $new_handle);
 	}
 
 	/**
@@ -94,7 +98,7 @@ class extension_email_newsletter_manager extends extension{
 	public function groupSaved($context){
 		$old_handle = $context['handle'];
 		$new_handle = Lang::createHandle($context['fields']['name'], 255, '_');
-		$this->_updateHandle('recipient_groups', $old_handle, $new_handle);
+		EmailNewsletterManager::updateRecipientsHandle($old_handle, $new_handle);
 	}
 
 	/**
@@ -106,32 +110,7 @@ class extension_email_newsletter_manager extends extension{
 	public function templateSaved($context){
 		$old_handle = $context['old_handle'];
 		$new_handle = Lang::createHandle($context['config']['name'], 255, '_');
-		$this->_updateHandle('templates', $old_handle, $new_handle);
-	}
-
-	/**
-	 * Update handle in field data
-	 *
-	 * @param string $old_handle
-	 * @param string $new_handle
-	 * @param string $column
-	 * @return void
-	 */
-	protected function _updateHandle($column, $old_handle, $new_handle){
-		// Select all - we don't expect any memory problems here...
-		$field_data = Symphony::Database()->fetch("SELECT * FROM `tbl_fields_email_newsletter_manager`");
-		foreach($field_data as $row){
-			// It should be safe to parse the comma-separated string using word boundaries
-			$c = preg_replace('/\b'.$old_handle.'\b/', $new_handle, $row[$column]);
-			// Only update if anything has changed
-			if($c !== $row[$column]){
-				Symphony::Database()->update(
-					array($column => $c),
-					'tbl_fields_email_newsletter_manager',
-					'`id` = '.$row['id']
-				);
-			}
-		}
+		EmailNewsletterManager::updateTemplateHandle($old_handle, $new_handle);
 	}
 
 	public function initEmailNewsletter(){

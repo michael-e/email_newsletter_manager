@@ -48,4 +48,24 @@ Class EmailNewsletterManager{
 			throw new EmailNewsletterManagerException(Symphony::Database()->getLastError());
 		}
 	}
+	
+	public static function updateTemplateHandle($old_handle, $new_handle){
+		return Symphony::Database()->update(array('template' => $new_handle), 'tbl_email_newsletters', 'template = \'' . $old_handle . '\'');
+	}
+
+	public static function updateSenderHandle($old_handle, $new_handle){
+		return Symphony::Database()->update(array('sender' => $new_handle), 'tbl_email_newsletters', 'sender = \'' . $old_handle . '\'');
+	}
+
+	public static function updateRecipientsHandle($old_handle, $new_handle){
+		$ids = array_keys(Symphony::Database()->fetch(sprintf('SELECT id FROM tbl_email_newsletters WHERE recipients LIKE \'%%s%%\'', $old_handle), 'id'));
+		foreach($ids as $id){
+			$newsletter = self::create($id);
+			$groups = $newsletter->getRecipientGroups($filter_complete = false, $return_array = true);
+			if(($pos = array_search($old_handle, $groups)) !== FALSE){
+				$groups[$pos] = $new_handle;
+				$newsletter->setRecipientGroups($groups);
+			}
+		}
+	}
 }

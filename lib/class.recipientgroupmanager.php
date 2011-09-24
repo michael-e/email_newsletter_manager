@@ -145,7 +145,7 @@ class RecipientgroupManager{
 			if(!self::_writeRecipientSource(Lang::createHandle($fields['name'], 255, '_'), self::_parseTemplate($fields))) return false;
 			if(!@unlink(self::__getDriverPath($handle))) return false;
 			Symphony::ExtensionManager()->notifyMembers(
-				'PostGroupSaved',
+				'PostRecipientgroupSaved',
 				'/extension/email_newsletter_manager/',
 				array(
 					'handle'		=> $handle,

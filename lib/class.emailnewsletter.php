@@ -57,6 +57,9 @@ class EmailNewsletter{
 	}
 
 	public function start(){
+		if($this->getStatus() == 'stopped'){
+			throw new EmailNewsletterException('Can not restart a stopped process. Please start a new process if you need to send again.');
+		}
 		$this->generatePAuth();
 		Symphony::Database()->query("CREATE TABLE IF NOT EXISTS `tbl_email_newsletters_sent_". $this->getId() . "` (
 		  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -77,7 +80,6 @@ class EmailNewsletter{
 	public function stop(){
 		EmailBackgroundProcess::killProcess($this->getPId());
 		Symphony::Database()->query('DROP TABLE IF EXISTS `tbl_email_newsletters_sent_'. $this->getId() . '`');
-		Symphony::Database()->update(array('completed_recipients' => NULL), 'tbl_email_newsletters', 'id = ' . $this->getId());
 		$this->setStatus('stopped');
 		return true;
 	}
@@ -150,10 +152,13 @@ class EmailNewsletter{
 		}
 	}
 
-	public function getRecipientGroups($filter_complete = false){
+	public function getRecipientGroups($filter_complete = false, $return_array = false){
 		$gr = array();
 		$groups = Symphony::Database()->fetch('SELECT recipients, completed_recipients from tbl_email_newsletters where id = \'' . $this->getId() .'\'');
 		$groups_arr = array_map('trim', explode(', ', $groups[0]['recipients']));
+		if($return_array == true){
+			return $groups_arr;
+		}
 		foreach($groups_arr as $group){
 			if(!in_array($group, array_map('trim', explode(', ', $groups[0]['completed_recipients']))) || $filter_complete == false){ 
 				try{
@@ -239,7 +244,17 @@ class EmailNewsletter{
 	}
 	
 	public function setTemplate($template){
-		return Symphony::Database()->update(array('sender' => $template), 'tbl_email_newsletters', 'id = \'' . $this->getId() . '\'');
+		return Symphony::Database()->update(array('template' => $template), 'tbl_email_newsletters', 'id = \'' . $this->getId() . '\'');
+	}
+
+	public function getStats(){
+		$results = Symphony::Database()->fetch('SELECT sent, total, failed FROM `tbl_email_newsletters` WHERE `id`=\'' . $this->getId() . '\'');
+		return $results[0];
+	}
+
+	public function getStatus(){
+		$status = Symphony::Database()->fetchCol('status', 'SELECT status from `tbl_email_newsletters` where id = \'' . $this->getId() .'\'');
+		return $status[0];
 	}
 
 	protected function setStatus($status){

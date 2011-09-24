@@ -8,6 +8,7 @@ if(!class_exists('ExtensionPage')){
 }
 
 require_once(TOOLKIT . '/class.xsltprocess.php');
+require_once(TOOLKIT . '/class.sectionmanager.php');
 require_once(ENMDIR . '/lib/class.recipientgroupmanager.php');
 
 Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionPage{
@@ -256,8 +257,10 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 	
 	function __viewTest(){
 		require_once(ENMDIR . '/lib/class.emailnewslettermanager.php');
-		$newsletter = EmailNewsletterManager::create(1);
-		$newsletter->stop();
+		EmailNewsletterManager::updateRecipientsHandle('test', 'huib');
+		//$newsletter = EmailNewsletterManager::create(1);
+		//var_dump($newsletter->getStats());
+		//$newsletter->start();
 		exit();
 	}
 	
