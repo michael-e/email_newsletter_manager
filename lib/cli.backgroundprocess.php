@@ -5,13 +5,14 @@
  *
  **/
 
-error_reporting(E_ERROR);
+error_reporting(0);
 
 register_shutdown_function('handleShutdown');
 
 function handleShutdown() {
+	file_put_contents('database.txt', print_r(Symphony::Database()->debug(), true));
 	$error = error_get_last();
-	if($error !== NULL){
+	if(($error !== NULL) && ($error['type'] <= 1)){
 		file_put_contents(DOCROOT . '/manifest/newsletter-log.txt', '['.DateTimeObj::get('Y/m/d H:i:s').'] pid: '.getmypid().' - ' . $error['message'] . ' in file: ' . $error['file'] . ' on line ' . $error['line'] . "\r\n", FILE_APPEND);
 	}
 }

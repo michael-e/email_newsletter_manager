@@ -91,10 +91,10 @@ class EmailNewsletter{
 		if($this->getPAuth() != $pauth){
 			throw new EmailNewsletterException('Incorrect Process Auth used. This usually means there is more than one process running. Aborting.');
 		}
-		$recipients = $this->_getRecipients(10);
+		$recipients = $this->_getRecipients($this->limit);
 		
 		if(count($recipients) == 0){
-			Symphony::Database()->query('DROP TABLE IF EXISTS `tbl_email_newsletters_sent_'. $this->getId() . '`');
+			//Symphony::Database()->query('DROP TABLE IF EXISTS `tbl_email_newsletters_sent_'. $this->getId() . '`');
 			$this->setStatus('completed');
 			return 'completed';
 		}
@@ -128,11 +128,11 @@ class EmailNewsletter{
 					Throw new EmailNewsletterException('Currently only sendmail and SMTP are supported. This will be fixed when the API supports it.');
 				}
 	
-				$email->reply_to_name = $about['reply-to-name'];
+				$email->setReplyToName($about['reply-to-name']);
 				$template->reply_to_name = $about['reply-to-name'];
 				$template->addParams(array('etm-reply-to-name' => $about['reply-to-name']));
 
-				$email->reply_to_email_address = $about['reply-to-email-address'];
+				$email->setReplyToEmailAddress($about['reply-to-email-address']);
 				$template->reply_to_email = $about['reply-to-email-address'];
 				$template->addParams(array('etm-reply-to-email' => $about['reply-to-email-address']));
 
