@@ -39,6 +39,8 @@ Class EmailNewsletterManager{
 	}
 
 	public static function save($data){
+		// TODO: sanitize data, check for empty values, etc.
+		// Also need to create the correct format from an array of recipient groups, a csv string is not the right way.
 		if(Symphony::Database()->insert($data, 'tbl_email_newsletters', true)){
 			if(($id = Symphony::Database()->getInsertID()) || ($id = $data['id'])){
 				return self::create($id);

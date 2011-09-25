@@ -7,6 +7,15 @@
 
 error_reporting(E_ERROR);
 
+register_shutdown_function('handleShutdown');
+
+function handleShutdown() {
+	$error = error_get_last();
+	if($error !== NULL){
+		file_put_contents(DOCROOT . '/manifest/newsletter-log.txt', '['.DateTimeObj::get('Y/m/d H:i:s').'] pid: '.getmypid().' - ' . $error['message'] . ' in file: ' . $error['file'] . ' on line ' . $error['line'] . "\r\n", FILE_APPEND);
+	}
+}
+
 // Accurate timing
 $start_time = microtime(true);
 
@@ -39,11 +48,11 @@ try{
 	$newsletter = EmailNewsletterManager::create($newsletter_id);
 	if(is_a($newsletter, 'EmailNewsletter')){
 		$newsletter->setPId(getmypid());
-		$newsletter->setSender('test');
 		$sending_settings = $newsletter->getSender()->about();
-		$newsletter->sendBatch($process_auth);
-		time_sleep_until($start_time + 10);
-		EmailBackgroundProcess::spawnProcess($newsletter_id, $process_auth);
+		if($newsletter->sendBatch($process_auth) != 'completed'){
+			time_sleep_until($start_time + $sending_settings['throttle-time']);
+			EmailBackgroundProcess::spawnProcess($newsletter_id, $process_auth);
+		}
 	}
 	else{
 		throw new Exception('Newsletter with id: ' . $newsletter_id . ' not found.');

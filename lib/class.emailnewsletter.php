@@ -14,6 +14,7 @@ class EmailNewsletterException extends Exception{
 class EmailNewsletter{
 
 	public $limit = 10;
+	protected $_completed;
 
 	protected $_id;
 	protected $_pid;
@@ -25,9 +26,11 @@ class EmailNewsletter{
 
 	public function __construct($id){
 		$this->_id = $id;
-		$this->getSender();
-		$this->getRecipientGroups();
-		$this->getTemplate();
+		$this->_sender = $this->getSender();
+		$this->_recipientgroups = $this->getRecipientGroups();
+		$this->_template = $this->getTemplate();
+		$sender_about = $this->_sender->about();
+		$this->limit = $sender_about['throttle-emails'];
 	}
 
 	public function getId(){
@@ -88,24 +91,50 @@ class EmailNewsletter{
 		if($this->getPAuth() != $pauth){
 			throw new EmailNewsletterException('Incorrect Process Auth used. This usually means there is more than one process running. Aborting.');
 		}
-		$recipients = $this->_getRecipients($this->limit);
+		$recipients = $this->_getRecipients(10);
+		
 		if(count($recipients) == 0){
-			return false;
+			Symphony::Database()->query('DROP TABLE IF EXISTS `tbl_email_newsletters_sent_'. $this->getId() . '`');
+			$this->setStatus('completed');
+			return 'completed';
 		}
-		$template = $this->getTemplate();
+
 		foreach($recipients as $recipient){
 			try{
+				$template = $this->getTemplate();
 				$template->recipients = '"'.$recipient['name'] . '" <' . $recipient['email'] . '>';
 				$template->addParams(array('etm-recipient' => $recipient['email']));
 
-				$template->reply_to_name = 'need_to_add_logic!';
-				$template->addParams(array('etm-reply-to-name' => 'need_to_add_logic!'));
+				$about = $this->getSender()->about();
+				if(is_array($about['smtp'])){
+					$email = Email::create('smtp');
+					$email->setSenderName($about['smtp']['from_name']);
+					$email->setSenderEmailAddress($about['smtp']['from_address']);
+					$email->setHost($about['smtp']['host']);
+					$email->setPort($about['smtp']['port']);
+					$email->setSecure($about['smtp']['secure']);
+					if($about['smtp']['auth'] == 1){
+						$email->setAuth(true);
+						$email->setUser($about['smtp']['username']);
+						$email->setPass($about['smtp']['password']);
+					}
+				}
+				elseif(is_array($about['sendmail'])){
+					$email = Email::create('sendmail');
+					$email->setSenderName($about['sendmail']['from_name']);
+					$email->setSenderEmailAddress($about['sendmail']['from_address']);
+				}
+				else{
+					Throw new EmailNewsletterException('Currently only sendmail and SMTP are supported. This will be fixed when the API supports it.');
+				}
+	
+				$email->reply_to_name = $about['reply-to-name'];
+				$template->reply_to_name = $about['reply-to-name'];
+				$template->addParams(array('etm-reply-to-name' => $about['reply-to-name']));
 
-				$template->reply_to_email = 'TODO@need_to_add_logic.com';
-				$template->addParams(array('etm-reply-to-email' => 'TODO@need_to_add_logic.com'));
-
-				// TODO: add email sender preferences
-				$email = Email::create();
+				$email->reply_to_email_address = $about['reply-to-email-address'];
+				$template->reply_to_email = $about['reply-to-email-address'];
+				$template->addParams(array('etm-reply-to-email' => $about['reply-to-email-address']));
 
 				$xml = $template->processDatasources();
 				$template->setXML($xml->generate());
@@ -117,14 +146,6 @@ class EmailNewsletter{
 				}
 				else{
 					throw new EmailTemplateException("Can not send emails without a subject");
-				}
-
-				if(isset($content['reply-to-name'])){
-					$email->reply_to_name = $content['reply-to-name'];
-				}
-
-				if(isset($content['reply-to-email-address'])){
-					$email->reply_to_email_address = $content['reply-to-email-address'];
 				}
 
 				if(isset($content['plain']))
@@ -150,6 +171,9 @@ class EmailNewsletter{
 				continue;
 			}
 		}
+		//To prevent timing problems, the completed recipient groups should only be marked as complete when the emails are actually sent.
+		Symphony::Database()->update(array('completed_recipients'=>implode(', ', $this->_completed)), 'tbl_email_newsletters', 'id = ' . $this->getId());
+		return 'sent';
 	}
 
 	public function getRecipientGroups($filter_complete = false, $return_array = false){
@@ -217,8 +241,8 @@ class EmailNewsletter{
 		$groups = $this->getCompletedRecipientGroups();
 		//lots of complicated stuff here. Because I do not assume this function will be called a lot (1000s of times), I have used quite a lot of filters to keep the completed_recipients output clean.
 		//what happens here is that the new group is merged, all empty values are cleared and all duplicates are removed. This should result in the cleanest possible value.
-		$completed = array_filter(array_unique(array_merge(array_map('trim', explode(', ', $groups)), array(is_object($group)?$group->dsParamROOTELEMENT:$group))), 'strlen');
-		return Symphony::Database()->update(array('completed_recipients'=>implode(', ', $completed)), 'tbl_email_newsletters', 'id = ' . $this->getId());
+		$this->_completed = array_filter(array_unique(array_merge(array_map('trim', explode(', ', $groups)), array(is_object($group)?$group->dsParamROOTELEMENT:$group))), 'strlen');
+		//return Symphony::Database()->update(array('completed_recipients'=>implode(', ', $completed)), 'tbl_email_newsletters', 'id = ' . $this->getId());
 	}
 
 	public function getCompletedRecipientGroups(){

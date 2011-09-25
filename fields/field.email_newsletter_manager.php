@@ -216,11 +216,11 @@
 				$value = $data['status'];
 			}
 			switch ($value){
-				case 'processing':
-					$value = __('Processing...');
+				case 'sending':
+					$value = __('Sending...');
 					break;
-				case 'cancel':
-					$value = __('Cancelling...');
+				case 'stopped':
+					$value = __('Stopping...');
 					break;
 				case 'error':
 					$value = __('ERROR');
@@ -269,7 +269,6 @@
 			$newsletter_properties = array();
 			if($data['newsletter_id']){
 				$newsletter = EmailNewsletterManager::get($data['newsletter_id']);
-				$newsletter_properties = $newsletter->getProperties();
 			}
 
 			// get configured templates
@@ -332,10 +331,10 @@
 
 			// switch status
 			switch ($status){
-				case "processing":
+				case "sending":
 					break;
 
-				case "cancel":
+				case "stopped":
 					break;
 
 				case "error":
@@ -353,7 +352,7 @@
 						foreach($templates_options as $template){
 							$options[] = array(
 								$template[0],
-								$template[0] == $newsletter_properties['template'],
+								$template[0] == $newsletter->getTemplate()->dsParamROOTELEMENT,
 								$template[1]
 							);
 						}
@@ -502,12 +501,10 @@
 				'sender'           => $data['sender'],
 				'started_by'       => Administration::instance()->Author->get('id'),
 			));
-			$properties = $newsletter->getProperties();
-			$newsletter_id = $properties['id'];
 
 			$result = array(
 				'author_id' => Administration::instance()->Author->get('id'),
-				'newsletter_id' => $newsletter_id,
+				'newsletter_id' => $newsletter->getId(),
 			);
 			return $result;
 		}

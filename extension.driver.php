@@ -113,14 +113,29 @@ class extension_email_newsletter_manager extends extension{
 		EmailNewsletterManager::updateTemplateHandle($old_handle, $new_handle);
 	}
 
-	public function initEmailNewsletter(){
+	public function initEmailNewsletter($context){
 		// The field has a 'save and send' button. We trigger the newsletter
 		// start using the 'action' string, which seems to be the only way.
-		if(@array_key_exists('save', $_POST['action']) && substr($_POST['action']['save'], 0, 9) == 'enm-send:'){
-
-			// save the newsletter
-
-			// start the newsletter
+		if(@array_key_exists('save', $_POST['action']) && substr($_POST['action']['save'], 0, 8) == 'en-send:'){
+			$vars = explode(":",$_POST['action']['save']);
+			
+			$field_id = $vars[1];
+			$entry_id = $vars[2];
+			$domain = $vars[3];
+			
+			$data = $this->_getEntryData($field_id, $entry_id);
+			if(!empty($data)){
+				try{
+					$newsletter = EmailNewsletterManager::create($data['newsletter_id']);
+					// The reason the newsletter is started here and not in the field save function is because it must only send if all other fields are completed successfully.
+					$newsletter->start();
+				}
+				// This is the last resort. All checks should be done before saving the entry, so this error should ideally never be shown. Ever.
+				// Because the delegate this function hooks into can not undo the saving, or display any warning messages, a "hard" error is the only way to communicate what is going wrong.
+				catch(Exception $e){
+					Administration::instance()->customError(__('Error sending email newsletter'), __($e->getMessage()));
+				}
+			}
 		}
 	}
 
@@ -186,5 +201,9 @@ class extension_email_newsletter_manager extends extension{
 		*/
 
 		return true;
+	}
+	
+	private function _getEntryData($field_id, $entry_id){
+		return Symphony::Database()->fetchRow(0, "SELECT * FROM `tbl_entries_data_".$field_id."` WHERE `entry_id` = '".$entry_id."' LIMIT 1");
 	}
 }
