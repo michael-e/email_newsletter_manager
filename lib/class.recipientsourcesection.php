@@ -183,22 +183,17 @@ Class RecipientSourceSection extends RecipientSource{
 			}
 		}
 
-		$where .= ' AND `f`.`value` IS NOT NULL';
+		$where .= ' AND `d`.`value` IS NOT NULL';
 		
-		$joins .= 'LEFT JOIN (
-				SELECT `d`.`entry_id` , `d`.value
-				FROM tbl_entries_data_'.$entryManager->fieldManager->fetchFieldIDFromElementName($this->emailField, $this->getSource()).' AS `d`';
+		$joins .= ' LEFT JOIN tbl_entries_data_'.$entryManager->fieldManager->fetchFieldIDFromElementName($this->emailField, $this->getSource()).' AS `d` ON `e`.`id` = `d`.`entry_id`';
 
 		if($this->newsletter_id !== NULL){
-			$where .= ' GROUP BY `f`.`value`';
-			$joins .= 'LEFT OUTER JOIN tbl_email_newsletters_sent_'.$this->newsletter_id.' AS `n` ON `d`.`value` = `n`.`email`
-						WHERE `n`.`email` IS NULL ORDER BY `d`.`entry_id` '.($this->dsParamSTARTPAGE > 0 ? '  LIMIT ' . $this->dsParamSTARTPAGE * $this->dsParamLIMIT * 10:'');
+			$joins .= ' LEFT OUTER JOIN tbl_email_newsletters_sent_'.$this->newsletter_id.' AS `n` ON `d`.`value` = `n`.`email`';
+			$where .= ' AND `n`.`email` IS NULL GROUP BY `d`.`value`';
 		}
 		else{
-			$joins .= 'GROUP BY `d`.`value`';
+			$where .= ' GROUP BY `d`.`value`';
 		}
-
-		$joins .= ') AS `f` ON `e`.`id` = `f`.`entry_id`';
 
 		return array(
 			'where' => $where,

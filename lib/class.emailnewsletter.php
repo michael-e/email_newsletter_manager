@@ -132,9 +132,9 @@ class EmailNewsletter{
 				$template->reply_to_name = $about['reply-to-name'];
 				$template->addParams(array('etm-reply-to-name' => $about['reply-to-name']));
 
-				$email->setReplyToEmailAddress($about['reply-to-email-address']);
-				$template->reply_to_email = $about['reply-to-email-address'];
-				$template->addParams(array('etm-reply-to-email' => $about['reply-to-email-address']));
+				$email->setReplyToEmailAddress($about['reply-to-email']);
+				$template->reply_to_email = $about['reply-to-email'];
+				$template->addParams(array('etm-reply-to-email' => $about['reply-to-email']));
 
 				$xml = $template->processDatasources();
 				$template->setXML($xml->generate());
