@@ -97,6 +97,11 @@ Class RecipientSourceSection extends RecipientSource{
 			true,
 			array_merge(array($this->emailField), $this->nameFields) 
 		);
+		// The count method of the entrymanager does not work properly, so this hack is needed :(
+		$count = $this->getCount();
+		$entries['total-entries'] = $count;
+		$entries['total-pages'] = ceil($count / $this->dsParamLIMIT);
+		$entries['remaining-pages'] = $entries['total-pages'] - $entries['current-page'];
 		return $entries;
 	}
 
@@ -111,14 +116,9 @@ Class RecipientSourceSection extends RecipientSource{
 		if($this->newsletter_id !== NULL){
 			return -1;
 		}
-		$entryManager = new EntryManager($this->_Parent);
-		// I want the total count, not the remaining count, so I do not want the additional joins.
-		$newsletter_id = $this->newsletter_id;
-		$this->newsletter_id = null;
-		$where_and_joins = $this->getWhereJoinsAndGroup();
-		$count = $entryManager->fetchCount($this->getSource(), $where_and_joins['where'], $where_and_joins['joins'], true);
-		// Saving the newsletter back, so nobody will ever notice this hack.
-		$this->newsletter_id = $newsletter_id;
+		$where_and_joins = $this->getWhereJoinsAndGroup(true);
+		$count = Symphony::Database()->fetchVar('count',0, sprintf('SELECT SQL_CACHE count(DISTINCT `d`.value) as `count` FROM `tbl_entries` AS `e` %s %s', $where_and_joins['joins'], $where_and_joins['where']));
+		
 		return $count;
 	}
 
@@ -131,7 +131,7 @@ Class RecipientSourceSection extends RecipientSource{
 	 *
 	 * @return array
 	 */
-	public function getWhereJoinsAndGroup(){
+	public function getWhereJoinsAndGroup($count_only = false){
 		$where = null;
 		$joins = null;
 		$entryManager = new EntryManager($this->_Parent);
@@ -191,7 +191,7 @@ Class RecipientSourceSection extends RecipientSource{
 			$joins .= ' LEFT OUTER JOIN tbl_email_newsletters_sent_'.$this->newsletter_id.' AS `n` ON `d`.`value` = `n`.`email`';
 			$where .= ' AND `n`.`email` IS NULL GROUP BY `d`.`value`';
 		}
-		else{
+		elseif($count_only != true){
 			$where .= ' GROUP BY `d`.`value`';
 		}
 
