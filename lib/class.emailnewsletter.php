@@ -14,7 +14,7 @@ class EmailNewsletterException extends Exception{
 class EmailNewsletter{
 
 	public $limit = 10;
-	protected $_completed;
+	protected $_completed = array();
 
 	protected $_id;
 	protected $_pid;

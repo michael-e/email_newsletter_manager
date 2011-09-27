@@ -46,9 +46,9 @@ Class RecipientSourceStatic extends RecipientSource{
 		$this->_createTempTable();
 		
 		if($this->newsletter_id !== NULL){
-			$where .= ' GROUP BY `f`.`email`';
+			$where .= ' GROUP BY `d`.`email`';
 			$joins .= ' LEFT OUTER JOIN tbl_email_newsletters_sent_'.$this->newsletter_id.' AS `n` ON `d`.`email` = `n`.`email`
-						WHERE `n`.`email` IS NULL ORDER BY `d`.`id` '.($this->dsParamSTARTPAGE > 0 ? '  LIMIT ' . $this->dsParamSTARTPAGE * $this->dsParamLIMIT * 10:'');
+						WHERE `n`.`email` IS NULL';
 		}
 		else{
 			$joins .= 'GROUP BY `d`.`email`';
@@ -56,7 +56,7 @@ Class RecipientSourceStatic extends RecipientSource{
 		
 		$limit = ' LIMIT ' . ($this->dsParamSTARTPAGE - 1) * $this->dsParamLIMIT . ', ' . $this->dsParamLIMIT;
 		
-		$rows = Symphony::Database()->fetch('SELECT * FROM (SELECT `d`.`id`, `d`.`name`, `d`.`email`, `d`.`valid` from ' . $this->_tempTable . ' as `d` ' . $joins . ') as `f`' . $where . 'ORDER BY `f`.`id`' .  $limit);
+		$rows = Symphony::Database()->fetch('SELECT `d`.`id`, `d`.`name`, `d`.`email`, `d`.`valid` from ' . $this->_tempTable . ' as `d` ' . $joins . $where . $limit);
 		return $rows;
 	}
 
