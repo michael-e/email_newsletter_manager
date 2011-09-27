@@ -89,12 +89,13 @@ class EmailNewsletter{
 
 	public function sendBatch($pauth){
 		if($this->getPAuth() != $pauth){
+			$this->setStatus('error');
 			throw new EmailNewsletterException('Incorrect Process Auth used. This usually means there is more than one process running. Aborting.');
 		}
 		$recipients = $this->_getRecipients($this->limit);
 		
 		if(count($recipients) == 0){
-			//Symphony::Database()->query('DROP TABLE IF EXISTS `tbl_email_newsletters_sent_'. $this->getId() . '`');
+			Symphony::Database()->query('DROP TABLE IF EXISTS `tbl_email_newsletters_sent_'. $this->getId() . '`');
 			$this->setStatus('completed');
 			return 'completed';
 		}
