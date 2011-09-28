@@ -510,6 +510,20 @@
 		}
 
 /*-------------------------------------------------------------------------
+	Publish: delete
+-------------------------------------------------------------------------*/
+		
+		public function entryDataCleanup($entry_id, $data=NULL){
+			try{
+				$newsletter_id = EmailNewsletterManager::delete($data['newsletter_id']);
+				return parent::entryDataCleanup($entry_id, $data);
+			}
+			catch(Exception $e){
+				return false;
+			}
+		}
+
+/*-------------------------------------------------------------------------
 	Output
 -------------------------------------------------------------------------*/
 		/**

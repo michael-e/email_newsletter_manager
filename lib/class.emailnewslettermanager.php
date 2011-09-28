@@ -50,7 +50,17 @@ Class EmailNewsletterManager{
 			throw new EmailNewsletterManagerException(Symphony::Database()->getLastError());
 		}
 	}
-	
+
+	public function delete($id){
+		try{
+			Symphony::Database()->query(sprintf('DELETE FROM `36552cdv12`.`sym_email_newsletters` WHERE `sym_email_newsletters`.`id` = \'%d\'', $id));
+			Symphony::Database()->query(sprintf('DROP TABLE `sym_tmp_email_newsletters_sent_%d`', $id));
+		}
+		catch(Exception $e){
+			return false;
+		}
+	}
+
 	public static function updateTemplateHandle($old_handle, $new_handle){
 		return Symphony::Database()->update(array('template' => $new_handle), 'tbl_email_newsletters', 'template = \'' . $old_handle . '\'');
 	}
