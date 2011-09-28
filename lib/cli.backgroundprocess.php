@@ -37,6 +37,10 @@ file_put_contents('domain.txt', DOMAIN, FILE_APPEND);
 file_put_contents('domain.txt', $_SERVER['HTTP_HOST'], FILE_APPEND);
 
 require_once(DOCROOT . '/symphony/lib/boot/bundle.php');
+
+//Inside bundle.php, the error_reporting is set again, but we don't want to be stopped by any other than fatal errors.
+error_reporting(0);
+
 require_once(DOCROOT . '/symphony/lib/core/class.symphony.php');
 require_once(DOCROOT . '/symphony/lib/core/class.administration.php');
 
