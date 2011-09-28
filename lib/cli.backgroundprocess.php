@@ -31,10 +31,10 @@ $_SERVER['HTTP_HOST'] = $_SERVER['argv'][3];
 // Generic Symphony includes & defines
 define('DOCROOT', realpath(rtrim(dirname(__FILE__) . '/../../../', '\\/')));
 define('DOMAIN', rtrim(rtrim($_SERVER['HTTP_HOST'], '\\/') . dirname($_SERVER['PHP_SELF']), '.\\/'));
+define('HTTP_HOST', $_SERVER['HTTP_HOST']);
 
 file_put_contents('domain.txt', DOMAIN, FILE_APPEND);
 file_put_contents('domain.txt', $_SERVER['HTTP_HOST'], FILE_APPEND);
-
 
 require_once(DOCROOT . '/symphony/lib/boot/bundle.php');
 require_once(DOCROOT . '/symphony/lib/core/class.symphony.php');
@@ -44,6 +44,7 @@ require_once(DOCROOT . '/symphony/lib/core/class.administration.php');
 // ENM Specific includes & defines
 define_safe('ENM_DIR', DOCROOT . '/extensions/email_newsletter_manager');
 define_safe('ETM_DIR', DOCROOT . '/extensions/email_template_manager');
+
 
 
 
