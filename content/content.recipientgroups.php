@@ -223,7 +223,7 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 		$errors = new XMLElement('errors');
 		if(!empty($fields['name']) && !empty($fields['name-xslt']) && (General::validateXML($fields['name-xslt'], $error, false) == true)){
 			try{
-				if(RecipientGroupManager::save($this->_context[1], $fields, $new)){
+				if(RecipientGroupManager::save($this->_context[1], $fields)){
 					redirect(SYMPHONY_URL . '/extension/email_newsletter_manager/recipientgroups/edit/' . Lang::createHandle($fields['name'], 225, '_') . '/saved');
 					return true;
 				}
