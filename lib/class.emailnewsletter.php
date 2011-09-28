@@ -245,7 +245,7 @@ class EmailNewsletter{
 		$groups = $this->getCompletedRecipientGroups();
 		//lots of complicated stuff here. Because I do not assume this function will be called a lot (1000s of times), I have used quite a lot of filters to keep the completed_recipients output clean.
 		//what happens here is that the new group is merged, all empty values are cleared and all duplicates are removed. This should result in the cleanest possible value.
-		$this->_completed = array_filter(array_unique(array_merge(array_map('trim', explode(', ', $groups)), array(is_object($group)?$group->dsParamROOTELEMENT:$group))), 'strlen');
+		$this->_completed = array_filter(array_unique(array_merge(array_map('trim', explode(', ', $groups)), array(is_object($group)?$group->getHandle():$group))), 'strlen');
 		//return Symphony::Database()->update(array('completed_recipients'=>implode(', ', $completed)), 'tbl_email_newsletters', 'id = ' . $this->getId());
 	}
 

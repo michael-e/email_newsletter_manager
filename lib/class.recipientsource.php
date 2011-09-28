@@ -34,7 +34,12 @@ Class RecipientSource extends DataSource{
 
 	public function grab(&$param_pool=NULL){
 	}
-	
+
+	public function getHandle(){
+		$about = $this->about();
+		return Lang::createHandle($about['name'], 255, '_');
+	}
+
 	public function getProperties(){
 		return array(
 			'source' => $this->getSource(),
