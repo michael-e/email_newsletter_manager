@@ -145,31 +145,32 @@ class extension_email_newsletter_manager extends extension{
 			try{
 				if(@mkdir(WORKSPACE . '/email-newsletters') || is_dir(WORKSPACE . '/email-newsletters')){
 					Symphony::Database()->query("CREATE TABLE IF NOT EXISTS `tbl_fields_email_newsletter_manager` (
-					  `id` int(11) unsigned NOT NULL auto_increment,
-					  `field_id` int(11) unsigned NOT NULL,
-					  `templates` text,
-					  `senders` text,
-					  `recipient_groups` text,
-					  PRIMARY KEY  (`id`),
-					  KEY `field_id` (`field_id`)
-					) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
+						`id` int(11) unsigned NOT NULL auto_increment,
+						`field_id` int(11) unsigned NOT NULL,
+						`templates` text,
+						`senders` text,
+						`recipient_groups` text,
+						PRIMARY KEY  (`id`),
+						KEY `field_id` (`field_id`)
+					) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
 
-					Symphony::Database()->query("CREATE TABLE IF NOT EXISTS `tbl_email_newsletters` (
-					  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-					  `pid` varchar(13),
-					  `pauth` varchar (23),
-					  `template` varchar(255),
-					  `recipients` text,
-					  `completed_recipients` text,
-					  `sender` varchar(255),
-					  `total` int(11) DEFAULT '0',
-					  `sent` int(11) DEFAULT '0',
-					  `failed` int(11) DEFAULT '0',
-					  `started_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-					  `started_by` int(10) unsigned NOT NULL,
-					  `status` varchar(255) DEFAULT 'idle',
-					  PRIMARY KEY (`id`)
-					) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
+					Symphony::Database()->query("CREATE TABLE `sym_email_newsletters` (
+							`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+							`template` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+							`recipients` text CHARACTER SET utf8,
+							`completed_recipients` text CHARACTER SET utf8,
+							`sender` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+							`total` int(11) DEFAULT '0',
+							`sent` int(11) DEFAULT '0',
+							`failed` int(11) DEFAULT '0',
+							`started_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+							`started_by` int(10) unsigned NOT NULL,
+							`flag` varchar(255) CHARACTER SET utf8 DEFAULT 'idle',
+							`status` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+							`pauth` varchar(23) CHARACTER SET utf8 DEFAULT NULL,
+							`pid` varchar(13) CHARACTER SET utf8 DEFAULT NULL,
+							PRIMARY KEY (`id`)
+						) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
 					return true;
 				}
 			}
