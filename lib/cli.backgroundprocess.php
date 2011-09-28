@@ -40,13 +40,11 @@ require_once(DOCROOT . '/symphony/lib/boot/bundle.php');
 require_once(DOCROOT . '/symphony/lib/core/class.symphony.php');
 require_once(DOCROOT . '/symphony/lib/core/class.administration.php');
 
+GenericErrorHandler::$enabled = false;
 
 // ENM Specific includes & defines
 define_safe('ENM_DIR', DOCROOT . '/extensions/email_newsletter_manager');
 define_safe('ETM_DIR', DOCROOT . '/extensions/email_template_manager');
-
-
-
 
 require_once(ENM_DIR . '/lib/class.sendermanager.php');
 require_once(ENM_DIR . '/lib/class.recipientgroupmanager.php');
@@ -54,7 +52,7 @@ require_once(ENM_DIR . '/lib/class.emailnewslettermanager.php');
 require_once(ENM_DIR . '/lib/class.emailbackgroundprocess.php');
 
 // Needed to __construct() the Symphony class.
-// This in term is needed to get the Symphony::Database() functions working.
+// This in turn is needed to get the Symphony::Database() functions working.
 $thing = Administration::instance();
 
 try{
