@@ -29,8 +29,10 @@ class EmailNewsletter{
 		$this->_sender = $this->getSender();
 		$this->_recipientgroups = $this->getRecipientGroups();
 		$this->_template = $this->getTemplate();
-		$sender_about = $this->_sender->about();
-		$this->limit = $sender_about['throttle-emails'];
+		if(is_a($this->_sender, 'NewsletterSender')){
+			$sender_about = $this->_sender->about();
+			$this->limit = $sender_about['throttle-emails'];
+		}
 	}
 
 	public function getId(){
