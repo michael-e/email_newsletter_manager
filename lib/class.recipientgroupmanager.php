@@ -128,7 +128,7 @@ class RecipientgroupManager{
 		if(strlen(Lang::createHandle($fields['name'], 255, '_')) == 0){
 			return false;
 		}
-		if($handle == Lang::createHandle($fields['name'], 255, '_') || $handle == null){
+		if($handle == Lang::createHandle($fields['name'], 255, '_') || (($handle == null) && (self::__getClassPath(Lang::createHandle($fields['name'], 255, '_')) == false))){
 			if(self::_writeRecipientSource(Lang::createHandle($fields['name'], 255, '_'), self::_parseTemplate($fields))){
 				Symphony::ExtensionManager()->notifyMembers(
 					'PostRecipientgroupSaved',
@@ -144,7 +144,7 @@ class RecipientgroupManager{
 				return false;
 			}
 		}
-		elseif(false == self::__getClassPath($handLang::createHandle($fields['name'], 255, '_'))){
+		elseif(false == self::__getClassPath(Lang::createHandle($fields['name'], 255, '_'))){
 			if(!self::_writeRecipientSource(Lang::createHandle($fields['name'], 255, '_'), self::_parseTemplate($fields))) return false;
 			if(!@unlink(self::__getDriverPath($handle))) return false;
 			Symphony::ExtensionManager()->notifyMembers(
