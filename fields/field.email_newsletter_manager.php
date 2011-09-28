@@ -115,7 +115,7 @@
 				foreach($all_recipient_groups as $recipient_group){
 					$options[] = array(
 						$recipient_group['handle'],
-						in_array($recipient_group['handle'], explode(',', $recipient_groups)),
+						in_array($recipient_group['handle'], explode(',', (array)$recipient_groups)),
 						$recipient_group['name']
 					);
 				}
