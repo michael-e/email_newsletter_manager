@@ -103,8 +103,6 @@ class EmailNewsletter{
 		foreach($recipients as $recipient){
 			try{
 				$template = $this->getTemplate();
-				$template->recipients = '"'.$recipient['name'] . '" <' . $recipient['email'] . '>';
-				$template->addParams(array('etm-recipient' => $recipient['email']));
 
 				$about = $this->getSender()->about();
 				if(is_array($about['smtp'])){
@@ -128,7 +126,18 @@ class EmailNewsletter{
 				else{
 					Throw new EmailNewsletterException('Currently only sendmail and SMTP are supported. This will be fixed when the API supports it.');
 				}
-	
+
+				require_once(TOOLKIT . '/util.validators.php');
+				if(General::validateString($recipient['email'], $validators['email']) && !is_null($recipient['email'])){
+					file_put_contents('recipients.txt', print_r(array((is_null($recipient['name'])?0:$recipient['name']) => $recipient['email']), true), FILE_APPEND);
+					$email->setRecipients(array($recipient['name'] => $recipient['email']));
+					$template->recipients = '"'.$recipient['name'] . '" <' . $recipient['email'] . '>';
+					$template->addParams(array('etm-recipient' => $recipient['email']));
+				}
+				else{
+					throw new EmailTemplateException("Email address invalid: ".$recipient['email']);
+				}
+
 				$email->setReplyToName($about['reply-to-name']);
 				$template->reply_to_name = $about['reply-to-name'];
 				$template->addParams(array('etm-reply-to-name' => $about['reply-to-name']));
@@ -153,14 +162,6 @@ class EmailNewsletter{
 					$email->text_plain = $content['plain'];
 				if(isset($content['html']))
 					$email->text_html = $content['html'];
-
-				require_once(TOOLKIT . '/util.validators.php');
-				if(General::validateString($recipient['email'], $validators['email'])){
-					$email->recipients = array($recipient['name'] => $recipient['email']);
-				}
-				else{
-					throw new EmailTemplateException("Email address invalid: ".$recipient['email']);
-				}
 
 				$email->send();
 				

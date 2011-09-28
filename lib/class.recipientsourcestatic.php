@@ -92,7 +92,7 @@ Class RecipientSourceStatic extends RecipientSource{
 			return array(
 				'name'	=> $name,
 				'email' => $email,
-				'valid' => @preg_match($this->_emailValidator, $email)?true:false
+				'valid' => General::validateString($this->_emailValidator, $recipient['email'])?true:false
 			);
 		}
 	}

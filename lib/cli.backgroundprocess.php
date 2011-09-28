@@ -5,6 +5,9 @@
  *
  **/
 
+// Accurate timing
+$start_time = microtime(true);
+
 error_reporting(0);
 
 register_shutdown_function('handleShutdown');
@@ -17,14 +20,21 @@ function handleShutdown() {
 	}
 }
 function handleError($error_level,$error_message,$error_file,$error_line,$error_context){
+	//echo $error_message . "\r\n";
 }
 
-// Accurate timing
-$start_time = microtime(true);
+$newsletter_id  = $_SERVER['argv'][1];
+$process_auth = $_SERVER['argv'][2];
+$_SERVER['HTTP_HOST'] = $_SERVER['argv'][3];
+
 
 // Generic Symphony includes & defines
-define('DOCROOT', rtrim(dirname(__FILE__) . '/../../../', '\\/'));
-define('DOMAIN', rtrim(rtrim($_SERVER['HTTP_HOST'], '\\/') . dirname($_SERVER['PHP_SELF']), '\\/'));
+define('DOCROOT', realpath(rtrim(dirname(__FILE__) . '/../../../', '\\/')));
+define('DOMAIN', rtrim(rtrim($_SERVER['HTTP_HOST'], '\\/') . dirname($_SERVER['PHP_SELF']), '.\\/'));
+
+file_put_contents('domain.txt', DOMAIN, FILE_APPEND);
+file_put_contents('domain.txt', $_SERVER['HTTP_HOST'], FILE_APPEND);
+
 
 require_once(DOCROOT . '/symphony/lib/boot/bundle.php');
 require_once(DOCROOT . '/symphony/lib/core/class.symphony.php');
@@ -35,13 +45,12 @@ require_once(DOCROOT . '/symphony/lib/core/class.administration.php');
 define_safe('ENM_DIR', DOCROOT . '/extensions/email_newsletter_manager');
 define_safe('ETM_DIR', DOCROOT . '/extensions/email_template_manager');
 
+
+
 require_once(ENM_DIR . '/lib/class.sendermanager.php');
 require_once(ENM_DIR . '/lib/class.recipientgroupmanager.php');
 require_once(ENM_DIR . '/lib/class.emailnewslettermanager.php');
 require_once(ENM_DIR . '/lib/class.emailbackgroundprocess.php');
-
-$newsletter_id  = $_SERVER['argv'][1];
-$process_auth = $_SERVER['argv'][2];
 
 // Needed to __construct() the Symphony class.
 // This in term is needed to get the Symphony::Database() functions working.
@@ -53,7 +62,7 @@ try{
 		$newsletter->setPId(getmypid());
 		$sending_settings = $newsletter->getSender()->about();
 		if($newsletter->sendBatch($process_auth) != 'completed'){
-			time_sleep_until($start_time - $sending_settings['throttle-time']);
+			time_sleep_until($start_time + $sending_settings['throttle-time']);
 			EmailBackgroundProcess::spawnProcess($newsletter_id, $process_auth);
 		}
 	}
