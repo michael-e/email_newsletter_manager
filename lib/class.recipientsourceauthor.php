@@ -84,7 +84,7 @@ Class RecipientSourceAuthor extends RecipientSource{
 			}
 		}
 		if(!is_null($this->newsletter_id)){
-			$joins .= ' LEFT OUTER JOIN `tbl_email_newsletters_sent_' . $this->newsletter_id . '` as `s` ON `s`.`email` = `a`.`email`';
+			$joins .= ' LEFT OUTER JOIN `tbl_tmp_email_newsletters_sent_' . $this->newsletter_id . '` as `s` ON `s`.`email` = `a`.`email`';
 			$where .= 'AND `s`.`email` IS NULL';
 		}
 		return array(

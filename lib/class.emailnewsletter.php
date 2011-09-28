@@ -64,7 +64,7 @@ class EmailNewsletter{
 			throw new EmailNewsletterException('Can not restart a stopped process. Please start a new process if you need to send again.');
 		}
 		$this->generatePAuth();
-		Symphony::Database()->query("CREATE TABLE IF NOT EXISTS `tbl_email_newsletters_sent_". $this->getId() . "` (
+		Symphony::Database()->query("CREATE TABLE IF NOT EXISTS `tbl_tmp_email_newsletters_sent_". $this->getId() . "` (
 		  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 		  `email` varchar(255),
 		  `result` varchar(255),
@@ -82,7 +82,7 @@ class EmailNewsletter{
 
 	public function stop(){
 		EmailBackgroundProcess::killProcess($this->getPId());
-		Symphony::Database()->query('DROP TABLE IF EXISTS `tbl_email_newsletters_sent_'. $this->getId() . '`');
+		Symphony::Database()->query('DROP TABLE IF EXISTS `tbl_tmp_email_newsletters_sent_'. $this->getId() . '`');
 		$this->setStatus('stopped');
 		return true;
 	}
@@ -95,7 +95,7 @@ class EmailNewsletter{
 		$recipients = $this->_getRecipients($this->limit);
 		
 		if(count($recipients) == 0){
-			Symphony::Database()->query('DROP TABLE IF EXISTS `tbl_email_newsletters_sent_'. $this->getId() . '`');
+			Symphony::Database()->query('DROP TABLE IF EXISTS `tbl_tmp_email_newsletters_sent_'. $this->getId() . '`');
 			$this->setStatus('completed');
 			return 'completed';
 		}
@@ -236,7 +236,7 @@ class EmailNewsletter{
 
 	protected function _markRecipient($recipient, $status = 'sent'){
 		Symphony::Database()->query('UPDATE `tbl_email_newsletters` SET sent = sent + ' . ($status == 'sent'?1:0) . ', failed = failed + ' . ($status == 'failed'?1:0) . ', total = total + 1 WHERE id = \'' . $this->getId() . '\'');
-		return Symphony::Database()->insert(array('email'=>$recipient, 'result'=>$status), 'tbl_email_newsletters_sent_' . $this->getId());
+		return Symphony::Database()->insert(array('email'=>$recipient, 'result'=>$status), 'tbl_tmp_email_newsletters_sent_' . $this->getId());
 	}
 
 	protected function _markRecipientGroup($group){

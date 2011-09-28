@@ -47,7 +47,7 @@ Class RecipientSourceStatic extends RecipientSource{
 		
 		if($this->newsletter_id !== NULL){
 			$where .= ' GROUP BY `d`.`email`';
-			$joins .= ' LEFT OUTER JOIN tbl_email_newsletters_sent_'.$this->newsletter_id.' AS `n` ON `d`.`email` = `n`.`email`
+			$joins .= ' LEFT OUTER JOIN tbl_tmp_email_newsletters_sent_'.$this->newsletter_id.' AS `n` ON `d`.`email` = `n`.`email`
 						WHERE `n`.`email` IS NULL';
 		}
 		else{

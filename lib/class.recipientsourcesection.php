@@ -188,7 +188,7 @@ Class RecipientSourceSection extends RecipientSource{
 		$joins .= ' LEFT JOIN tbl_entries_data_'.$entryManager->fieldManager->fetchFieldIDFromElementName($this->emailField, $this->getSource()).' AS `d` ON `e`.`id` = `d`.`entry_id`';
 
 		if($this->newsletter_id !== NULL){
-			$joins .= ' LEFT OUTER JOIN tbl_email_newsletters_sent_'.$this->newsletter_id.' AS `n` ON `d`.`value` = `n`.`email`';
+			$joins .= ' LEFT OUTER JOIN tbl_tmp_email_newsletters_sent_'.$this->newsletter_id.' AS `n` ON `d`.`value` = `n`.`email`';
 			$where .= ' AND `n`.`email` IS NULL GROUP BY `d`.`value`';
 		}
 		elseif($count_only != true){
