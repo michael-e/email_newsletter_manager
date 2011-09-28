@@ -93,6 +93,7 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 					if($gateway['handle'] == 'smtp'){
 						$gw->setFrom($config['from_address'], $config['from_name']);
 						$gw->setHost($config['host']);
+						$gw->setSecure($config['secure']);
 						$gw->setPort($config['port']);
 						$gw->setAuth($config['auth']);
 						$gw->setUser($config['username']);
