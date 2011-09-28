@@ -269,6 +269,13 @@
 			$newsletter_properties = array();
 			if($data['newsletter_id']){
 				$newsletter = EmailNewsletterManager::get($data['newsletter_id']);
+				if(is_object($newsletter->getTemplate())){
+					$newsletter_properties['template'] = $newsletter->getTemplate()->getHandle();
+				}
+				if(is_object($newsletter->getSender())){
+					$newsletter_properties['sender'] = $newsletter->getSender()->getHandle();
+				}
+				$newsletter_properties['recipients'] = $newsletter->getRecipientGroups(false, true);
 			}
 
 			// get configured templates
@@ -352,7 +359,7 @@
 						foreach($templates_options as $template){
 							$options[] = array(
 								$template[0],
-								$template[0] == $newsletter->getTemplate()->dsParamROOTELEMENT,
+								$template[0] == $newsletter_properties['template'],
 								$template[1]
 							);
 						}
@@ -413,7 +420,7 @@
 								'fields['.$this->get('element_name').'][recipient_groups][]',
 								$recipient_group[0],
 								'checkbox',
-								(!empty($recipient_group[0]) && in_array($recipient_group[0], explode(',', $newsletter_properties['recipients'])))
+								(!empty($recipient_group[0]) && in_array($recipient_group[0], $newsletter_properties['recipients']))
 								? array('checked' => 'checked')
 								: NULL
 							);
@@ -497,7 +504,7 @@
 			$newsletter = EmailNewsletterManager::save(array(
 				'id'               => $entry_data['newsletter_id'],
 				'template'         => $data['template'],
-				'recipients'       => implode(',', $data['recipient_groups']),
+				'recipients'       => implode(', ', $data['recipient_groups']),
 				'sender'           => $data['sender'],
 				'started_by'       => Administration::instance()->Author->get('id'),
 			));
