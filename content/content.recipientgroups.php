@@ -235,6 +235,9 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 		if(empty($fields['name'])){
 			$errors->appendChild(new XMLElement('name', __('This field can not be empty.')));
 		}
+		if(strlen(Lang::createHandle($fields['name'], 255, '_')) == 0){
+			$errors->appendChild(new XMLElement('name', __('This field must at least contain a number or a letter')));
+		}
 		if(empty($fields['name-xslt'])){
 			$errors->appendChild(new XMLElement('name-xslt', __('This field can not be empty.')));
 		}

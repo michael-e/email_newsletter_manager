@@ -154,12 +154,15 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 
 		$errors = new XMLElement('errors');
 		require_once(TOOLKIT . '/util.validators.php');
-		if(!empty($fields['name'])){
-			SenderManager::save($this->_context[1], $fields);
-			redirect(SYMPHONY_URL . '/extension/email_newsletter_manager/senders/edit/' . Lang::createHandle($fields['name'], 225, '_') . '/saved');
-		}
 		if(empty($fields['name'])){
 			$errors->appendChild(new XMLElement('name', __('This field can not be empty.')));
+		}
+		elseif(strlen(Lang::createHandle($fields['name'], 255, '_')) == 0){
+			$errors->appendChild(new XMLElement('name', __('This field must at least contain a number or a letter')));
+		}
+		else{
+			SenderManager::save($this->_context[1], $fields);
+			redirect(SYMPHONY_URL . '/extension/email_newsletter_manager/senders/edit/' . Lang::createHandle($fields['name'], 225, '_') . '/saved');
 		}
 		$this->_XML->appendChild($errors);
 	}

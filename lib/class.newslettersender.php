@@ -9,6 +9,6 @@ class NewsletterSender{
 
 	public function getHandle(){
 		$about = $this->about();
-		return strtolower(preg_replace('/[^a-zA-Z0-9\-]/', '', str_replace(' ', '-', $this->getName())));
+		return Lang::createHandle($this->getName(), 255, '_');
 	}
 }

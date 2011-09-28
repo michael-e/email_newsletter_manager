@@ -125,13 +125,16 @@ class RecipientgroupManager{
 	}
 
 	public static function save($handle = null, $fields){
+		if(strlen(Lang::createHandle($fields['name'], 255, '_')) == 0){
+			return false;
+		}
 		if($handle == Lang::createHandle($fields['name'], 255, '_') || $handle == null){
 			if(self::_writeRecipientSource(Lang::createHandle($fields['name'], 255, '_'), self::_parseTemplate($fields))){
 				Symphony::ExtensionManager()->notifyMembers(
 					'PostRecipientgroupSaved',
 					'/extension/email_newsletter_manager/',
 					array(
-						'handle'		=> $handle,
+						'handle'		=> Lang::createHandle($fields['name'], 255, '_'),
 						'fields' 		=> $fields
 					)
 				);
@@ -141,14 +144,14 @@ class RecipientgroupManager{
 				return false;
 			}
 		}
-		elseif(false == self::__getClassPath(Lang::createHandle($fields['name'], 255, '_'))){
+		elseif(false == self::__getClassPath($handLang::createHandle($fields['name'], 255, '_'))){
 			if(!self::_writeRecipientSource(Lang::createHandle($fields['name'], 255, '_'), self::_parseTemplate($fields))) return false;
 			if(!@unlink(self::__getDriverPath($handle))) return false;
 			Symphony::ExtensionManager()->notifyMembers(
 				'PostRecipientgroupSaved',
 				'/extension/email_newsletter_manager/',
 				array(
-					'handle'		=> $handle,
+					'handle'		=> Lang::createHandle($fields['name'], 255, '_'),
 					'fields' 		=> $fields
 				)
 			);
