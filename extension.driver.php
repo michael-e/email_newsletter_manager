@@ -49,6 +49,11 @@ class extension_email_newsletter_manager extends extension{
 			),
 			array(
 				'page' => '/publish/edit/',
+				'delegate' => 'EntryPreEdit',
+				'callback' => 'stopRestartNewsletter'
+			),
+			array(
+				'page' => '/publish/edit/',
 				'delegate' => 'EntryPostEdit',
 				'callback' => 'initEmailNewsletter'
 			),
@@ -112,6 +117,47 @@ class extension_email_newsletter_manager extends extension{
 		$new_handle = Lang::createHandle($context['config']['name'], 255, '_');
 		EmailNewsletterManager::updateTemplateHandle($old_handle, $new_handle);
 	}
+
+	public function stopRestartNewsletter(&$context){
+		if(substr($_POST['action']['save'], 0, 11) == 'en-restart:'){
+			$vars = explode(":",$_POST['action']['save']);
+			$field_id = $vars[1];
+			$entry_id = $vars[2];
+			$data = $this->_getEntryData($field_id, $entry_id);
+			if(!empty($data)){
+				try{
+					$newsletter = EmailNewsletterManager::create($data['newsletter_id']);
+					$array = array(
+						'template'	=>	$newsletter->getTemplate()->getHandle(),
+						'sender'	=> 	$newsletter->getSender()->getHandle(),
+						'recipients'=>	implode(', ', $newsletter->getRecipientGroups(false, true)),
+						'started_by'=>	Administration::instance()->Author->get('id'));
+					$news = EmailNewsletterManager::save($array);
+					$context['entry']->setData($field_id, array('author_id'=>Administration::instance()->Author->get('id'), 'entry_id'=>$entry_id, 'newsletter_id'=>$news->getId()));
+					$news->start();
+				}
+				catch(Exception $e){
+					Administration::instance()->customError(__('Error restarting email newsletter'), __($e->getMessage()));
+				}
+			}
+		}
+		if(substr($_POST['action']['save'], 0, 8) == 'en-stop:'){
+			$vars = explode(":",$_POST['action']['save']);
+			$field_id = $vars[1];
+			$entry_id = $vars[2];
+			$data = $this->_getEntryData($field_id, $entry_id);
+			if(!empty($data)){
+				try{
+					$newsletter = EmailNewsletterManager::create($data['newsletter_id']);
+					$newsletter->stop();
+				}
+				catch(Exception $e){
+					Administration::instance()->customError(__('Error stopping email newsletter'), __($e->getMessage()));
+				}
+			}
+		}
+	}
+			
 
 	public function initEmailNewsletter($context){
 		// The field has a 'save and send' button. We trigger the newsletter

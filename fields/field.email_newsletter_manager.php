@@ -278,6 +278,8 @@
 					$newsletter_properties['sender'] = $newsletter->getSender()->getHandle();
 				}
 				$newsletter_properties['recipients'] = $newsletter->getRecipientGroups(false, true);
+				$stats = $newsletter->getStats();
+				$status = $stats['status'];
 			}
 
 			// get configured templates
@@ -331,7 +333,7 @@
 			}
 
 			// build header
-			$header = new XMLElement('h3', $this->get('label'));
+			$header = new XMLElement('label', $this->get('label'));
 			$wrapper->appendChild($header);
 
 			// build GUI element
@@ -341,21 +343,86 @@
 			// switch status
 			switch ($status){
 				case "sending":
+					$heading = new XMLElement('p',__('Sending'), array('class'=>'status sending'));
+					$gui->appendChild($heading);
+					$gui->appendChild(new XMLElement('p', sprintf(__("%d emails sent"), $stats['sent']), array('class'=>'stats')));
+					$gui->appendChild(new XMLElement('p', sprintf(__("%d emails failed"), $stats['failed']), array('class'=>'stats')));
+					$gui->appendChild(new XMLElement('p', sprintf(__("Started %s"), DateTimeObj::get(__SYM_DATETIME_FORMAT__, strftime($stats['started_on']))), array('class'=>'stats')));
+					$this->_addStandardForm($newsletter, &$gui);
+					$gui->appendChild(new XMLElement(
+						'button',
+						__('Stop'),
+						array(
+							'name' => 'action[save]',
+							'type' => 'submit',
+							'value' => 'en-stop:'.$this->_field_id.':'.$this->_entry_id,
+							'class' => 'button delete confirm'
+						)
+					));
 					break;
 
 				case "stopped":
+					$heading = new XMLElement('p',__('Stopped'), array('class'=>'status stopped'));
+					$gui->appendChild($heading);
+					$gui->appendChild(new XMLElement('p', sprintf(__("%d emails sent"), $stats['sent']), array('class'=>'stats')));
+					$gui->appendChild(new XMLElement('p', sprintf(__("%d emails failed"), $stats['failed']), array('class'=>'stats')));
+					$gui->appendChild(new XMLElement('p', sprintf(__("Started %s"), DateTimeObj::get(__SYM_DATETIME_FORMAT__, strftime($stats['started_on']))), array('class'=>'stats')));
+					$this->_addStandardForm($newsletter, &$gui);
+					$gui->appendChild(new XMLElement(
+						'button',
+						__('Restart'),
+						array(
+							'name' => 'action[save]',
+							'type' => 'submit',
+							'value' => 'en-restart:'.$this->_field_id.':'.$this->_entry_id,
+							'class' => 'button'
+						)
+					));
 					break;
 
 				case "error":
+					$heading = new XMLElement('p',__('Sending failed. Check the log for details.'), array('class'=>'status error'));
+					$gui->appendChild($heading);
+					$gui->appendChild(new XMLElement('p', sprintf(__("%d emails sent"), $stats['sent']), array('class'=>'stats')));
+					$gui->appendChild(new XMLElement('p', sprintf(__("%d emails failed"), $stats['failed']), array('class'=>'stats')));
+					$gui->appendChild(new XMLElement('p', sprintf(__("Started %s"), DateTimeObj::get(__SYM_DATETIME_FORMAT__, strftime($stats['started_on']))), array('class'=>'stats')));
+					$this->_addStandardForm($newsletter, &$gui);
+					$gui->appendChild(new XMLElement(
+						'button',
+						__('Restart'),
+						array(
+							'name' => 'action[save]',
+							'type' => 'submit',
+							'value' => 'en-restart:'.$this->_field_id.':'.$this->_entry_id,
+							'class' => 'button'
+						)
+					));
 					break;
 
-				case "sent":
+				case "completed":
+					$heading =  new XMLElement('p',__('Completed'), array('class'=>'status completed'));
+					$gui->appendChild($heading);
+					$gui->appendChild(new XMLElement('p', sprintf(__("%d emails sent"), $stats['sent']), array('class'=>'stats')));
+					$gui->appendChild(new XMLElement('p', sprintf(__("%d emails failed"), $stats['failed']), array('class'=>'stats')));
+					$gui->appendChild(new XMLElement('p', sprintf(__("Started %s"), DateTimeObj::get(__SYM_DATETIME_FORMAT__, strftime($stats['started_on']))), array('class'=>'stats')));
+					$this->_addStandardForm($newsletter, &$gui);
+					$gui->appendChild(new XMLElement(
+						'button',
+						__('Restart'),
+						array(
+							'name' => 'action[save]',
+							'type' => 'submit',
+							'value' => 'en-restart:'.$this->_field_id.':'.$this->_entry_id,
+							'class' => 'button'
+						)
+					));
 					break;
 
 				default:
+					$heading = new XMLElement('p',__('Waiting for input'), array('class'=>'status idle'));
+					$gui->appendChild($heading);
 					// build selector for email templates
 					if(count($templates_options) > 1){
-						$p = new XMLElement('p');
 						$options = array();
 						$options[] = array(NULL, NULL, __('--- please select ---'));
 						foreach($templates_options as $template){
@@ -365,11 +432,10 @@
 								$template[1]
 							);
 						}
-						$p->appendChild(
+						$gui->appendChild(
 							Widget::Label(__('Email Template: '),
 							Widget::Select('fields['.$this->get('element_name').'][template]', $options))
 						);
-						$gui->appendChild($p);
 					}
 					elseif(count($templates_options) == 1){
 						$gui->appendChild(Widget::Input(
@@ -384,7 +450,6 @@
 
 					// build selector for senders
 					if(count($senders_options) > 1){
-						$p = new XMLElement('p');
 						$options = array();
 						$options[] = array(NULL, NULL, __('--- please select ---'));
 						foreach($senders_options as $sender){
@@ -394,11 +459,10 @@
 								$sender[1]
 							);
 						}
-						$p->appendChild(
+						$gui->appendChild(
 							Widget::Label(__('Sender: '),
 							Widget::Select('fields['.$this->get('element_name').'][sender]', $options))
 						);
-						$gui->appendChild($p);
 					}
 					elseif(count($senders_options) == 1){
 						$gui->appendChild(Widget::Input(
@@ -681,5 +745,29 @@
 			);
 			$table->setAttributeArray(array('class' => 'status'));
 			return $table;
+		}
+		protected function _addStandardForm($newsletter, &$gui){
+			foreach($newsletter->getRecipientGroups(false, true) as $group){
+				$gui->appendChild(Widget::Input(
+					'fields['.$this->get('element_name').'][recipient_groups][]',
+					$group,
+					'hidden')
+				);
+			}
+			$gui->appendChild(Widget::Input(
+				'fields['.$this->get('element_name').'][sender]',
+				$newsletter->getSender()->getHandle(),
+				'hidden')
+			);
+			$gui->appendChild(Widget::Input(
+				'fields['.$this->get('element_name').'][template]',
+				$newsletter->getTemplate()->getHandle(),
+				'hidden')
+			);
+			$gui->appendChild(Widget::Input(
+				'fields['.$this->get('element_name').'][newsletter_id]',
+				$newsletter->getId(),
+				'hidden')
+			);
 		}
 	}
