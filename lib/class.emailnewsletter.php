@@ -159,6 +159,8 @@ class EmailNewsletter{
 				$email->setReplyToEmailAddress($about['reply-to-email']);
 				$template->reply_to_email = $about['reply-to-email'];
 				$template->addParams(array('etm-reply-to-email' => $about['reply-to-email']));
+				
+				$template->addParams(array('enm-newsletter-id' => $this->getId()));
 
 				$xml = $template->processDatasources();
 				$template->setXML($xml->generate());
