@@ -43,6 +43,8 @@
 
 			// initialize field settings based on class defaults (name, placement)
 			parent::displaySettingsPanel($wrapper, $errors);
+			
+			
 
 			// build selector for email templates
 			$all_templates = EmailTemplateManager::listAll();
@@ -420,7 +422,7 @@
 								'fields['.$this->get('element_name').'][recipient_groups][]',
 								$recipient_group[0],
 								'checkbox',
-								(!empty($recipient_group[0]) && in_array($recipient_group[0], $newsletter_properties['recipients']))
+								(!empty($recipient_group[0]) && in_array($recipient_group[0], (array)$newsletter_properties['recipients']))
 								? array('checked' => 'checked')
 								: NULL
 							);
@@ -538,7 +540,7 @@
 		 * @return: boolean
 		 */
 		public function canFilter(){
-			return false;
+			return true;
 		}
 
 		/**
@@ -572,46 +574,41 @@
 		 */
 		public function appendFormattedElement(&$wrapper, $data, $encode = false){
 			$node = new XMLElement($this->get('element_name'));
-			$node->setAttribute('author-id', $data['author_id']);
-			$node->setAttribute('status', $data['status']);
-			$node->setAttribute('total', $data['stats_rec_total']);
-			$node->setAttribute('sent', $data['stats_rec_sent']);
-			$node->setAttribute('errors', $data['stats_rec_errors']);
-			$node->appendChild(new XMLElement('subject', $data['subject']));
+	
+			$newsletter = EmailNewsletterManager::create($data['newsletter_id']);
+			
+			$properties = $newsletter->getStats();
+
+			$node->setAttribute('newsletter-id', $data['newsletter_id']);
+			$node->setAttribute('author-id', $properties['started_by']);
+			$node->setAttribute('status', $properties['status']);
+			$node->setAttribute('total', $properties['total']);
+			$node->setAttribute('sent', $properties['sent']);
+			$node->setAttribute('failed', $properties['failed']);
+			$node->appendChild(new XMLElement('subject', $newsletter->getTemplate()->subject));
 
 			// load configuration;
 			// use saved (entry) config XML if available (i.e.: if the email newsletter has been sent);
 			// fallback: the field's configuration XML
-			if(!empty($data['config_xml'])){
-				$config = simplexml_load_string($data['config_xml']);
-			}
-			else{
-				$field_data = Symphony::Database()->fetchRow(0, "SELECT * FROM `tbl_fields_email_newsletter` WHERE `field_id` = ".$this->get('id')." LIMIT 1");
-				$config = simplexml_load_string($field_data['config_xml']);
-			}
+			
 
 			// sender
 			$sender = new XMLElement('senders');
-			$sender_id = $data['sender_id'];
-			if(!empty($sender_id)){
-				$sender_data = $config->xpath("senders/item[@id = $sender_id]");
-				$sender->setValue((string)$sender_data[0]);
-				$sender->setAttribute('id', $data['sender_id']);
-			}
+			General::array_to_xml($sender, (array)$newsletter->getSender()->about());
 			$node->appendChild($sender);
 
 			// recipients
-			$rec_groups = $config->xpath('recipients/group');
-			$recipient_group_ids = explode(',', $data['rec_group_ids']);
-			$recipients = new XMLElement('recipients');
-			foreach($rec_groups as $rec_group){
-				if(in_array($rec_group['id'], $recipient_group_ids)){
-					$group = new XMLElement('group', $rec_group);
-					$group->setAttribute('id', $rec_group['id']);
-					$recipients->appendChild($group);
-				}
+			$recipients = new XMLElement('recipient_groups');
+			foreach($newsletter->getRecipientGroups() as $group){
+				$rgroup = new XMLElement('group');
+				General::array_to_xml($rgroup, (array)$group->about());
+				$recipients->appendChild($rgroup);
 			}
 			$node->appendChild($recipients);
+
+			$template = new XMLElement('template');
+			General::array_to_xml($template, (array)$newsletter->getTemplate()->about);
+			$node->appendChild($template);
 
 			$wrapper->appendChild($node);
 		}
@@ -622,6 +619,38 @@
 		public function getExampleFormMarkup(){
 			// nothing to show here
 			return;
+		}
+/*-------------------------------------------------------------------------
+	Filtering
+-------------------------------------------------------------------------*/
+		public function displayDatasourceFilterPanel(&$wrapper, $data=NULL, $errors=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL){
+			$wrapper->appendChild(new XMLElement('h4', $this->get('label') . ' <i>'.$this->Name().'</i>'));
+			$label = Widget::Label(__('Newsletter ID'));
+			$label->appendChild(Widget::Input('fields[filter]'.($fieldnamePrefix ? '['.$fieldnamePrefix.']' : '').'['.$this->get('id').']'.($fieldnamePostfix ? '['.$fieldnamePostfix.']' : ''), ($data ? General::sanitize($data) : null)));
+			$wrapper->appendChild($label);
+		}
+		
+		public function buildDSRetrievalSQL($data, &$joins, &$where, $andOperation = false) {
+			$field_id = $this->get('id');
+
+			if (!is_array($data)) $data = array($data);
+
+			foreach ($data as &$value) {
+				$value = $this->cleanValue($value);
+			}
+
+			$this->_key++;
+			$data = implode("', '", $data);
+			$joins .= "
+				LEFT JOIN
+					`tbl_entries_data_{$field_id}` AS t{$field_id}_{$this->_key}
+					ON (e.id = t{$field_id}_{$this->_key}.entry_id)
+			";
+			$where .= "
+				AND t{$field_id}_{$this->_key}.newsletter_id IN ('{$data}')
+			";
+
+			return true;
 		}
 
 /*-------------------------------------------------------------------------

@@ -105,8 +105,9 @@ class EmailNewsletter{
 		foreach($recipients as $recipient){
 			try{
 				$template = $this->getTemplate();
+				$sender = $this->getSender();
+				$about = $sender->about();
 
-				$about = $this->getSender()->about();
 				if(is_array($about['smtp'])){
 					$email = Email::create('smtp');
 					$email->setSenderName($about['smtp']['from_name']);
@@ -128,6 +129,17 @@ class EmailNewsletter{
 				else{
 					Throw new EmailNewsletterException('Currently only sendmail and SMTP are supported. This will be fixed when the API supports it.');
 				}
+
+				Symphony::ExtensionManager()->notifyMembers(
+					'preEmailGenerate',
+					'/extension/email_newsletter_manager/',
+					array(
+						'newsletter'	=> &$this,
+						'email'			=> &$email,
+						'template' 		=> &$template,
+						'recipient'		=> &$recipient
+					)
+				);
 
 				require_once(TOOLKIT . '/util.validators.php');
 				if(General::validateString($recipient['email'], $validators['email']) && !is_null($recipient['email'])){
@@ -165,8 +177,30 @@ class EmailNewsletter{
 				if(isset($content['html']))
 					$email->text_html = $content['html'];
 
+				Symphony::ExtensionManager()->notifyMembers(
+					'preEmailSend',
+					'/extension/email_newsletter_manager/',
+					array(
+						'newsletter'	=> &$this,
+						'email'			=> &$email,
+						'template' 		=> &$template,
+						'recipient'		=> $recipient
+					)
+				);
+
 				$email->send();
-				
+
+				Symphony::ExtensionManager()->notifyMembers(
+					'postEmailSend',
+					'/extension/email_newsletter_manager/',
+					array(
+						'newsletter'	=> &$this,
+						'email'			=> &$email,
+						'template' 		=> &$template,
+						'recipient'		=> $recipient
+					)
+				);
+	
 				$this->_markRecipient($recipient['email'], 'sent');
 			}
 			catch(EmailTemplateException $e){
@@ -276,7 +310,7 @@ class EmailNewsletter{
 	}
 
 	public function getStats(){
-		$results = Symphony::Database()->fetch('SELECT sent, total, failed FROM `tbl_email_newsletters` WHERE `id`=\'' . $this->getId() . '\'');
+		$results = Symphony::Database()->fetch('SELECT started_on, started_by, status, sent, total, failed FROM `tbl_email_newsletters` WHERE `id`=\'' . $this->getId() . '\'');
 		return $results[0];
 	}
 
