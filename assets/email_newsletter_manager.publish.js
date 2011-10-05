@@ -3,26 +3,26 @@
 		/**
 		 * publish panel: reloader
 		 */
-		var refresh = 2000;
 		setInterval(function(){
-			if($(".email-newsletter-manager-gui.reloadable").length > 0){
+			$('.field-email_newsletter_manager .reloadable').each(function(){
+				gui = $(this);
 				$.ajax({
-					url: location.href,
+					url: Symphony.Context.get('root') + '/symphony/extension/email_newsletter_manager/publishfield/' + $(this).parent().attr('id').substring(6) + '/' + Symphony.Context.get('env').entry_id  + '/',
 					cache: false,
+					context: gui,
+					dataType: 'html',
 					success: function(html){
-						$(".email-newsletter-manager-gui").each(function(i){
-							if($(this).hasClass("reloadable")){
-								$(this).replaceWith($(html).find(".email-newsletter-manager-gui:eq(" + i + ")"));
-							}
-						});
+						//console.log($(html).$('field'));
+						//$(this).parent().html($(html).find('field').html());
+						$(this).parent().empty().html($(html).contents());
 					}
 				});
-			}
-		}, refresh);
+			});
+		}, 2000);
 		/**
 		 * prevent double-clicks
 		 */
-		$("#savesend").one("click", function() {
+		$("button").one("click", function() {
 		    $(this).click(function(){
 				return false;
 			});

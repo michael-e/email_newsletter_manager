@@ -351,14 +351,26 @@
 					$this->_addStandardForm($newsletter, &$gui);
 					$gui->appendChild(new XMLElement(
 						'button',
-						__('Stop'),
+						__('Pause'),
+						array(
+							'name' => 'action[save]',
+							'type' => 'submit',
+							'value' => 'en-pause:'.$this->_field_id.':'.$this->_entry_id,
+							'class' => 'button'
+						)
+					));
+					$gui->appendChild(new XMLElement(
+						'button',
+						__('Cancel'),
 						array(
 							'name' => 'action[save]',
 							'type' => 'submit',
 							'value' => 'en-stop:'.$this->_field_id.':'.$this->_entry_id,
-							'class' => 'button delete confirm'
+							'class' => 'button delete confirm',
+							'data-message' => __('Are you sure you want to cancel sending?')
 						)
 					));
+					$gui->setAttribute('class', 'email-newsletters-gui reloadable');
 					break;
 
 				case "stopped":
@@ -375,7 +387,38 @@
 							'name' => 'action[save]',
 							'type' => 'submit',
 							'value' => 'en-restart:'.$this->_field_id.':'.$this->_entry_id,
-							'class' => 'button confirm'
+							'class' => 'button confirm',
+							'data-message' => __('Restarting will send duplicate emails. Are you sure you want to continue?')
+						)
+					));
+					break;
+
+				case "paused":
+					$heading = new XMLElement('p',__('Paused'), array('class'=>'status paused'));
+					$gui->appendChild($heading);
+					$gui->appendChild(new XMLElement('p', sprintf(__("%d emails sent"), $stats['sent']), array('class'=>'stats')));
+					$gui->appendChild(new XMLElement('p', sprintf(__("%d emails failed"), $stats['failed']), array('class'=>'stats')));
+					$gui->appendChild(new XMLElement('p', sprintf(__("Started %s"), DateTimeObj::get(__SYM_DATETIME_FORMAT__, strftime($stats['started_on']))), array('class'=>'stats')));
+					$this->_addStandardForm($newsletter, &$gui);
+					$gui->appendChild(new XMLElement(
+						'button',
+						__('Continue'),
+						array(
+							'name' => 'action[save]',
+							'type' => 'submit',
+							'value' => 'en-send:'.$this->_field_id.':'.$this->_entry_id,
+							'class' => 'button create'
+						)
+					));
+					$gui->appendChild(new XMLElement(
+						'button',
+						__('Cancel'),
+						array(
+							'name' => 'action[save]',
+							'type' => 'submit',
+							'value' => 'en-stop:'.$this->_field_id.':'.$this->_entry_id,
+							'class' => 'button delete confirm',
+							'data-message' => __('Are you sure you want to cancel sending?')
 						)
 					));
 					break;
@@ -425,7 +468,8 @@
 							'name' => 'action[save]',
 							'type' => 'submit',
 							'value' => 'en-restart:'.$this->_field_id.':'.$this->_entry_id,
-							'class' => 'button confirm'
+							'class' => 'button confirm',
+							'data-message' => __('Restarting will send duplicate emails. Are you sure you want to continue?')
 						)
 					));
 					break;

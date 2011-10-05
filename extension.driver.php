@@ -156,6 +156,21 @@ class extension_email_newsletter_manager extends extension{
 				}
 			}
 		}
+		if(substr($_POST['action']['save'], 0, 9) == 'en-pause:'){
+			$vars = explode(":",$_POST['action']['save']);
+			$field_id = $vars[1];
+			$entry_id = $vars[2];
+			$data = $this->_getEntryData($field_id, $entry_id);
+			if(!empty($data)){
+				try{
+					$newsletter = EmailNewsletterManager::create($data['newsletter_id']);
+					$newsletter->pause();
+				}
+				catch(Exception $e){
+					Administration::instance()->customError(__('Error pausing email newsletter'), __($e->getMessage()));
+				}
+			}
+		}
 	}
 			
 
