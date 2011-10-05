@@ -375,7 +375,7 @@
 							'name' => 'action[save]',
 							'type' => 'submit',
 							'value' => 'en-restart:'.$this->_field_id.':'.$this->_entry_id,
-							'class' => 'button'
+							'class' => 'button confirm'
 						)
 					));
 					break;
@@ -389,12 +389,24 @@
 					$this->_addStandardForm($newsletter, &$gui);
 					$gui->appendChild(new XMLElement(
 						'button',
+						__('Continue'),
+						array(
+							'name' => 'action[save]',
+							'type' => 'submit',
+							'value' => 'en-send:'.$this->_field_id.':'.$this->_entry_id,
+							'class' => 'button create',
+							
+						)
+					));
+					$gui->appendChild(new XMLElement(
+						'button',
 						__('Restart'),
 						array(
 							'name' => 'action[save]',
 							'type' => 'submit',
 							'value' => 'en-restart:'.$this->_field_id.':'.$this->_entry_id,
-							'class' => 'button'
+							'class' => 'button confirm',
+							'data-message' => __('Restarting will send duplicate emails. Are you sure you want to continue?')
 						)
 					));
 					break;
@@ -413,13 +425,18 @@
 							'name' => 'action[save]',
 							'type' => 'submit',
 							'value' => 'en-restart:'.$this->_field_id.':'.$this->_entry_id,
-							'class' => 'button'
+							'class' => 'button confirm'
 						)
 					));
 					break;
 
 				default:
-					$heading = new XMLElement('p',__('Waiting for input'), array('class'=>'status idle'));
+					if(isset($this->_entry_id)){
+						$heading = new XMLElement('p',__('Ready to send'), array('class'=>'status idle'));
+					}
+					else{
+						$heading = new XMLElement('p',__('Waiting for input'), array('class'=>'status idle'));
+					}
 					$gui->appendChild($heading);
 					// build selector for email templates
 					if(count($templates_options) > 1){
@@ -510,15 +527,14 @@
 					// build 'save and send' button
 					if(isset($this->_entry_id)){
 						$p = new XMLElement('p');
-						$p->appendChild(new XMLElement(
+						$gui->appendChild(new XMLElement(
 							'button',
 							__('Send'),
 							array(
 								'name' => 'action[save]',
 								'type' => 'submit',
-								'value' => 'en-send:'.$this->_field_id.':'.$this->_entry_id.':'.DOMAIN.':'.$live_mode,
-								'class' => 'send',
-								'id' => 'savesend'
+								'value' => 'en-send:'.$this->_field_id.':'.$this->_entry_id,
+								'class' => 'button create'
 							)
 						));
 						$gui->appendChild($p);
