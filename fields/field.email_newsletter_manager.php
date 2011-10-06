@@ -214,24 +214,32 @@
 		public function prepareTableValue($data, XMLElement $link=NULL){
 			if(!is_array($data) || empty($data)) return;
 			$value = null;
-			if(isset($data['status'])){
-				$value = $data['status'];
+			if(isset($data['newsletter_id'])){
+				$newsletter = EmailNewsletterManager::get($data['newsletter_id']);;
+				$stats = $newsletter->getStats();
+				$value = $stats['status'];
 			}
 			switch ($value){
 				case 'sending':
-					$value = __('Sending...');
+					$value = __('Sending');
 					break;
 				case 'stopped':
-					$value = __('Stopping...');
+					$value = __('Stopped');
 					break;
 				case 'error':
-					$value = __('ERROR');
+					$value = __('Failed');
 					break;
-				case 'sent':
-					$value = __('Sent');
+				case 'completed':
+					$value = __('Completed');
+					break;
+				case 'paused':
+					$value = __('Paused');
+					break;
+				case 'idle':
+					$value = __('Ready to send');
 					break;
 				default:
-					$value = NULL;
+					$value = 'none';
 			}
 			return parent::prepareTableValue(array('value' => $value), $link);
 		}
