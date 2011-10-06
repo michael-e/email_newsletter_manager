@@ -244,6 +244,16 @@
 			return parent::prepareTableValue(array('value' => $value), $link);
 		}
 
+		public function buildSortingSQL(&$joins, &$where, &$sort, $order='ASC'){
+			if(in_array(strtolower($order), array('random', 'rand'))) {
+				$sort = 'ORDER BY RAND()';
+			}
+			else {
+				$joins .= "LEFT OUTER JOIN `tbl_entries_data_".$this->get('id')."` AS `ed` ON (`e`.`id` = `ed`.`entry_id`) LEFT JOIN `tbl_email_newsletters` as `nl` on `ed`.`newsletter_id` = `nl`.`id`";
+				$sort = 'ORDER BY `nl`.`status` ' . $order;
+			}
+		}
+
 		/**
 		 * Is the table column sortable?
 		 *
