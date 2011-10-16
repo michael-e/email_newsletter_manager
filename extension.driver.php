@@ -134,7 +134,7 @@ class extension_email_newsletter_manager extends extension{
 						'started_by'=>	Administration::instance()->Author->get('id'));
 					$news = EmailNewsletterManager::save($array);
 					$context['entry']->setData($field_id, array('author_id'=>Administration::instance()->Author->get('id'), 'entry_id'=>$entry_id, 'newsletter_id'=>$news->getId()));
-					$news->start();
+					//$news->start();
 				}
 				catch(Exception $e){
 					Administration::instance()->customError(__('Error restarting email newsletter'), __($e->getMessage()));
