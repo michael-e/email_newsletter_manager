@@ -104,7 +104,7 @@ Class RecipientSourceStatic extends RecipientSource{
 				if(count($this->recipients) > 0){
 					$rcpts = array_map(array(__CLASS__, '_parseNameAndEmail'), explode(',', $this->recipients));
 					foreach($rcpts as $recipient){
-						$values[] = '(\'' . $recipient['email'] . '\', \'' . $recipient['name'] . '\', '. ($recipient['valid']?1:0) . ')';
+						$values[] = '(\'' . Symphony::Database()->cleanValue($recipient['email']) . '\', \'' . Symphony::Database()->cleanValue($recipient['name']) . '\', '. ($recipient['valid']?1:0) . ')';
 					}
 					$value = implode(', ', $values);
 					Symphony::Database()->query("INSERT IGNORE INTO " . $name . " (email, name, valid) values " . $value);
