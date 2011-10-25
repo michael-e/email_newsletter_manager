@@ -122,6 +122,15 @@ class EmailNewsletter{
 						$email->setPass($about['smtp']['password']);
 					}
 				}
+				elseif(is_array($about['amazon_ses'])){
+					$email = Email::create('amazon_ses');
+					$email->setSenderName($about['amazon_ses']['from_name']);
+					$email->setSenderEmailAddress($about['amazon_ses']['from_address']);
+					$email->setAwsKey($about['amazon_ses']['aws_key']);
+					$email->setAwsSecretKey($about['amazon_ses']['aws_secret_key']);
+					$email->setFallback($about['amazon_ses']['fallback']);
+					$email->setReturnPath($about['amazon_ses']['return_path']);
+				}
 				elseif(is_array($about['sendmail'])){
 					$email = Email::create('sendmail');
 					$email->setSenderName($about['sendmail']['from_name']);

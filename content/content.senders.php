@@ -86,7 +86,7 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 		$gateways = $emailGatewayManager->listAll();
 		foreach($gateways as $gateway){
 			// to be removed in later versions. Right now only smtp and sendmail are supported.
-			if(in_array($gateway['handle'], array('smtp', 'sendmail'))){
+			if(in_array($gateway['handle'], array('smtp', 'sendmail', 'amazon_ses'))){
 				$gw = $emailGatewayManager->create($gateway['handle']);
 				if(!empty($about[$gateway['handle']])){
 					$config = $about[$gateway['handle']];
@@ -98,6 +98,13 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 						$gw->setAuth($config['auth']);
 						$gw->setUser($config['username']);
 						$gw->setPass($config['password']);
+					}
+					if($gateway['handle'] == 'amazon_ses'){
+						$gw->setFrom($config['from_address'], $config['from_name']);
+						$gw->setAwsKey($config['aws_key']);
+						$gw->setAwsSecretKey($config['aws_secret_key']);
+						$gw->setFallback($config['fallback']);
+						$gw->setReturnPath($config['return_path']);
 					}
 					if($gateway['handle'] == 'sendmail'){
 						$gw->setFrom($config['from_address'], $config['from_name']);
