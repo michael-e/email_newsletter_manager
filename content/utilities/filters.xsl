@@ -99,7 +99,7 @@
 							</label>
 						</li>
 						<xsl:for-each select="field">
-							<li class="unique template" data-type="{type}">
+							<li class="unique template" data-type="{element-name}">
 								<xsl:copy-of select="filter_html/node()"/>
 							</li>
 						</xsl:for-each>
