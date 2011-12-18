@@ -148,7 +148,7 @@ If you use the Email Newsletter field to be output to the param pool (for Data S
 
 ## The "Send" button
 
-The "Send" button actually is a "Save and Send" button, so it will save the entry and start the "mailing engine" with a single click. I think that this is what people expect this button to do. (The implementation in Symphony has been rather hard.)
+The "Send" button actually is a "Save and Send" button, so it will save the entry and start the "mailing engine" with a single click. We think that this is what people expect this button to do.
 
 There are bugs concerning HTML form button values in Internet Explorer 6 and 7 (which shouldn't be used for Symphony anyway). This means that:
 
