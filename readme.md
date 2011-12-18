@@ -2,7 +2,7 @@
 
 The Email Newsletter Manager is the successor of the Email Newsletters extension. The latter will be marked as deprecated with the first stable release of the Email Newsletter Manager.
 
-Conceptually this is a brand-new extension. It is not compatible with the Email Newsletters extension, nor is there an upgrade path. To ease the transition, the authors decided to even choose a new name. This allows to install both extensions in Symphony side-by-side and move any old newsletters to the new extension on after the other. No hard break (i.e. uninstalling the old Email Newsletters extension before having built everything new) is necessary.
+Conceptually this is a brand-new extension. It is not compatible with the Email Newsletters extension, nor is there an upgrade path. To ease the transition, the authors decided to even choose a new name. This allows to install both extensions in Symphony side-by-side and move any old newsletters to the new extension one after the other. No hard break (i.e. uninstalling the old Email Newsletters extension before having built everything new) is necessary.
 
 
 ## Installation & Updating
@@ -19,29 +19,22 @@ The Email Newsletter Manager is another big step in a strategy to make Symphony 
 - The Email Template Manager (ETM) extension (used through its public API)
 - The Core Email API (which has been introduced with Symphony 2.2)
 
-In short words, the Email Newsletter Manager (plus the Email Template Manager) enable you to:
+In short words, the Email Newsletter Manager (plus the Email Template Manager) will:
 
 - allow to define multiple recipient groups based on sections in Symphony (with a datasource-like editor)
 - allow to define multiple senders
 - add an Email Newsletter Manager field to sections (which in itself allows to choose which recipient groups and senders should be available for this special newsletter)
+- use templates defined in the ETM to render the email content
 - send HTML and/or plain text emails (defined in the Email Template Manager extension)
-- flexible recipient personalization (by using filtered datasources in the templates)
-- "sender personalization" can be done in XSLT (using the field's datasource output which includes the sender ID and value)
-- upon sending:
-	- use a stable background process
-	- give feedback in the publish panel (and in the entry overview table)
-	- use templates defined in the ETM to render the email content
-	- copy the recipients to a database table based on the definitions (section, filters, fields) of the recipients groups
-	- read and process these recipients using pagination
-	- send email from the chosen sender to these recipients using the Core Email API
+- use flexible recipient personalization (by using filtered datasources in the templates)
+- even perform "sender personalization" in XSLT (using the field's datasource output which includes the sender ID and value)
 
+Upon sending it will:
 
-### Features
-
-- background processes for sending
-- no duplicate sending (to single recipients) in a campaign
-- feedback in the publish panel (and in the entry overview table)
-- verbose log files, gzipped (if available)
+- use a stable background process
+- prevent duplicate emails (to the same address)
+- give feedback in the publish panel (and in the entry overview table)
+- read and process recipients using pagination, which means that there is virtually no limit to the number of recipients
 
 
 ### What this extension won't do
@@ -117,7 +110,7 @@ Never use this extension for SPAM. If you do so we will hate you.
 
 ## API
 
-(This documentation is still work in progress.)
+(This part of the README is still missing.)
 
 - select sender
 - select recipient group(s)
