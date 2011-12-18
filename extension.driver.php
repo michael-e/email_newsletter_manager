@@ -104,6 +104,7 @@ class extension_email_newsletter_manager extends extension{
 		$old_handle = $context['handle'];
 		$new_handle = Lang::createHandle($context['fields']['name'], 255, '_');
 		EmailNewsletterManager::updateRecipientsHandle($old_handle, $new_handle);
+		return true;
 	}
 
 	/**
