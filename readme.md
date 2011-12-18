@@ -14,15 +14,17 @@ Information about [installing and updating extensions](http://symphony-cms.com/l
 
 The Email Newsletter Manager is another big step in a strategy to make Symphony the best emailing platform of all CMSs/frameworks. It builds on top of:
 
-- The Core Email API (which has been introduced with Symphony 2.2)
 - The Email Template Manager (ETM) extension (used through its public API)
+- The Core Email API (which has been introduced with Symphony 2.2)
 
-In short words, the Email Newsletter Manager does:
+In short words, the Email Newsletter Manager (plus the Email Template Manager) enable you to:
 
-- allow to define recipient groups based on sections in Symphony (with a datasource-like editor)
-- allow to define senders
+- allow to define multiple recipient groups based on sections in Symphony (with a datasource-like editor)
+- allow to define multiple senders
 - add an Email Newsletter Manager field to sections (which in itself allows to choose which recipient groups and senders should be available for this special newsletter)
 - send HTML and/or plain text emails (defined in the Email Template Manager extension)
+- flexible recipient personalization (by using filtered datasources in the templates)
+- "sender personalization" can be done in XSLT (using the field's datasource output which includes the sender ID and value)
 - upon sending:
 	- use a stable background process
 	- give feedback in the publish panel (and in the entry overview table)
@@ -31,23 +33,12 @@ In short words, the Email Newsletter Manager does:
 	- read and process these recipients using pagination
 	- send email from the chosen sender to these recipients using the Core Email API
 
-Being able to use the Email Template Manager means that newsletter emails may include:
-
-- Plain and HTML text
-- sender personalization
-- recipient personalization (by using filtered datasources in the templates)
-
 
 ### Features
 
 - background processes for sending
 - no duplicate sending (to single recipients) in a campaign
 - feedback in the publish panel (and in the entry overview table)
-- send html and/or text emails
-- multiple recipient groups
-- flexible recipient personalization
-- multiple senders
-- "sender personalization" can be done in XSLT (using the field's datasource output which includes the sender ID and value)
 - verbose log files, gzipped (if available)
 
 
