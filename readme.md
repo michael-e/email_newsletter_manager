@@ -205,18 +205,6 @@ By design the extension will not send an email to one address multiple times.
 
 ## 2do
 
-- ? make the recipients input field in the ETM a textarea (see configuration example below)
-
-- Multiple Templates per EN2 field? (e.g. send different email to site admin)
-- Does ETM allow datasource filtering for recipients **at all**? (e.g. `$country`) – NO
-- Related: Should ETM support groups??? – NO
-- Where will sender credentials be saved? (config file or DB?)
-- logging to DB only or additional file?
-- link to the log file in the backend (field)
-- log email content? (probably not)
-- not EN, but related: data backup/logging extension for opt-outs
-
-
 ## Concept
 
 Backend pages:
@@ -285,28 +273,3 @@ EN2 inner workings:
 	                        <- reply-to-email
 	                        <- reply-to-name
 	           <- 1 throttling (number/period)
-
-
-## DB content
-
-- author_id
-- author_ip_address
-- sender_id
-- rec_group_ids
-- status
-- error_message (displayed in the field!)
-- start_time
-- end_time
-- rec_all (-> also: statistics)
-- rec_sent
-- rec_errors
-- log_file (i.e. name/path)
-
-## Log file content
-
-- ? subject (string, XPath/params)
-- ? content_html (XSLT)
-- ? content_text (XSLT)
-- errors (verbose)
-
-
