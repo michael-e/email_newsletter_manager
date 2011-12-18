@@ -53,7 +53,7 @@ Class EmailNewsletterManager{
 
 	public function delete($id){
 		try{
-			Symphony::Database()->query(sprintf('DELETE FROM `36552cdv12`.`sym_email_newsletters` WHERE `sym_email_newsletters`.`id` = \'%d\'', $id));
+			Symphony::Database()->query(sprintf('DELETE FROM `sym_email_newsletters` WHERE `sym_email_newsletters`.`id` = \'%d\'', $id));
 			Symphony::Database()->query(sprintf('DROP TABLE `sym_tmp_email_newsletters_sent_%d`', $id));
 		}
 		catch(Exception $e){
@@ -70,7 +70,8 @@ Class EmailNewsletterManager{
 	}
 
 	public static function updateRecipientsHandle($old_handle, $new_handle){
-		$ids = array_keys(Symphony::Database()->fetch(sprintf('SELECT id FROM tbl_email_newsletters WHERE recipients LIKE \'%%s%%\'', $old_handle), 'id'));
+		$query = sprintf('SELECT id FROM tbl_email_newsletters WHERE recipients LIKE \'%%%s%%\'', $old_handle);
+		$ids = array_keys(Symphony::Database()->fetch($query, 'id'));
 		foreach($ids as $id){
 			$newsletter = self::create($id);
 			$groups = $newsletter->getRecipientGroups($filter_complete = false, $return_array = true);

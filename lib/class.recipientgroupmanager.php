@@ -134,7 +134,7 @@ class RecipientgroupManager{
 					'PostRecipientgroupSaved',
 					'/extension/email_newsletter_manager/',
 					array(
-						'handle'		=> Lang::createHandle($fields['name'], 255, '_'),
+						'handle'		=> $handle,
 						'fields' 		=> $fields
 					)
 				);
@@ -151,7 +151,7 @@ class RecipientgroupManager{
 				'PostRecipientgroupSaved',
 				'/extension/email_newsletter_manager/',
 				array(
-					'handle'		=> Lang::createHandle($fields['name'], 255, '_'),
+					'handle'		=> $handle,
 					'fields' 		=> $fields
 				)
 			);
