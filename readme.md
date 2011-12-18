@@ -5,6 +5,11 @@ The Email Newsletter Manager is the successor of the Email Newsletters extension
 Conceptually this is a brand-new extension. It is not compatible with the Email Newsletters extension, nor is there an upgrade path. To ease the transition, the authors decided to even choose a new name. This allows to install both extensions in Symphony side-by-side and move any old newsletters to the new extension on after the other. No hard break (i.e. uninstalling the old Email Newsletters extension before having built everything new) necessary.
 
 
+## Installation & Updating
+
+Information about [installing and updating extensions](http://symphony-cms.com/learn/tasks/view/install-an-extension/) can be found in the Symphony documentation at <http://symphony-cms.com/learn/>.
+
+
 ## Concept
 
 The Email Newsletter Manager is another big step in a strategy to make Symphony the best emailing platform of all CMSs/frameworks. It builds on top of:
@@ -33,6 +38,27 @@ Being able to use the Email Template Manager means that newsletter emails may in
 - recipient personalization (by using filtered datasources in the templates)
 
 
+### Features
+
+- background processes for sending
+- no duplicate sending (to single recipients) in a campaign
+- feedback in the publish panel (and in the entry overview table)
+- send html and/or text emails
+- multiple recipient groups
+- flexible recipient personalization
+- multiple senders
+- "sender personalization" can be done in XSLT (using the field's datasource output which includes the sender ID and value)
+- verbose log files, gzipped (if available)
+
+
+### What this extension won't do
+
+At the time of writing the following features are supposed to be built in separate extensions (when the time comes):
+
+- email campaign statistics/tracking
+- email bounce management
+
+
 ### Advantages over the Email Newsletters extension
 
 - Newsletter setup is a lot easier, and so is maintenance.
@@ -57,33 +83,6 @@ Of course these possibilitie still require a bit of custom code. But the public 
 ### Disadvantages over the Email Newsletters extension
 
 * It is not possible to use multiple Datasources to build up a recipient group.
-
-
-### Features
-
-- background processes for sending
-- no duplicate sending (to single recipients) in a campaign
-- feedback in the publish panel (and in the entry overview table)
-- send html and/or text emails
-- multiple recipient groups
-- flexible recipient personalization
-- multiple senders
-- "sender personalization" can be done in XSLT (using the field's datasource output which includes the sender ID and value)
-- verbose log files, gzipped (if available)
-
-
-### What this extension won't do
-
-At the time of writing the following features are supposed to be built in separate extensions (when the time comes):
-
-- email campaign statistics/tracking
-- email bounce management
-
-
-## Installation & Updating
-
-Information about [installing and updating extensions](http://symphony-cms.com/learn/tasks/view/install-an-extension/) can be found in the Symphony documentation at <http://symphony-cms.com/learn/>.
-
 
 
 ## Configuration
@@ -162,6 +161,13 @@ The "Send" button actually is a "Save and Send" button, so it will save the entr
 
 If you click the button, the system will prepare for sendind (e.g. count the recipients and display the number in the GUI), then wait for some seconds before actually starting the send process. This allows for "last minute cancelling" in case a user has not really (?) meant to really (!) send the newsletter. :-)
 
+There are bugs concerning HTML form button values in Internet Explorer 6 and 7 (which shouldn't be used for Symphony anyway). This means that:
+
+- You won't be able to send a newsletter in IE6 (who cares?)
+- You won't be able to handle multiple email newsletters (i.e. Email Newsletter Manager fields) **in the same section** using IE7. This is considered a rare setup (but is actually a supported feature in modern browsers).
+
+These constraints are regarded a small price for having a combined "Save and Send" button (which is simply called "Send"). (We actually need the button's value to implement this functionality.)
+
 
 ## Before you start
 
@@ -183,13 +189,4 @@ Here is a simple example DNS record which worked very well in my tests:
 
 	example.com. IN TXT "v=spf1 a mx"
 
-
-## Known issues
-
-- There are bugs concerning HTML form button values in Internet Explorer 6 and 7 (which shouldn't be used for Symphony anyway). This means that:
-
-	- You won't be able to send a newsletter in IE6 (who cares?)
-	- You won't be able to handle multiple email newsletters (i.e. Email Newsletter Manager fields) **in the same section** using IE7. This is considered a rare setup (but is actually a supported feature in modern browsers).
-
-	These constraints are regarded a small price for having a combined "Save and Send" button (which is simply called "Send"). (We actually need the button's value to implement this functionality.)
 
