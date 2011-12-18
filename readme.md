@@ -33,13 +33,6 @@ Being able to use the Email Template Manager means that newsletter emails may in
 - recipient personalization (by using filtered datasources in the templates)
 
 
-<!--
-	TODO include the following:
-	- flexible recipient personalization
-	- "sender personalization" can be done in XSLT (using the field's datasource output which includes the sender ID and value)
-
--->
-
 ### Advantages over the Email Newsletters extension
 
 - Newsletter setup is a lot easier, and so is maintenance.
@@ -91,7 +84,7 @@ Information about [installing and updating extensions](http://symphony-cms.com/l
 
 Most of the configuration is really easy, because there is a Symphony-style user interface for recipient groups and senders alike. However, the recipient group has one special textarea to deal with, the "Name XSLT" textarea.
 
-The idea behin dit is rather simple: You might have the full name of your recpients in a single field of your section, but ou might as well have separate fields for the name, the family name, the gender, whatever. In these cases the simplest way to build a "full name" is to use XSLT. Here are some examples:
+The idea behind it is rather simple: You might have the full name of your recpients in a single field of your section, but ou might as well have separate fields for the name, the family name, the gender, whatever. In these cases the simplest way to build a "full name" is to use XSLT. Here are some examples:
 
 * The full name is stored in field called `name`:
 
@@ -126,9 +119,8 @@ Never use this extension for SPAM. If you do so we will hate you.
 
 ## API
 
-<!--
-	TODO Add the API :-)
--->
+(This documentation is still work in progress.)
+
 - select sender
 - select recipient group(s)
 - select ETM template
@@ -143,32 +135,21 @@ Never use this extension for SPAM. If you do so we will hate you.
 
 The data source output of the Email Newsletter field contains:
 
+- newsletter-id
 - author-id
 - status
 - total (emails)
 - sent (emails)
-- errors (emails)
+- failed (emails)
+- subject
 - sender
 - recipient groups
+- email template ("about")
 
-It will look like this in your page XML:
-
-	<email-newsletter author-id="1" status="processing" total="602" sent="120" errors="0">
-		<sender id="1">Michael E.</sender>
-		<recipients>
-			<group id="1">Clients</group>
-			<group id="3">Partners (Bavaria)</group>
-		</recipients>
-	</email-newsletter>
-
-This XML output allows for advanced email customization using XSLT. You may, for example, append custom headers or footers for certain sender IDs.
+The XML output allows for advanced email customization using XSLT. You may, for example, append custom headers or footers for certain sender IDs.
 
 
 ## Param Pool value
-
-<!--
-	TODO check if param output is still the same in ENM
--->
 
 If you use the Email Newsletter field to be output to the param pool (for Data Source chaining), output will be the **sender ID**! (This seems to be the most useful output.)
 
@@ -203,25 +184,10 @@ Here is a simple example DNS record which worked very well in my tests:
 
 ## Miscellaneous
 
-### Internationalization
-
-<!--
-	TODO decide how internationalization will be handled
--->
-
-We are providing this extension with a German language file. More translations are welcome, but it should be noted that language strings might change massively for the "official" 1.0 release.
 
 ### Recipient email duplicates
 
-By design the extension will not send an email to one address multiple times. This is due to the design of the SwiftMailer library. As written in the documentation ([Adding Recipients to Your Message](http://swiftmailer.org/docs/recipients "Adding Recipients to Your Message – Swift Mailer")), any recipient list must be an array using the recipient's email address as key. So if an email address is included multiple times in your recipients XML page, the last address/name pair will be used.
-
-### Ampersands
-
-<!--
-	TODO check ampersands in Plain Text emails
--->
-
-You will probably find no way to display ampersands as `&` on your TEXT preview page. This is by nature of XSLT: ampersand will always be encoded as `&amp;`. However, upon sending those entities will be replaced by `&`, and the Swiftmailer library will leave them untouched. Since the newsletter TEXT page will probably be used for preview purposes only, this is regarded a minor flaw.
+By design the extension will not send an email to one address multiple times.
 
 
 ## Known issues
