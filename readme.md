@@ -48,15 +48,21 @@ The last point, the public API, is especially interesting. While to the user the
 
 This allows for interesting use cases (especially in conjunction with the Members extension):
 
-- Send emails (e.g. "Please check if your contact data is still right") on a regular basis using a custom event and CRON.
+- Send emails on a regular basis (e.g. "Please check if your contact data is still right") using a custom event and CRON.
 - Send notification emails to big recipient groups based on events in the system (e.g. creating an entry)
 
 Of course these possibilitie still require a bit of custom code. But the public API of the extension should really help you.
 
 
+### Disadvantages over the Email Newsletters extension
+
+* It is not possible to use multiple Datasources to build up a recipient group.
+
+
 ### Features
 
 - background processes for sending
+- no duplicate sending (to single recipients) in a campaign
 - feedback in the publish panel (and in the entry overview table)
 - send html and/or text emails
 - multiple recipient groups
@@ -129,10 +135,6 @@ Never use this extension for SPAM. If you do so we will hate you.
 
 ## Data Source output
 
-<!--
-	TODO check if DS output description is still true for ENM
--->
-
 The data source output of the Email Newsletter field contains:
 
 - newsletter-id
@@ -182,14 +184,6 @@ Here is a simple example DNS record which worked very well in my tests:
 	example.com. IN TXT "v=spf1 a mx"
 
 
-## Miscellaneous
-
-
-### Recipient email duplicates
-
-By design the extension will not send an email to one address multiple times.
-
-
 ## Known issues
 
 - There are bugs concerning HTML form button values in Internet Explorer 6 and 7 (which shouldn't be used for Symphony anyway). This means that:
@@ -198,46 +192,4 @@ By design the extension will not send an email to one address multiple times.
 	- You won't be able to handle multiple email newsletters (i.e. Email Newsletter Manager fields) **in the same section** using IE7. This is considered a rare setup (but is actually a supported feature in modern browsers).
 
 	These constraints are regarded a small price for having a combined "Save and Send" button (which is simply called "Send"). (We actually need the button's value to implement this functionality.)
-
-
----
-
-
-## 2do
-
-## Concept
-
-Backend pages:
-
-- Email Templates (ETM)
-- Email Senders (EN2)
-	- A sender is similar to the "default sender" on the prefs page, with a unique name.
-- Email Recipients (EN2)
-	- 1 or multiple DSs.
-	- 1 or multiple param/value pairs.
-	- Params will be used to filter the DSs.
-
-EN2 field:
-
-- in the section editor you select what will later be visible in the entry editor (=entry edit page):
-	- select 1 or multiple senders
-	- select 1 or multiple recipient groups
-	- ETM template (layouts + subject)
-- on the entry edit page you select what ahould be used for this newsletter:
-	- select 1 sender
-	- select 1 or multiple recipient groups
-
-EN2 inner workings:
-
-- ETM will __not__ send any emails!
-- EN2 "send" method
-	- has to build the full recipient list (all recipient groups) using pagination, then save it to the DB
-	- has to write the sender to the DB
-	- has to pass the task to a background process
-- the background process
-	- has to build "recipients slices"
-	- has to get the rendered output (HTML and/or PLAIN) for each email from the ETM
-	- has to send the emails using the Core Email API
-	- has to write logs to the DB and/or files
-	- has to update the "status" field in the DB (same as EN1)
 
