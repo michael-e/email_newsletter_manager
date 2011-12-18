@@ -5,7 +5,7 @@
 <xsl:template name="filters">
 	<fieldset class="settings contextual sections Sections authors System">
 		<legend>Filter Results</legend>
-		<p class="help">Use <code>{$param}</code> syntax to filter by page parameters.</p>
+		<p class="help">Use <code>{$param}</code> syntax to filter by parameters.</p>
 		<div>
 			<div class="contextual authors">
 				<p class="label">Filter Authors by</p>
