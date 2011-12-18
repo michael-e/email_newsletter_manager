@@ -46,8 +46,6 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 	function __viewEdit($new = false){
 		$this->setPageType('form');
 		$this->setTitle(sprintf(__("Symphony - Newsletter Recipient Groups - %s", Array(), false), ucfirst(Lang::createHandle($this->_context[1], 225, '_'))));
-		$this->addScriptToHead(URL . '/extensions/email_newsletter_manager/assets/email_newsletter_manager.recipientgroups.js', 140);
-		//$this->addStylesheetToHead(URL . '/extensions/email_newsletter_manager/assets/email_newsletter_manager.recipientgroups.css', 'screen', 103);
 
 		$errors = new XMLElement('errors');
 
@@ -164,7 +162,7 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 								if(is_numeric($filter) && in_array($filter, $field_ids)){
 									$filter_obj = $fieldManager->fetch($filter);
 									if(is_object($filter_obj)){
-										$filter_entry = new XMLElement('entry', null, array('id'=>$filter, 'data-type'=>$fieldManager->fetch($filter)->handle()));
+										$filter_entry = new XMLElement('entry', null, array('id'=>$filter, 'data-type'=>$fieldManager->fetchHandleFromID($filter)));
 										$filter_obj->displayDatasourceFilterPanel($filter_entry, $val, $errors, is_numeric($properties['source'])?$properties['source']:1);
 										$filters->appendChild($filter_entry);
 									}
