@@ -62,14 +62,41 @@ Class EmailNewsletterManager{
 	}
 
 	public static function updateTemplateHandle($old_handle, $new_handle){
+		$query = sprintf('SELECT id,templates FROM tbl_fields_email_newsletter_manager WHERE templates LIKE \'%%%s%%\'', $old_handle);
+		$fields = Symphony::Database()->fetch($query);
+		foreach($fields as $field){
+			$templates = array_map('trim', explode(',',$field['templates']));
+			if(($pos = array_search($old_handle, $templates)) !== FALSE){
+				$templates[$pos] = $new_handle;
+				Symphony::Database()->update(array('templates'=>implode(',',$templates)),'tbl_fields_email_newsletter_manager', 'id = \'' . $field['id'] . '\'');
+			}
+		}
 		return Symphony::Database()->update(array('template' => $new_handle), 'tbl_email_newsletters', 'template = \'' . $old_handle . '\'');
 	}
 
 	public static function updateSenderHandle($old_handle, $new_handle){
+		$query = sprintf('SELECT id,senders FROM tbl_fields_email_newsletter_manager WHERE senders LIKE \'%%%s%%\'', $old_handle);
+		$fields = Symphony::Database()->fetch($query);
+		foreach($fields as $field){
+			$senders = array_map('trim', explode(',',$field['senders']));
+			if(($pos = array_search($old_handle, $senders)) !== FALSE){
+				$senders[$pos] = $new_handle;
+				Symphony::Database()->update(array('senders'=>implode(',',$senders)),'tbl_fields_email_newsletter_manager', 'id = \'' . $field['id'] . '\'');
+			}
+		}
 		return Symphony::Database()->update(array('sender' => $new_handle), 'tbl_email_newsletters', 'sender = \'' . $old_handle . '\'');
 	}
 
 	public static function updateRecipientsHandle($old_handle, $new_handle){
+		$query = sprintf('SELECT id,recipient_groups FROM tbl_fields_email_newsletter_manager WHERE recipient_groups LIKE \'%%%s%%\'', $old_handle);
+		$fields = Symphony::Database()->fetch($query);
+		foreach($fields as $field){
+			$recipients = array_map('trim', explode(',',$field['recipient_groups']));
+			if(($pos = array_search($old_handle, $recipients)) !== FALSE){
+				$recipients[$pos] = $new_handle;
+				Symphony::Database()->update(array('recipient_groups'=>implode(',',$recipients)),'tbl_fields_email_newsletter_manager', 'id = \'' . $field['id'] . '\'');
+			}
+		}
 		$query = sprintf('SELECT id FROM tbl_email_newsletters WHERE recipients LIKE \'%%%s%%\'', $old_handle);
 		$ids = array_keys(Symphony::Database()->fetch($query, 'id'));
 		foreach($ids as $id){
