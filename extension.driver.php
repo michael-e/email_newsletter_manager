@@ -1,180 +1,272 @@
 <?php
 
-	/**
-	 * Extension driver
-	 *
-	 * @package Email Newsletters 2
-	 * @author Michael Eichelsdoerfer
-	 */
-	class Extension_Email_Newsletters_2 extends Extension
-	{
-		// protected $_field_id;
-		// protected $_entry_id;
+if(!defined('ENMDIR')) define('ENMDIR', EXTENSIONS . "/email_newsletter_manager");
+require_once(ENMDIR . '/lib/class.emailnewslettermanager.php');
 
-		/**
-		 * Extension information
-		 */
-		public function about()
-		{
-			return array(
-				'name'			=> 'Email Newsletters 2',
-				'version'		=> '0.1',
-				'release-date'	=> '2011-05-04',
-				'author'		=> array(
-					'name'			=> 'Huib Keemink, Michael Eichelsdoerfer',
+
+class extension_email_newsletter_manager extends extension{
+
+	public function about(){
+		return array(
+			'name' => 'Email Newsletter Manager',
+			'version' => '1.0 Alpha',
+			'author' => array(
+				array(
+					'name'=>'Huib Keemink',
+					'website' => 'http://www.creativedutchmen.com',
+					'email' => 'huib.keemink@creativedutchmen.com',
 				),
-				'description'	=> 'Allows you to send Email Newsletters.'
-			);
-		}
+				array(
+					'name' => 'Michael Eichelsdoerfer',
+					'website' => 'http://www.michael-eichelsdoerfer.de',
+					'email' => 'info@michael-eichelsdoerfer.de',
+				)
+			)
+		);
+	}
 
-		/**
-		 * Add callback functions to backend delegates
-		 */
-		public function getSubscribedDelegates()
-		{
-			// return array(
-			// 	array(
-			// 		'page' => '/system/preferences/',
-			// 		'delegate' => 'AddCustomPreferenceFieldsets',
-			// 		'callback' => 'appendPreferences'
-			// 	),
-			// 	array(
-			// 		'page' => '/publish/edit/',
-			// 		'delegate' => 'EntryPostEdit',
-			// 		'callback' => 'initEmailNewsletter'
-			// 	),
-			// );
-		}
+	public function fetchNavigation(){
+		return array(
+			array(
+				'location'  => __('Blueprints'),
+				'name'      => __('Newsletter Recipients'),
+				'link'      => '/recipientgroups/'
+			),
+			array(
+				'location'  => __('Blueprints'),
+				'name'      => __('Newsletter Senders'),
+				'link'      => '/senders/'
+			)
+		);
+	}
 
-		/**
-		 * Function to be executed on uninstallation
-		 */
-		public function uninstall()
-		{
-			// ## drop database table
-			// Symphony::Database()->query("DROP TABLE `tbl_fields_email_newsletter`");
-			// 
-			// ## remove configuration details from Symphony's configuration file
-			// Symphony::Configuration()->remove('email-newsletters');
-			// Administration::instance()->saveConfig();
-		}
+	public function getSubscribedDelegates(){
+		return array(
+			array(
+				'page' => '/backend/',
+				'delegate' => 'InitaliseAdminPageHead',
+				'callback' => 'appendStyles'
+			),
+			array(
+				'page' => '/publish/edit/',
+				'delegate' => 'EntryPreEdit',
+				'callback' => 'stopRestartNewsletter'
+			),
+			array(
+				'page' => '/publish/edit/',
+				'delegate' => 'EntryPostEdit',
+				'callback' => 'initEmailNewsletter'
+			),
+			array(
+				'page' => '/extension/email_newsletter_manager/',
+				'delegate' => 'PostSenderSaved',
+				'callback' => 'senderSaved'
+			),
+			array(
+				'page' => '/extension/email_newsletter_manager/',
+				'delegate' => 'PostRecipientgroupSaved',
+				'callback' => 'groupSaved'
+			),
+			array(
+				'page' => '/extension/email_template_manager/',
+				'delegate' => 'EmailTemplatePostSave',
+				'callback' => 'templateSaved'
+			),
+		);
+	}
 
-		/**
-		 * Function to be executed if the extension has been updated
-		 *
-		 * @param string $previousVersion - version number of the currently installed extension build
-		 * @return boolean - true on success, false otherwise
-		 */
-		public function update($previousVersion)
-		{
-			## nothing to do here today
-			return true;
-		}
+	public function appendStyles($context){
+		$callback = $context['parent']->getPageCallback();
 
-		/**
-		 * Function to be executed on installation
-		 *
-		 * @return boolean - true on success, false otherwise
-		 */
-		public function install()
-		{
-			// if(ini_get('safe_mode'))
-			// {
-			// 	Administration::instance()->Page->pageAlert(__('Email Newsletters can not be installed because PHP is running in Safe Mode.'), AdministrationPage::PAGE_ALERT_ERROR);
-			// 	return false;
-			// }
-			// ## Create database table and fields.
-			// $fields = Symphony::Database()->query(
-			// 	"CREATE TABLE IF NOT EXISTS `tbl_fields_email_newsletter` (
-			// 	 `id` int(11) unsigned NOT NULL auto_increment,
-			// 	 `field_id` int(11) unsigned NOT NULL,
-			// 		 		 `config_xml` TEXT,
-			// 	  PRIMARY KEY  (`id`),
-			// 	  KEY `field_id` (`field_id`)
-			// 	) ENGINE=MyISAM;"
-			// );
-			// if($fields) return true;
-			// return false;
-		}
+		if ($callback['driver'] == 'recipientgroups' && $callback['classname'] == 'contentExtensionEmail_newsletter_managerRecipientgroups' && $callback['context'][0] == 'preview')
+			$context['parent']->Page->addStylesheetToHead(URL . '/extensions/email_newsletter_manager/assets/email_newsletter_manager.recipientgroups.preview.css', 'screen', 1000);
+	}
 
-		/**
-		 * Append preferences
-		 *
-		 * @param object $context
-		 */
-		public function appendPreferences($context)
-		{
-			// $settings = new XMLElement('fieldset');
-			// $settings->setAttribute('class', 'settings');
-			// $settings->appendChild(new XMLElement('legend', 'Email Newsletters'));
-			// 
-			// ## Just in case the website has been moved to a new server which is running in safe mode
-			// if(ini_get('safe_mode'))
-			// {
-			// 	$settings->appendChild(new XMLElement('p', '<strong>' . __('Warning: It appears PHP is running in Safe Mode. This extension will not work. You should uninstall the extension or get rid of PHP Safe Mode.') . '</strong>'));
-			// 	$context['wrapper']->appendChild($settings);
-			// 	return;
-			// }
-			// 
-			// $label = Widget::Label('SwiftMailer Location');
-			// $label->appendChild(Widget::Input('settings[email-newsletters][swiftmailer-location]', General::Sanitize($context['parent']->Configuration->get('swiftmailer-location', 'email-newsletters'))));
-			// $settings->appendChild($label);
-			// $settings->appendChild(new XMLElement('p', __('The SwiftMailer library must be located in the "extensions" directory. Its location defaults to "email_newsletters/lib/swiftmailer", so this field may be left empty if you have not moved the library.'), array('class' => 'help')));
-			// 
-			// $context['wrapper']->appendChild($settings);
-		}
+	/**
+	 * Callback function to change a sender handle in each newsletter field.
+	 *
+	 * @param string $context
+	 * @return void
+	 */
+	public function senderSaved($context){
+		$old_handle = $context['handle'];
+		$new_handle = Lang::createHandle($context['fields']['name'], 255, '_');
+		EmailNewsletterManager::updateSenderHandle($old_handle, $new_handle);
+	}
 
-		/**
-		 * Init the Email Newsletter if conditions are met
-		 *
-		 * @return void
-		 */
-		public function initEmailNewsletter()
-		{
-			// if(@array_key_exists('save', $_POST['action']) && substr($_POST['action']['save'], 0, 8) == 'en-send:')
-			// {
-			// 	$vars = explode(":",$_POST['action']['save']);
-			// 	$this->_field_id = $vars[1];
-			// 	$this->_entry_id = $vars[2];
-			// 	$domain          = $vars[3];
-			// 
-			// 	## status must be NULL to prohibit multiple CLI processes caused by page reload;
-			// 	## 'fast double-click' protection is done using JavaScript (see email-newsletters.js);
-			// 	$entry_data = $this->__getEntryData();
-			// 	if(!empty($entry_data) && $entry_data['status'] == NULL)
-			// 	{
-			// 		## build the command to initiate the background mailer process
-			// 		$cmd  = 'env -i php ' . EXTENSIONS . '/email_newsletters/lib/init.php' . ' ';
-			// 		$cmd .= $this->_field_id . ' ';
-			// 		$cmd .= $this->_entry_id . ' ';
-			// 		$cmd .= $domain . ' ';
-			// 		$cmd .= 'init' . ' ';
-			// 		$cmd .= '> /dev/null &';
-			// 		shell_exec($cmd);
-			// 	}
-			// }
-		}
+	/**
+	 * Callback function to change a recipient group handle in each newsletter field
+	 *
+	 * @param string $context
+	 * @return void
+	 */
+	public function groupSaved($context){
+		$old_handle = $context['handle'];
+		$new_handle = Lang::createHandle($context['fields']['name'], 255, '_');
+		EmailNewsletterManager::updateRecipientsHandle($old_handle, $new_handle);
+		return true;
+	}
 
-/*-------------------------------------------------------------------------
-	Helpers
--------------------------------------------------------------------------*/
-		/**
-		 * Get entry data
-		 *
-		 * @return Symphony method
-		 */
-		private function __getEntryData()
-		{
-			return Symphony::Database()->fetchRow(0, "SELECT * FROM `tbl_entries_data_".$this->_field_id."` WHERE `entry_id` = $this->_entry_id LIMIT 1");
-		}
+	/**
+	 * Callback function to change a template handle in each newsletter field.
+	 *
+	 * @param string $context
+	 * @return void
+	 */
+	public function templateSaved($context){
+		$old_handle = $context['old_handle'];
+		$new_handle = Lang::createHandle($context['config']['name'], 255, '_');
+		EmailNewsletterManager::updateTemplateHandle($old_handle, $new_handle);
+	}
 
-		/**
-		 * Update entry data
-		 *
-		 * @return Symphony method
-		 */
-		private function __updateEntryData($array)
-		{
-			return Symphony::Database()->update($array, 'tbl_entries_data_'.$this->_field_id, "`entry_id` = '".$this->_entry_id."'");
+	public function stopRestartNewsletter(&$context){
+		if(substr($_POST['action']['save'], 0, 11) == 'en-restart:'){
+			$vars = explode(":",$_POST['action']['save']);
+			$field_id = $vars[1];
+			$entry_id = $vars[2];
+			$data = $this->_getEntryData($field_id, $entry_id);
+			if(!empty($data)){
+				try{
+					$newsletter = EmailNewsletterManager::create($data['newsletter_id']);
+					$array = array(
+						'template'	=>	$newsletter->getTemplate()->getHandle(),
+						'sender'	=> 	$newsletter->getSender()->getHandle(),
+						'recipients'=>	implode(', ', $newsletter->getRecipientGroups(false, true)),
+						'started_by'=>	Administration::instance()->Author->get('id'));
+					$news = EmailNewsletterManager::save($array);
+					$context['entry']->setData($field_id, array('author_id'=>Administration::instance()->Author->get('id'), 'entry_id'=>$entry_id, 'newsletter_id'=>$news->getId()));
+					//$news->start();
+				}
+				catch(Exception $e){
+					Administration::instance()->customError(__('Error restarting email newsletter'), __($e->getMessage()));
+				}
+			}
+		}
+		if(substr($_POST['action']['save'], 0, 8) == 'en-stop:'){
+			$vars = explode(":",$_POST['action']['save']);
+			$field_id = $vars[1];
+			$entry_id = $vars[2];
+			$data = $this->_getEntryData($field_id, $entry_id);
+			if(!empty($data)){
+				try{
+					$newsletter = EmailNewsletterManager::create($data['newsletter_id']);
+					$newsletter->stop();
+				}
+				catch(Exception $e){
+					Administration::instance()->customError(__('Error stopping email newsletter'), __($e->getMessage()));
+				}
+			}
+		}
+		if(substr($_POST['action']['save'], 0, 9) == 'en-pause:'){
+			$vars = explode(":",$_POST['action']['save']);
+			$field_id = $vars[1];
+			$entry_id = $vars[2];
+			$data = $this->_getEntryData($field_id, $entry_id);
+			if(!empty($data)){
+				try{
+					$newsletter = EmailNewsletterManager::create($data['newsletter_id']);
+					$newsletter->pause();
+				}
+				catch(Exception $e){
+					Administration::instance()->customError(__('Error pausing email newsletter'), __($e->getMessage()));
+				}
+			}
 		}
 	}
+			
+
+	public function initEmailNewsletter($context){
+		// The field has a 'save and send' button. We trigger the newsletter
+		// start using the 'action' string, which seems to be the only way.
+		if(@array_key_exists('save', $_POST['action']) && substr($_POST['action']['save'], 0, 8) == 'en-send:'){
+			$vars = explode(":",$_POST['action']['save']);
+			
+			$field_id = $vars[1];
+			$entry_id = $vars[2];
+			$domain = $vars[3];
+			
+			$data = $this->_getEntryData($field_id, $entry_id);
+			if(!empty($data)){
+				try{
+					$newsletter = EmailNewsletterManager::create($data['newsletter_id']);
+					// The reason the newsletter is started here and not in the field save function is because it must only send if all other fields are completed successfully.
+					$newsletter->start();
+				}
+				// This is the last resort. All checks should be done before saving the entry, so this error should ideally never be shown. Ever.
+				// Because the delegate this function hooks into can not undo the saving, or display any warning messages, a "hard" error is the only way to communicate what is going wrong.
+				catch(Exception $e){
+					Administration::instance()->customError(__('Error sending email newsletter'), __($e->getMessage()));
+				}
+			}
+		}
+	}
+
+	public function install(){
+		$etm = Symphony::ExtensionManager()->getInstance('email_template_manager');
+		if($etm instanceof Extension){
+			try{
+				if(@mkdir(WORKSPACE . '/email-newsletters') || is_dir(WORKSPACE . '/email-newsletters')){
+					Symphony::Database()->query("CREATE TABLE IF NOT EXISTS `tbl_fields_email_newsletter_manager` (
+						`id` int(11) unsigned NOT NULL auto_increment,
+						`field_id` int(11) unsigned NOT NULL,
+						`templates` text,
+						`senders` text,
+						`recipient_groups` text,
+						PRIMARY KEY  (`id`),
+						KEY `field_id` (`field_id`)
+					) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
+
+					Symphony::Database()->query("CREATE TABLE `sym_email_newsletters` (
+							`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+							`template` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+							`recipients` text CHARACTER SET utf8,
+							`completed_recipients` text CHARACTER SET utf8,
+							`sender` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+							`total` int(11) DEFAULT '0',
+							`sent` int(11) DEFAULT '0',
+							`failed` int(11) DEFAULT '0',
+							`started_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+							`started_by` int(10) unsigned NOT NULL,
+							`flag` varchar(255) CHARACTER SET utf8 DEFAULT 'idle',
+							`status` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+							`pauth` varchar(23) CHARACTER SET utf8 DEFAULT NULL,
+							`pid` varchar(13) CHARACTER SET utf8 DEFAULT NULL,
+							PRIMARY KEY (`id`)
+						) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
+					return true;
+				}
+			}
+			catch(Exception $e){
+				throw new Exception(__('Installation failed:') . ' ' . $e->getMessage());
+			}
+		}
+		else{
+			throw new Exception(__('The Email Template Manager is required for this extension to work.'));
+		}
+	}
+
+	public function update($previousVersion){
+		return true;
+	}
+
+	public function uninstall(){
+		Symphony::Database()->query("DROP TABLE `tbl_fields_email_newsletter_manager`");
+
+		/*
+			TODO should we drop the newsletters table upon uninstallation of the extension?
+		*/
+
+		// // drop database table
+		// Symphony::Database()->query("DROP TABLE `tbl_email_newsletters`");
+
+		/*
+			TODO shoud we remove the template files upon uninstallation of the extension?
+		*/
+
+		return true;
+	}
+	
+	private function _getEntryData($field_id, $entry_id){
+		return Symphony::Database()->fetchRow(0, "SELECT * FROM `tbl_entries_data_".$field_id."` WHERE `entry_id` = '".$entry_id."' LIMIT 1");
+	}
+}

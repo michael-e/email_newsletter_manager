@@ -1,0 +1,98 @@
+.email-newsletters-gui
+{
+	background: #e9e9e7;
+	border-top: 1px solid #c7c7c7;
+	border-left:1px solid #d9d9d9;
+	border-right:1px solid #d9d9d9;
+	border-bottom: 1px solid #c2c2c2;
+	background: #f5f5f3;
+	padding: 1em 10px 0.5em 10px;
+}
+
+.field-email_newsletter_manager label
+{
+	margin-bottom: 3px;
+}
+.email-newsletters-gui label{
+	margin-bottom: 3px;
+	margin-top:0;
+}
+.email-newsletters-gui p.status{
+	width:100%;
+	display:block;
+	background-color:#423A3A;
+	border-top: 1px solid #c7c7c7;
+	border-left:1px solid #d9d9d9;
+	border-right:1px solid #d9d9d9;
+	border-bottom: 1px solid #d9d9d9;
+	color:#E3DEDB;
+	padding:0.5em 10px;
+	margin-left:-11px;
+	margin-top:-12px;
+}
+.email-newsletters-gui p.status.idle{
+	background-color:#ebebe9;
+	color:#222222;
+}
+.email-newsletters-gui p.status.completed{
+	background-color:#81B934;
+	border-left:1px solid #6fa721;
+	border-right:1px solid #6fa721;
+	border-bottom:1px solid #6fa721;
+	border-top:1px solid #61990c;
+	color:white;
+}
+.email-newsletters-gui p.status.error{
+	background-color:#DD4422;
+	border-left:1px solid #ce3615;
+	border-right:1px solid #ce3615;
+	border-bottom:1px solid #ce3615;
+	border-top:1px solid #c1290a;
+	color:white;
+}
+.email-newsletters-gui p.status.stopped{
+	background-color:#FFFFBB;
+	border-left:1px solid #CCCC88;
+	border-right:1px solid #CCCC88;
+	border-bottom:1px solid #CCCC88;
+	border-top:1px solid #bfc07c;
+	color:#555555;
+}
+.field-email_newsletter_manager p
+{
+	margin-bottom: 1em;
+}
+
+.field-email_newsletter_manager select
+{
+	margin-bottom: 1em;
+}
+
+.field-email_newsletter_manager .recipient-groups
+{
+	margin-bottom: 1em;
+}
+
+.field-email_newsletter_manager .recipient-group
+{
+	margin-top: 0;
+	margin-bottom: 0.3em;
+}
+
+.field-email_newsletter_manager .recipient-group input[type=checkbox]
+{
+	margin-right: 0.5em;
+}
+
+.field-email_newsletter_manager table.status
+{
+	border-collapse: collapse;
+	margin-bottom: 1em;
+}
+
+.field-email_newsletter_manager table.status th,
+.field-email_newsletter_manager table.status td
+{
+	text-align: left;
+	padding-right: 10px;
+}
