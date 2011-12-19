@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension id="email_newsletter_manager" status="released" xmlns="http://symphony-cms.com/schemas/extension/1.0">
+	<name>Email Newsletter Manager</name>
+	<description>Powerful email newsletters from within Symphony.</description>
+	<repo type="github">https://github.com/creativedutchmen/email_newsletter_manager</repo>
+	<url type="discuss">http://symphony-cms.com/discuss/thread/82064/</url>
+	<types>
+		<type>Email</type>
+	</types>
+	<authors>
+		<author>
+			<name github="creativedutchmen" symphony="creativedutchmen">Huib Keemink</name>
+			<website>http://www.creativedutchmen.com</website>
+		</author>
+	</authors>
+	<releases>
+		<release version="1.0 Beta" date="2011-12-19" />
+	</releases>
+</extension>
