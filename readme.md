@@ -45,12 +45,29 @@ At the time of writing the following features are supposed to be built in separa
 - email bounce management
 
 
+### Requirement: The PHP CLI
+
+In simple words, the CLI SAPI allows to run PHP scripts from the command line, and **this can be initiated from within PHP scripts** even on hosting accounts without shell access. The Email Newsletter Manager extension runs the actual (background) mailing processes using the PHP CLI SAPI. Some useful articles on this topic:
+
+- <http://articles.sitepoint.com/article/php-command-line-1>
+- <http://articles.sitepoint.com/article/php-command-line-2>
+- <http://php.net/manual/en/features.commandline.php>
+
+If you are unsure if the PHP CLI SAPI is installed and you have command line access, type
+
+	php -v
+
+in your shell. If you don't get a verbose answer, the CLI SAPI is not installed. On Debian, you may install it by typing
+
+	apt-get install php5-cli
+
+If you are on a shared hosting account, you should ask your provider. (The CLI should be installed on most shared hosting accounts.)
+
+
 ### Advantages over the Email Newsletters extension
 
 - Newsletter setup is a lot easier, and so is maintenance.
 - Removed the SwiftMailer framework dependancy. (Sending is done using Symphony's Core Emai API).
-- Removed the PHP CLI dependancy. (Using a custom PHP background process now.)
-- Improved database logging, removed filesystem logs.
 - Real-time preview of the number of recipients in groups.
 - No need anymore to use Symphony pages in order to generate email content or recipients lists.
 - Greatly improved scalability: The new concept has virtually no limits regarding the number of recipients.
