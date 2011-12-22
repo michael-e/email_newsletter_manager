@@ -588,7 +588,6 @@
 
 					// build 'save and send' button
 					if(isset($this->_entry_id)){
-						$p = new XMLElement('p');
 						$gui->appendChild(new XMLElement(
 							'button',
 							__('Send'),
@@ -599,7 +598,6 @@
 								'class' => 'button create'
 							)
 						));
-						$gui->appendChild($p);
 					}
 					else{
 						$p = new XMLElement('p', __('The entry has not been created yet. No emails can be sent.'));
