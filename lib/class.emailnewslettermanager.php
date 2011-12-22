@@ -53,8 +53,8 @@ Class EmailNewsletterManager{
 
 	public function delete($id){
 		try{
-			Symphony::Database()->query(sprintf('DELETE FROM `sym_email_newsletters` WHERE `sym_email_newsletters`.`id` = \'%d\'', $id));
-			Symphony::Database()->query(sprintf('DROP TABLE `sym_tmp_email_newsletters_sent_%d`', $id));
+			Symphony::Database()->query(sprintf('DELETE FROM `tbl_email_newsletters` WHERE `tbl_email_newsletters`.`id` = \'%d\'', $id));
+			Symphony::Database()->query(sprintf('DROP TABLE `tbl_tmp_email_newsletters_sent_%d`', $id));
 		}
 		catch(Exception $e){
 			return false;

@@ -216,7 +216,7 @@ class extension_email_newsletter_manager extends extension{
 						KEY `field_id` (`field_id`)
 					) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
 
-					Symphony::Database()->query("CREATE TABLE `sym_email_newsletters` (
+					Symphony::Database()->query("CREATE TABLE `tbl_email_newsletters` (
 							`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 							`template` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
 							`recipients` text CHARACTER SET utf8,
