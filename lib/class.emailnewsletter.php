@@ -71,7 +71,7 @@ class EmailNewsletter{
 		  `email` varchar(255),
 		  `result` varchar(255),
 		  PRIMARY KEY (`id`)
-		) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
+		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
 		$this->setStatus('sending');
 		Symphony::Database()->update(array('started_on' => date('Y-m-d H:i:s', time())), 'tbl_email_newsletters', 'id = ' . $this->getId());
 		EmailBackgroundProcess::spawnProcess($this->getId(), $this->getPAuth());
