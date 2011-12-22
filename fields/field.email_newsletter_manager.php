@@ -450,6 +450,7 @@
 					$gui->appendChild(new XMLElement('p', sprintf(__("%d emails sent"), $stats['sent']), array('class'=>'stats')));
 					$gui->appendChild(new XMLElement('p', sprintf(__("%d emails failed"), $stats['failed']), array('class'=>'stats')));
 					$gui->appendChild(new XMLElement('p', sprintf(__("Started %s"), DateTimeObj::get(__SYM_DATETIME_FORMAT__, strftime($stats['started_on']))), array('class'=>'stats')));
+					$this->_addInfoIfApplicable($newsletter, &$gui);
 					$this->_addStandardForm($newsletter, &$gui);
 					$gui->appendChild(new XMLElement(
 						'button',
