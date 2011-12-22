@@ -366,6 +366,7 @@
 					$gui->appendChild(new XMLElement('p', sprintf(__("%d emails sent"), $stats['sent']), array('class'=>'stats')));
 					$gui->appendChild(new XMLElement('p', sprintf(__("%d emails failed"), $stats['failed']), array('class'=>'stats')));
 					$gui->appendChild(new XMLElement('p', sprintf(__("Started %s"), DateTimeObj::get(__SYM_DATETIME_FORMAT__, strftime($stats['started_on']))), array('class'=>'stats')));
+					$this->_addInfoIfApplicable($newsletter, &$gui);
 					$this->_addStandardForm($newsletter, &$gui);
 					$gui->appendChild(new XMLElement(
 						'button',
@@ -397,6 +398,7 @@
 					$gui->appendChild(new XMLElement('p', sprintf(__("%d emails sent"), $stats['sent']), array('class'=>'stats')));
 					$gui->appendChild(new XMLElement('p', sprintf(__("%d emails failed"), $stats['failed']), array('class'=>'stats')));
 					$gui->appendChild(new XMLElement('p', sprintf(__("Started %s"), DateTimeObj::get(__SYM_DATETIME_FORMAT__, strftime($stats['started_on']))), array('class'=>'stats')));
+					$this->_addInfoIfApplicable($newsletter, &$gui);
 					$this->_addStandardForm($newsletter, &$gui);
 					$gui->appendChild(new XMLElement(
 						'button',
@@ -417,6 +419,7 @@
 					$gui->appendChild(new XMLElement('p', sprintf(__("%d emails sent"), $stats['sent']), array('class'=>'stats')));
 					$gui->appendChild(new XMLElement('p', sprintf(__("%d emails failed"), $stats['failed']), array('class'=>'stats')));
 					$gui->appendChild(new XMLElement('p', sprintf(__("Started %s"), DateTimeObj::get(__SYM_DATETIME_FORMAT__, strftime($stats['started_on']))), array('class'=>'stats')));
+					$this->_addInfoIfApplicable($newsletter, &$gui);
 					$this->_addStandardForm($newsletter, &$gui);
 					$gui->appendChild(new XMLElement(
 						'button',
@@ -478,6 +481,7 @@
 					$gui->appendChild(new XMLElement('p', sprintf(__("%d emails sent"), $stats['sent']), array('class'=>'stats')));
 					$gui->appendChild(new XMLElement('p', sprintf(__("%d emails failed"), $stats['failed']), array('class'=>'stats')));
 					$gui->appendChild(new XMLElement('p', sprintf(__("Started %s"), DateTimeObj::get(__SYM_DATETIME_FORMAT__, strftime($stats['started_on']))), array('class'=>'stats')));
+					$this->_addInfoIfApplicable($newsletter, &$gui);
 					$this->_addStandardForm($newsletter, &$gui);
 					$gui->appendChild(new XMLElement(
 						'button',
@@ -819,5 +823,38 @@
 				$newsletter->getId(),
 				'hidden')
 			);
+		}
+
+		protected function _addInfoIfApplicable($newsletter, &$gui){
+			$displayTemplate = count(explode(',', $this->get('templates'))) > 1;
+			$displaySender = count(explode(',', $this->get('senders'))) > 1;
+			$displayRecipientGroups = count(explode(',', $this->get('recipient_groups'))) > 1;
+
+			$recipient_groups = array();
+			foreach($newsletter->getRecipientGroups(false, false) as $group){
+				$about = $group->about();
+				$recipient_groups[] = $about['name'];
+			}
+
+			$info = null;
+			if($displayTemplate){
+				$info .= sprintf(__('Email Template: %s'), $newsletter->getTemplate()->about['name']);
+			}
+			if($displayTemplate && $displayRecipientGroups){
+				$info .= '<br />';
+			}
+			if($displaySender){
+				$info .= sprintf(__('Sender: %s'), $newsletter->getSender()->getName());
+			}
+			if($displayRecipientGroups && $displaySender){
+				$info .= '<br />';
+			}
+			if($displayRecipientGroups){
+				$info .= sprintf(__('Recipient groups: %s'), implode(', ', $recipient_groups));
+			}
+
+			if(!empty($info)){
+				$gui->appendChild(new XMLElement('p', $info, array('class'=>'stats')));
+			}
 		}
 	}
