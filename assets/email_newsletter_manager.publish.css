@@ -96,3 +96,8 @@
 	text-align: left;
 	padding-right: 10px;
 }
+
+.field-email_newsletter_manager button
+{
+	margin-bottom: 10px;
+}
