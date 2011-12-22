@@ -43,8 +43,8 @@
 
 			// initialize field settings based on class defaults (name, placement)
 			parent::displaySettingsPanel($wrapper, $errors);
-			
-			
+
+
 
 			// build selector for email templates
 			$all_templates = EmailTemplateManager::listAll();
@@ -456,7 +456,7 @@
 							'type' => 'submit',
 							'value' => 'en-send:'.$this->_field_id.':'.$this->_entry_id,
 							'class' => 'button create',
-							
+
 						)
 					));
 					$gui->appendChild(new XMLElement(
@@ -661,7 +661,7 @@
 /*-------------------------------------------------------------------------
 	Publish: delete
 -------------------------------------------------------------------------*/
-		
+
 		public function entryDataCleanup($entry_id, $data=NULL){
 			try{
 				$newsletter_id = EmailNewsletterManager::delete($data['newsletter_id']);
@@ -714,9 +714,9 @@
 		 */
 		public function appendFormattedElement(&$wrapper, $data, $encode = false){
 			$node = new XMLElement($this->get('element_name'));
-	
+
 			$newsletter = EmailNewsletterManager::create($data['newsletter_id']);
-			
+
 			$properties = $newsletter->getStats();
 
 			$node->setAttribute('newsletter-id', $data['newsletter_id']);
@@ -730,7 +730,7 @@
 			// load configuration;
 			// use saved (entry) config XML if available (i.e.: if the email newsletter has been sent);
 			// fallback: the field's configuration XML
-			
+
 
 			// sender
 			$sender = new XMLElement('senders');
@@ -769,7 +769,7 @@
 			$label->appendChild(Widget::Input('fields[filter]'.($fieldnamePrefix ? '['.$fieldnamePrefix.']' : '').'['.$this->get('id').']'.($fieldnamePostfix ? '['.$fieldnamePostfix.']' : ''), ($data ? General::sanitize($data) : null)));
 			$wrapper->appendChild($label);
 		}
-		
+
 		public function buildDSRetrievalSQL($data, &$joins, &$where, $andOperation = false) {
 			$field_id = $this->get('id');
 
