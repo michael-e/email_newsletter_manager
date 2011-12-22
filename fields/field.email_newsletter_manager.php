@@ -796,32 +796,6 @@
 /*-------------------------------------------------------------------------
 	Helpers
 -------------------------------------------------------------------------*/
-		/**
-		 * Build the email newsletter status table (counts)
-		 *
-		 * @param array $entry_data
-		 * @return string HTML table
-		 */
-		private function __buildStatusTable($entry_data){
-			$aTableHead = array(
-				array(__('Total'), 'col'),
-				array(__('Sent'), 'col'),
-				array(__('Errors'), 'col'),
-			);
-			$td1 = Widget::TableData($entry_data['stats_rec_total'] ? $entry_data['stats_rec_total'] : '-');
-			$td2 = Widget::TableData($entry_data['stats_rec_sent'] ? $entry_data['stats_rec_sent'] : '0');
-			$td3 = Widget::TableData($entry_data['stats_rec_errors'] ? $entry_data['stats_rec_errors'] : '0');
-			$aTableBody = array();
-			$aTableBody[] = Widget::TableRow(array($td1, $td2, $td3));
-			$table = Widget::Table(
-				Widget::TableHead($aTableHead),
-				NULL,
-				Widget::TableBody($aTableBody),
-				NULL
-			);
-			$table->setAttributeArray(array('class' => 'status'));
-			return $table;
-		}
 		protected function _addStandardForm($newsletter, &$gui){
 			foreach($newsletter->getRecipientGroups(false, true) as $group){
 				$gui->appendChild(Widget::Input(
