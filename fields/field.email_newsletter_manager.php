@@ -743,7 +743,7 @@
 			$node->appendChild($sender);
 
 			// recipients
-			$recipients = new XMLElement('recipient_groups');
+			$recipients = new XMLElement('recipient-groups');
 			foreach($newsletter->getRecipientGroups() as $group){
 				$rgroup = new XMLElement('group');
 				General::array_to_xml($rgroup, (array)$group->about());
