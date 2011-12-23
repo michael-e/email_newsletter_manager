@@ -738,7 +738,7 @@
 
 
 			// sender
-			$sender = new XMLElement('senders');
+			$sender = new XMLElement('sender');
 			General::array_to_xml($sender, (array)$newsletter->getSender()->about());
 			$node->appendChild($sender);
 
