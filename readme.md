@@ -12,7 +12,7 @@ Information about [installing and updating extensions](http://symphony-cms.com/l
 
 ## Concept
 
-Please take a look at [the big picture](https://github.com/downloads/michael-e/email_newsletter_manager/EmailNewsletterManager.pdf).
+Please take a look at [the big picture](https://github.com/downloads/creativedutchmen/email_newsletter_manager/EmailNewsletterManager.pdf).
 
 The Email Newsletter Manager is another big step in a strategy to make Symphony the best emailing platform of all CMSs/frameworks. It builds on top of:
 
