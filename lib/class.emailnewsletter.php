@@ -167,8 +167,8 @@ class EmailNewsletter{
 				$template->addParams(array('etm-reply-to-name' => $about['reply-to-name']));
 
 				$email->setReplyToEmailAddress($about['reply-to-email']);
-				$template->reply_to_email = $about['reply-to-email'];
-				$template->addParams(array('etm-reply-to-email' => $about['reply-to-email']));
+				$template->reply_to_email_address = $about['reply-to-email'];
+				$template->addParams(array('etm-reply-to-email-address' => $about['reply-to-email']));
 				
 				$template->addParams(array('enm-newsletter-id' => $this->getId()));
 
