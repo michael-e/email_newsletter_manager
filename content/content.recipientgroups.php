@@ -24,15 +24,15 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 		$this->setPageType('index');
 		$this->setTitle(__("Symphony - Newsletter Recipient Groups"));
 		$groups = RecipientgroupManager::listAll();
-		$senders = new XMLElement('recipientgroups');
+		$recipientgroups = new XMLElement('recipientgroups');
 		foreach($groups as $group){
 			$entry = new XMLElement('entry');
 			General::array_to_xml($entry, $group);
 			$count = new XMLElement('count', RecipientgroupManager::create($group['handle'])->getCount());
 			$entry->appendChild($count);
-			$senders->appendChild($entry);
+			$recipientgroups->appendChild($entry);
 		}
-		$this->_XML->appendChild($senders);
+		$this->_XML->appendChild($recipientgroups);
 	}
 
 	function __actionIndex(){
