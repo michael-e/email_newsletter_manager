@@ -8,6 +8,5 @@ class EmailBackgroundProcess{
 	
 	public static function killProcess($process_id){
 		$return = shell_exec('kill ' . escapeshellarg($process_id));
-		file_put_contents('process_return.txt', $return);
 	}		
 }
