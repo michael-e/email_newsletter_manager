@@ -153,7 +153,6 @@ class EmailNewsletter{
 
 				require_once(TOOLKIT . '/util.validators.php');
 				if(General::validateString($recipient['email'], $validators['email']) && !is_null($recipient['email'])){
-					file_put_contents('recipients.txt', print_r(array((is_null($recipient['name'])?0:$recipient['name']) => $recipient['email']), true), FILE_APPEND);
 					$email->setRecipients(array($recipient['name'] => $recipient['email']));
 					$template->recipients = '"'.$recipient['name'] . '" <' . $recipient['email'] . '>';
 					$template->addParams(array('etm-recipient' => $recipient['email']));
