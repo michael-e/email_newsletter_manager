@@ -427,7 +427,7 @@
 						array(
 							'name' => 'action[save]',
 							'type' => 'submit',
-							'value' => 'en-send:'.$this->_field_id.':'.$this->_entry_id,
+							'value' => 'enm-send:'.$this->_field_id.':'.$this->_entry_id,
 							'class' => 'button create'
 						)
 					));
@@ -458,7 +458,7 @@
 						array(
 							'name' => 'action[save]',
 							'type' => 'submit',
-							'value' => 'en-send:'.$this->_field_id.':'.$this->_entry_id,
+							'value' => 'enm-send:'.$this->_field_id.':'.$this->_entry_id,
 							'class' => 'button create',
 
 						)
@@ -599,7 +599,7 @@
 							array(
 								'name' => 'action[save]',
 								'type' => 'submit',
-								'value' => 'en-send:'.$this->_field_id.':'.$this->_entry_id,
+								'value' => 'enm-send:'.$this->_field_id.':'.$this->_entry_id,
 								'class' => 'button create'
 							)
 						));
