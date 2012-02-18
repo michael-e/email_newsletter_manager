@@ -120,7 +120,7 @@ class extension_email_newsletter_manager extends extension{
 	}
 
 	public function stopRestartNewsletter(&$context){
-		if(substr($_POST['action']['save'], 0, 11) == 'en-restart:'){
+		if(substr($_POST['action']['save'], 0, 11) == 'enm-restart:'){
 			$vars = explode(":",$_POST['action']['save']);
 			$field_id = $vars[1];
 			$entry_id = $vars[2];
@@ -142,7 +142,7 @@ class extension_email_newsletter_manager extends extension{
 				}
 			}
 		}
-		if(substr($_POST['action']['save'], 0, 8) == 'en-stop:'){
+		if(substr($_POST['action']['save'], 0, 8) == 'enm-stop:'){
 			$vars = explode(":",$_POST['action']['save']);
 			$field_id = $vars[1];
 			$entry_id = $vars[2];
@@ -157,7 +157,7 @@ class extension_email_newsletter_manager extends extension{
 				}
 			}
 		}
-		if(substr($_POST['action']['save'], 0, 9) == 'en-pause:'){
+		if(substr($_POST['action']['save'], 0, 9) == 'enm-pause:'){
 			$vars = explode(":",$_POST['action']['save']);
 			$field_id = $vars[1];
 			$entry_id = $vars[2];
