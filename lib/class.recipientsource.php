@@ -50,10 +50,13 @@ Class RecipientSource extends DataSource{
 	}
 
 	public function processDependencies(array $params = array()) {
-		if(!is_array($this->getDependencies()) || empty($this->getDependencies())) return array();
 		$this->DatasourceManager = new DatasourceManager($this->_Parent);
 		
 		$datasources = $this->getDependencies();
+		
+		if(!is_array($datasources) || is_empty($datasources)){
+			return;
+		}
 		
 		$this->_env['pool'] = $params;
 		$pool = $params;
