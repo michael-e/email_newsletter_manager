@@ -8,6 +8,8 @@ class <!-- CLASS NAME --> extends RecipientSourceAuthor{
 	
 	public $dsParamROOTELEMENT = '<!-- HANDLE -->';
 	public $dsParamFILTERS = <!-- FILTERS -->;
+
+	protected $_dependencies = array();
 	
 	function about(){
 		return array(
