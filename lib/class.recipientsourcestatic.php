@@ -25,6 +25,7 @@ Class RecipientSourceStatic extends RecipientSource{
 	 * @return array
 	 */
 	public function getSlice(){
+		parent::grab();
 		$recipients = $this->grab();
 		$return['total-entries'] = $this->getCount();
 		$pages = ((int)$return['total-entries']/(int)$this->dsParamLIMIT);
