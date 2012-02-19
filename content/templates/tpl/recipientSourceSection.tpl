@@ -11,6 +11,8 @@ class <!-- CLASS NAME --> extends RecipientSourceSection{
 	public $emailField = '<!-- EMAIL_FIELD -->';
 	public $nameFields = <!-- NAME_FIELDS -->;
 	public $nameXslt = '<!-- NAME_XSLT -->';
+
+	protected $_dependencies = array();
 	
 	function about(){
 		return array(
