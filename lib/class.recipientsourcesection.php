@@ -83,7 +83,6 @@ Class RecipientSourceSection extends RecipientSource{
 	 * @return array
 	 */
 	public function grab(){
-		parent::grab();
 		$where_and_joins = $this->getWhereJoinsAndGroup();
 		$entryManager = new EntryManager($this->_Parent);
 		

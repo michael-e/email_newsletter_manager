@@ -178,7 +178,7 @@ class extension_email_newsletter_manager extends extension{
 	public function initEmailNewsletter($context){
 		// The field has a 'save and send' button. We trigger the newsletter
 		// start using the 'action' string, which seems to be the only way.
-		if(@array_key_exists('save', $_POST['action']) && substr($_POST['action']['save'], 0, 9) == 'enm-send:'){
+		if(@array_key_exists('save', $_POST['action']) && substr($_POST['action']['save'], 0, 8) == 'en-send:'){
 			$vars = explode(":",$_POST['action']['save']);
 			
 			$field_id = $vars[1];
