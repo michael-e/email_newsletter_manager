@@ -27,6 +27,7 @@ Class RecipientSourceSection extends RecipientSource{
 	 * @return array
 	 */
 	public function getSlice(){
+		parent::grab();
 		$entries = $this->grab();
 		$return['total-entries'] = (string)$entries['total-entries'];
 		$return['total-pages'] = (string)$entries['total-pages'];
