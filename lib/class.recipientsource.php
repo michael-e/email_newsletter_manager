@@ -50,6 +50,7 @@ Class RecipientSource extends DataSource{
 	}
 
 	public function processDependencies(array $params = array()) {
+		if(!is_array($this->getDependencies()) || empty($this->getDependencies())) return array();
 		$this->DatasourceManager = new DatasourceManager($this->_Parent);
 		
 		$datasources = $this->getDependencies();
@@ -76,7 +77,7 @@ Class RecipientSource extends DataSource{
 	}
 
 	public function __findDatasourceOrder($dependenciesList){
-		if(!is_array($dependenciesList) || empty($dependenciesList)) return;
+		if(!is_array($dependenciesList) || empty($dependenciesList)) return array();
 
 		$orderedList = array();
 		$dsKeyArray = $this->__buildDatasourcePooledParamList(array_keys($dependenciesList));
