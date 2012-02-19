@@ -54,7 +54,7 @@ Class RecipientSource extends DataSource{
 		
 		$datasources = $this->getDependencies();
 		
-		if(!is_array($datasources) || is_empty($datasources)){
+		if(!is_array($datasources) || empty($datasources)){
 			return;
 		}
 		
