@@ -9,7 +9,7 @@ class extension_email_newsletter_manager extends extension{
 	public function about(){
 		return array(
 			'name' => 'Email Newsletter Manager',
-			'version' => '1.0 Beta',
+			'version' => '1.0 Beta2',
 			'author' => array(
 				array(
 					'name'=>'Huib Keemink',
