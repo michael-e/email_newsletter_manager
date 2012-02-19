@@ -7,6 +7,8 @@ require_once(EXTENSIONS . '/email_newsletter_manager/lib/class.recipientsourcest
 class <!-- CLASS NAME --> extends RecipientSourceStatic{
 	
 	public $recipients = <!-- STATIC_RECIPIENTS -->;
+
+	protected $_dependencies = array();
 	
 	function about(){
 		return array(

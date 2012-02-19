@@ -111,6 +111,7 @@ Class RecipientSourceSection extends RecipientSource{
 	 * @return int
 	 */
 	public function getCount(){
+		parent::getCount();
 		// To get the exact count for the newsletter requires a very slow query.
 		// This value is not used anywhere, so for performance reasons count will not return anything.
 		if($this->newsletter_id !== NULL){

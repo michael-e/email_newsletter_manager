@@ -66,6 +66,7 @@ Class RecipientSourceStatic extends RecipientSource{
 	 * @return int
 	 */
 	public function getCount(){
+		parent::getCount();
 		if($this->newsletter_id !== NULL){
 			return -1;
 		}
