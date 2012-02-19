@@ -43,6 +43,7 @@ Class RecipientSourceStatic extends RecipientSource{
 	 * @return array
 	 */
 	public function grab(){
+		parent::grab();
 		$this->_createTempTable();
 		
 		if($this->newsletter_id !== NULL){

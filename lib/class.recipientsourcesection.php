@@ -27,7 +27,6 @@ Class RecipientSourceSection extends RecipientSource{
 	 * @return array
 	 */
 	public function getSlice(){
-		parent::grab();
 		$entries = $this->grab();
 		$return['total-entries'] = (string)$entries['total-entries'];
 		$return['total-pages'] = (string)$entries['total-pages'];
@@ -84,6 +83,7 @@ Class RecipientSourceSection extends RecipientSource{
 	 * @return array
 	 */
 	public function grab(){
+		parent::grab();
 		$where_and_joins = $this->getWhereJoinsAndGroup();
 		$entryManager = new EntryManager($this->_Parent);
 		
