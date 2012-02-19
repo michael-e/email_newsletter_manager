@@ -59,6 +59,9 @@ Class RecipientSource extends DataSource{
 			return;
 		}
 		
+		$datasources = array_map(create_function('$a', "return str_replace('\$ds-', '', \$a);"), $datasources);
+		$datasources = array_map(create_function('$a', "return str_replace('-', '_', \$a);"), $datasources);
+		
 		$this->_env['pool'] = $params;
 		$pool = $params;
 		$dependencies = array();
