@@ -28,6 +28,7 @@ Class RecipientSource extends DataSource{
 	}
 
 	public function getCount(){
+		$this->processDependencies();
 	}
 
 	public function getSlice($page = 1, $count = 10){
