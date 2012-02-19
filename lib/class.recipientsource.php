@@ -74,7 +74,8 @@ Class RecipientSource extends DataSource{
 
 		foreach ($dsOrder as $handle) {
 			$ds = $pool[$handle];
-			$ds->processParameters(array('env' => $this->_env, 'param' => $this->_param));
+			$ds->processParameters(array('env' => &$this->_env, 'param' => &$this->_param));
+			$ds->grab($this->_env['pool']);
 			unset($ds);
 		}
 		$this->processParameters(array('env' => $this->_env, 'param' => $this->_param));
