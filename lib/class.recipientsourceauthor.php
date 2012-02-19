@@ -52,6 +52,7 @@ Class RecipientSourceAuthor extends RecipientSource{
 	 * @return int
 	 */
 	public function getCount(){
+		parent::getCount();
 		if(!is_null($this->newsletter_id)){
 			return -1;
 		}
