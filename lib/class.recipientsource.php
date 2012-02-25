@@ -12,6 +12,7 @@ Class RecipientSource extends DataSource{
 	public $dsParamFILTERS;
 	public $dsParamLIMIT = '10';
 	public $dsParamSTARTPAGE = '1';
+	public $dependencies = array();
 	
 	// Properties.
 	protected $_count = null;
@@ -19,7 +20,6 @@ Class RecipientSource extends DataSource{
 	protected $_XSLTProc;
 	protected $_where;
 	protected $_joins;
-	protected $_dependencies = array();
 	
 	public function __construct(&$parent, $env = array(), $process_params=true, $param_pool = array()){
 		parent::__construct($parent, (array)$env, $process_params);
