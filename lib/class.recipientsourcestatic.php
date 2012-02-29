@@ -102,7 +102,7 @@ Class RecipientSourceStatic extends RecipientSource{
 	protected function _createTempTable(){
 		if($this->_tempTable == NULL){
 			$name = 'email_newsletters_static_recipients_' . substr(md5(microtime()), 0, 10);
-			if(Symphony::Database()->query('CREATE TEMPORARY TABLE ' . $name . ' (`id` INT UNSIGNED NOT NULL AUTO_INCREMENT, PRIMARY KEY ( `id` ), email varchar(255), name varchar(255),`valid` BOOL NOT NULL)')){
+			if(Symphony::Database()->query('CREATE TEMPORARY TABLE ' . $name . ' (`id` INT UNSIGNED NOT NULL AUTO_INCREMENT, PRIMARY KEY ( `id` ), email varchar(255), name varchar(255),`valid` BOOL NOT NULL) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;')){
 				if(count($this->recipients) > 0){
 					$rcpts = array_map(array(__CLASS__, '_parseNameAndEmail'), explode(',', $this->recipients));
 					foreach($rcpts as $recipient){
