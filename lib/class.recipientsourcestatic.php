@@ -35,7 +35,7 @@ Class RecipientSourceStatic extends RecipientSource{
 		$return['start'] = (((int)$this->dsParamSTARTPAGE - 1) * (int)$this->dsParamLIMIT) + 1;
 		$return['current-page'] = (int)$this->dsParamSTARTPAGE;
 		if($this->newsletter_id !== NULL){
-			$newsletter = EmailNewsletterManager::create($newsletter_id);
+			$newsletter = EmailNewsletterManager::create($this->newsletter_id);
 			if(is_a($newsletter, 'EmailNewsletter')){
 				foreach($recipients as $recipient){
 					$newsletter->_markRecipient($recipient['email'],'idle');
