@@ -72,6 +72,7 @@ class EmailNewsletter{
 		  `result` varchar(255),
 		  PRIMARY KEY (`id`)
 		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
+		Symphony::Database()->query('DELETE FROM `tbl_tmp_email_newsletters_sent_'. $this->getId() . '` WHERE `result` = \'idle\'');
 		$this->setStatus('sending');
 		Symphony::Database()->update(array('started_on' => date('Y-m-d H:i:s', time())), 'tbl_email_newsletters', 'id = ' . $this->getId());
 		EmailBackgroundProcess::spawnProcess($this->getId(), $this->getPAuth());
@@ -281,12 +282,12 @@ class EmailNewsletter{
 		return $recipients;
 	}
 
-	protected function _markRecipient($recipient, $status = 'sent'){
+	public function _markRecipient($recipient, $status = 'sent'){
 		Symphony::Database()->query('UPDATE `tbl_email_newsletters` SET sent = sent + ' . ($status == 'sent'?1:0) . ', failed = failed + ' . ($status == 'failed'?1:0) . ', total = total + 1 WHERE id = \'' . $this->getId() . '\'');
 		return Symphony::Database()->insert(array('email'=>$recipient, 'result'=>$status), 'tbl_tmp_email_newsletters_sent_' . $this->getId());
 	}
 
-	protected function _markRecipientGroup($group){
+	public function _markRecipientGroup($group){
 		$groups = $this->getCompletedRecipientGroups();
 		//lots of complicated stuff here. Because I do not assume this function will be called a lot (1000s of times), I have used quite a lot of filters to keep the completed_recipients output clean.
 		//what happens here is that the new group is merged, all empty values are cleared and all duplicates are removed. This should result in the cleanest possible value.
