@@ -55,7 +55,7 @@ Class RecipientSourceStatic extends RecipientSource{
 		$this->_createTempTable();
 		
 		if($this->newsletter_id !== NULL){
-			$where .= ' WHERE `d`.`email` IS NOT NULL GROUP BY `d`.`email`';
+			$where .= ' AND `d`.`email` IS NOT NULL GROUP BY `d`.`email`';
 			$joins .= ' LEFT OUTER JOIN tbl_tmp_email_newsletters_sent_'.$this->newsletter_id.' AS `n` ON `d`.`email` = `n`.`email`
 						WHERE `n`.`email` IS NULL';
 		}
