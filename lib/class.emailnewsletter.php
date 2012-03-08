@@ -284,7 +284,7 @@ class EmailNewsletter{
 
 	public function _markRecipient($recipient, $status = 'sent'){
 		Symphony::Database()->query('UPDATE `tbl_email_newsletters` SET sent = sent + ' . ($status == 'sent'?1:0) . ', failed = failed + ' . ($status == 'failed'?1:0) . ', total = total + 1 WHERE id = \'' . $this->getId() . '\'');
-		if($status !== 'idle') return Symphony::Database()->query('UPDATE `tbl_tmp_email_newsletters_sent_' . $this->getId(). '` SET status = \''.$status.'\' WHERE email = \'' . Symphony::Database()-<cleanValue($recipient) . '\'');
+		if($status !== 'idle') return Symphony::Database()->query('UPDATE `tbl_tmp_email_newsletters_sent_' . $this->getId(). '` SET status = \''.$status.'\' WHERE email = \'' . Symphony::Database()->cleanValue($recipient) . '\'');
 		else return Symphony::Database()->insert(array('email'=>$recipient, 'result'=>$status), 'tbl_tmp_email_newsletters_sent_' . $this->getId());
 	}
 
