@@ -36,6 +36,15 @@ Class RecipientSourceAuthor extends RecipientSource{
 			);
 		}
 		
+		if($this->newsletter_id !== NULL){
+			$newsletter = EmailNewsletterManager::create($this->newsletter_id);
+			if(is_a($newsletter, 'EmailNewsletter')){
+				foreach($return['records'] as $recipient){
+					$newsletter->_markRecipient($recipient['email'],'idle');
+				}
+			}
+		}
+		
 		return $return;
 	}
 

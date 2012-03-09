@@ -34,6 +34,14 @@ Class RecipientSourceStatic extends RecipientSource{
 		$return['entries-per-page'] = $this->dsParamLIMIT;
 		$return['start'] = (((int)$this->dsParamSTARTPAGE - 1) * (int)$this->dsParamLIMIT) + 1;
 		$return['current-page'] = (int)$this->dsParamSTARTPAGE;
+		if($this->newsletter_id !== NULL){
+			$newsletter = EmailNewsletterManager::create($this->newsletter_id);
+			if(is_a($newsletter, 'EmailNewsletter')){
+				foreach($recipients as $recipient){
+					$newsletter->_markRecipient($recipient['email'],'idle');
+				}
+			}
+		}
 		return array_merge($return, array('records'=>$recipients));
 	}
 
@@ -47,7 +55,7 @@ Class RecipientSourceStatic extends RecipientSource{
 		$this->_createTempTable();
 		
 		if($this->newsletter_id !== NULL){
-			$where .= ' GROUP BY `d`.`email`';
+			$where .= ' AND `d`.`email` IS NOT NULL GROUP BY `d`.`email`';
 			$joins .= ' LEFT OUTER JOIN tbl_tmp_email_newsletters_sent_'.$this->newsletter_id.' AS `n` ON `d`.`email` = `n`.`email`
 						WHERE `n`.`email` IS NULL';
 		}
