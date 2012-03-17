@@ -188,9 +188,9 @@ class extension_email_newsletter_manager extends extension{
 			$data = $this->_getEntryData($field_id, $entry_id);
 			if(!empty($data)){
 				try{
-					$newsletter = EmailNewsletterManager::create($data['newsletter_id']);
+					$this->newsletter = EmailNewsletterManager::create($data['newsletter_id']);
 					// The reason the newsletter is started here and not in the field save function is because it must only send if all other fields are completed successfully.
-					$newsletter->start();
+					$this->newsletter->start();
 				}
 				// This is the last resort. All checks should be done before saving the entry, so this error should ideally never be shown. Ever.
 				// Because the delegate this function hooks into can not undo the saving, or display any warning messages, a "hard" error is the only way to communicate what is going wrong.
