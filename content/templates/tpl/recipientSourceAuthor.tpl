@@ -9,7 +9,7 @@ class <!-- CLASS NAME --> extends RecipientSourceAuthor{
 	public $dsParamROOTELEMENT = '<!-- HANDLE -->';
 	public $dsParamFILTERS = <!-- FILTERS -->;
 
-	public $dependencies = <!-- DEPENDENCIES -->;
+	public $_dependencies = <!-- DEPENDENCIES -->;
 	
 	function about(){
 		return array(

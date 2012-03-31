@@ -205,7 +205,7 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 		$fields['dependencies'] = array();
 		try{
 			$result = RecipientGroupManager::create($this->_context[1]);
-			$fields['dependencies'] = $result->dependencies;
+			$fields['dependencies'] = $result->_dependencies;
 		}
 		catch(Exception $e){
 		}

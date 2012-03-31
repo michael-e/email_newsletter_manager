@@ -12,7 +12,7 @@ Class RecipientSource extends DataSource{
 	public $dsParamFILTERS;
 	public $dsParamLIMIT = '10';
 	public $dsParamSTARTPAGE = '1';
-	public $dependencies = array();
+	public $_dependencies = array();
 	
 	// Properties.
 	protected $_count = null;
