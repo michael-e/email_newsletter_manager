@@ -851,7 +851,7 @@
 				$info .= '<br />';
 			}
 			if($displayRecipientGroups){
-				$info .= sprintf(__('Recipient groups: %s'), implode(', ', $recipient_groups));
+				$info .= sprintf(__('Recipient Groups: %s'), implode(', ', $recipient_groups));
 			}
 
 			if(!empty($info)){
