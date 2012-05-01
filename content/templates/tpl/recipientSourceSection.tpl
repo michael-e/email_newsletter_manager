@@ -12,7 +12,7 @@ class <!-- CLASS NAME --> extends RecipientSourceSection{
 	public $nameFields = <!-- NAME_FIELDS -->;
 	public $nameXslt = '<!-- NAME_XSLT -->';
 
-	protected $_dependencies = array();
+	public $_dependencies = <!-- DEPENDENCIES -->;
 	
 	function about(){
 		return array(

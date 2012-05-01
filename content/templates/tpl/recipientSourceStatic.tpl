@@ -8,7 +8,7 @@ class <!-- CLASS NAME --> extends RecipientSourceStatic{
 	
 	public $recipients = <!-- STATIC_RECIPIENTS -->;
 
-	protected $_dependencies = array();
+	public $_dependencies = array();
 	
 	function about(){
 		return array(

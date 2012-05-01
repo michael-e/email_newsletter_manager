@@ -201,6 +201,14 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 
 	function __actionEdit($new = false){
 		$fields = $_POST['fields'];
+
+		$fields['dependencies'] = array();
+		try{
+			$result = RecipientGroupManager::create($this->_context[1]);
+			$fields['dependencies'] = $result->_dependencies;
+		}
+		catch(Exception $e){
+		}
 		if(isset($_POST['action']['delete'])){
 			if(RecipientgroupManager::delete($this->_context[1])){
 				redirect(SYMPHONY_URL . '/extension/email_newsletter_manager/recipientgroups');
