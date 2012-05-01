@@ -250,6 +250,9 @@ class RecipientgroupManager{
 		$template = str_replace('<!-- SOURCE -->' , addcslashes($data['source'], "'"), $template);
 		$template = str_replace('<!-- FILTERS -->' , var_export($filters, true), $template);
 
+		// Dependencies
+		$template = str_replace('<!-- DEPENDENCIES -->' , var_export($data['dependencies'], true), $template);
+
 		// Section Source
 		$template = str_replace('<!-- NAME_FIELDS -->' , var_export((array)$data['name-fields'], true), $template);
 		$template = str_replace('<!-- EMAIL_FIELD -->' , addcslashes($data['email-field'], "'"), $template);
