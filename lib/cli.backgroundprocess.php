@@ -11,7 +11,7 @@ $start_time = microtime(true);
 error_reporting(0);
 
 register_shutdown_function('handleShutdown');
-set_error_handler("handleError"); 
+set_error_handler("handleError");
 
 function handleShutdown() {
 	$error = error_get_last();

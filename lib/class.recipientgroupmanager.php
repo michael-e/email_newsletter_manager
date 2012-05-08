@@ -161,7 +161,7 @@ class RecipientgroupManager{
 			throw new Exception('Recipientsource ' . $fields['handle'] . ' already exists. Please choose another name.');
 		}
 	}
-	
+
 	public static function delete($handle = null){
 		Symphony::ExtensionManager()->notifyMembers(
 			'PreRecipientgroupDelete',
@@ -202,7 +202,7 @@ class RecipientgroupManager{
 			return false;
 		}
 	}
-	
+
 	public static function about($name){
 
 		$classname = self::__getClassName($name);

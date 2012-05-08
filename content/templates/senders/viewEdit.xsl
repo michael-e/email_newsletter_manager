@@ -8,7 +8,7 @@
 	indent="yes" />
 
 <xsl:template match="/">
-	<h2>	
+	<h2>
 		<span><xsl:choose><xsl:when test="/data/senders/entry/name"><xsl:value-of select="/data/senders/entry/name" /></xsl:when><xsl:otherwise>New Sender</xsl:otherwise></xsl:choose></span>
 	</h2>
 	<form method="post">

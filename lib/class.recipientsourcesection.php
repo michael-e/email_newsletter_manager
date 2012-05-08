@@ -5,24 +5,24 @@ require_once(TOOLKIT . '/class.entrymanager.php');
 require_once(TOOLKIT . '/class.xsltprocess.php');
 
 Class RecipientSourceSection extends RecipientSource{
-	
+
 	public $emailField = null;
 	public $nameFields = Array();
 	public $nameXslt = null;
-	
+
 	public $dsParamLIMIT = 10;
 	public $dsParamPAGINATERESULTS = 'yes';
 	public $dsParamSTARTPAGE = 1;
 
 	/**
 	 * Fetch generated recipient data.
-	 * 
+	 *
 	 * Returns parsed recipient data. This means the xslt provided by the user
 	 * will be ran on the raw data, returning a name and email direcly useable
 	 * by the email API.
 	 *
 	 * This is the preferred way of getting recipient data.
-	 * 
+	 *
 	 * @todo bugtesting and error handling
 	 * @return array
 	 */
@@ -80,11 +80,11 @@ Class RecipientSourceSection extends RecipientSource{
 
 	/**
 	 * Fetch raw recipient data.
-	 * 
+	 *
 	 * Usage of the getSlice function, which also parses the XSLT for the name
 	 * and checks the email is recommended. This function is here mainly for
 	 * internal reasons.
-	 * 
+	 *
 	 * Be advised, this function returns an array of entry objects.
 	 *
 	 * @todo bugtesting and error handling
@@ -94,7 +94,7 @@ Class RecipientSourceSection extends RecipientSource{
 		parent::grab();
 		$where_and_joins = $this->getWhereJoinsAndGroup();
 		$entryManager = new EntryManager($this->_Parent);
-		
+
 		$entries = $entryManager->fetchByPage(
 			($this->dsParamSTARTPAGE > 0 ? $this->dsParamSTARTPAGE : 1),
 			$this->getSource(),
@@ -104,7 +104,7 @@ Class RecipientSourceSection extends RecipientSource{
 			false,
 			false,
 			true,
-			array_merge(array($this->emailField), $this->nameFields) 
+			array_merge(array($this->emailField), $this->nameFields)
 		);
 		// The count method of the entrymanager does not work properly, so this hack is needed :(
 		$count = $this->getCount();
@@ -140,7 +140,7 @@ Class RecipientSourceSection extends RecipientSource{
 
 	/**
 	 * Get where and join information to build a query.
-	 * 
+	 *
 	 * The information returned by this function can be used in the
 	 * fetch() methods of the EntryManager class. If you only need
 	 * to fetch data the getSlice function is recommended.
@@ -200,7 +200,7 @@ Class RecipientSourceSection extends RecipientSource{
 		}
 
 		$where .= ' AND `d`.`value` IS NOT NULL';
-		
+
 		$joins .= ' LEFT JOIN tbl_entries_data_'.$entryManager->fieldManager->fetchFieldIDFromElementName($this->emailField, $this->getSource()).' AS `d` ON `e`.`id` = `d`.`entry_id`';
 
 		if($this->newsletter_id !== NULL){
@@ -216,7 +216,7 @@ Class RecipientSourceSection extends RecipientSource{
 			'joins'	=> $joins
 		);
 	}
-	
+
 	public function getProperties(){
 		$properties = array(
 			'email' => $this->emailField,

@@ -13,19 +13,19 @@ require_once(ENMDIR . '/lib/class.sendermanager.php');
 require_once(ENMDIR . '/lib/class.emailnewslettermanager.php');
 
 Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
-	
+
 	protected $_type;
 	protected $_function;
-	
+
 	protected $_XSLTProc;
 	protected $_XML;
-	
+
 	function __construct(){
 		$this->_XSLTProc = new XsltProcess();
 		$this->_XML = new XMLElement("data");
 		$this->viewDir = ENVIEWS . '/senders';
 		parent::__construct(Symphony::Engine());
-		
+
 	}
 
 	function __viewIndex(){
@@ -67,7 +67,7 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 
 		if(!$new){
 			$sender = SenderManager::create($this->_context[1]);
-			
+
 			// Make sure the POSTED values are always shown when present.
 			// This will make sure the form is always up-to-date, even where there are errors.
 			if(!empty($_POST['fields']) && !empty($_POST['settings'])){
@@ -80,7 +80,7 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 			General::array_to_xml($entry, $about);
 			$senders->appendChild($entry);
 		}
-		
+
 		$el_gateways = new XMLElement('gateways');
 		$emailGatewayManager = new EmailGatewayManager($this->_Parent);
 		$gateways = $emailGatewayManager->listAll();
@@ -119,7 +119,7 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 			}
 		}
 		$senders->appendChild($el_gateways);
-		
+
 		$this->_XML->appendChild($senders);
 	}
 
@@ -184,7 +184,7 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 		$this->_XML->appendChild($context);
 		parent::view();
 	}
-	
+
 	function action(){
 		if($this->_context[2] == 'saved'){
 			$this->_context[2] = null;
@@ -194,5 +194,5 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 		$this->_XML->appendChild($fields);
 		parent::action();
 	}
-	
+
 }

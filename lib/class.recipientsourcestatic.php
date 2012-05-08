@@ -3,25 +3,25 @@
 require_once('class.recipientsource.php');
 
 Class RecipientSourceStatic extends RecipientSource{
-	
+
 	public $dsParamLIMIT = 10;
 	public $dsParamSTARTPAGE = 1;
 	protected $_emailValidator;
 	protected $_tempTable;
-	
+
 	public function __construct(){
 		require_once(TOOLKIT . '/util.validators.php');
 		$this->_emailValidator = $validators['email'];
 		parent::__construct($this->_Parent);
 	}
-	
+
 	/**
 	 * Fetch recipient data, and include useful data.
 	 *
 	 * This function is used internally to fetch the recipient data.
 	 * It is the preferred way of getting data out of the system,
 	 * because it will also return pagination and other useful data.
-	 * 
+	 *
 	 * @return array
 	 */
 	public function getSlice(){
@@ -47,13 +47,13 @@ Class RecipientSourceStatic extends RecipientSource{
 
 	/**
 	 * Fetch recipient data.
-	 * 
+	 *
 	 * @return array
 	 */
 	public function grab(){
 		parent::grab();
 		$this->_createTempTable();
-		
+
 		if($this->newsletter_id !== NULL){
 			$where .= ' AND `d`.`email` IS NOT NULL GROUP BY `d`.`email`';
 			$joins .= ' LEFT OUTER JOIN tbl_tmp_email_newsletters_sent_'.$this->newsletter_id.' AS `n` ON `d`.`email` = `n`.`email`
@@ -62,9 +62,9 @@ Class RecipientSourceStatic extends RecipientSource{
 		else{
 			$joins .= 'GROUP BY `d`.`email`';
 		}
-		
+
 		$limit = ' LIMIT ' . ($this->dsParamSTARTPAGE - 1) * $this->dsParamLIMIT . ', ' . $this->dsParamLIMIT;
-		
+
 		$rows = Symphony::Database()->fetch('SELECT `d`.`id`, `d`.`name`, `d`.`email`, `d`.`valid` from ' . $this->_tempTable . ' as `d` ' . $joins . $where . $limit);
 		return $rows;
 	}
@@ -83,11 +83,11 @@ Class RecipientSourceStatic extends RecipientSource{
 		$rows = Symphony::Database()->fetchCol('count','SELECT count(email) as count from ' . $this->_tempTable);
 		return $rows[0];
 	}
-	
+
 	protected function _parseNameAndEmail(&$string){
 		$string = trim($string);
-		
-		if(strstr($string, '<')){		
+
+		if(strstr($string, '<')){
 			$name = trim(strstr($string, '<', true), "\" \t\n\r\0\x0B");
 			$email = trim(strstr($string, '<'), "<> \t\n\r\0\x0B");
 		}
@@ -106,7 +106,7 @@ Class RecipientSourceStatic extends RecipientSource{
 			);
 		}
 	}
-	
+
 	protected function _createTempTable(){
 		if($this->_tempTable == NULL){
 			$name = 'email_newsletters_static_recipients_' . substr(md5(microtime()), 0, 10);

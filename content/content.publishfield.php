@@ -33,7 +33,7 @@ Class contentExtensionemail_newsletter_managerpublishfield extends AjaxPage{
 
 			$data = new XMLElement('field');
 			$field->displayPublishPanel($data, $entry_data[$field_id]);
-			
+
 			echo $data->generate(true);
 			exit;
 			$this->_Result->appendChild($data);

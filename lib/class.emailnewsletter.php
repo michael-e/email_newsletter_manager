@@ -110,7 +110,7 @@ class EmailNewsletter{
 			throw new EmailNewsletterException('Incorrect Process Auth used. This usually means there is more than one process running. Aborting.');
 		}
 		$recipients = $this->_getRecipients($this->limit);
-		
+
 		if(count($recipients) == 0){
 			Symphony::Database()->query('DROP TABLE IF EXISTS `tbl_tmp_email_newsletters_sent_'. $this->getId() . '`');
 			$this->setStatus('completed');
@@ -182,7 +182,7 @@ class EmailNewsletter{
 				$email->setReplyToEmailAddress($about['reply-to-email']);
 				$template->reply_to_email_address = $about['reply-to-email'];
 				$template->addParams(array('etm-reply-to-email-address' => $about['reply-to-email']));
-				
+
 				$template->addParams(array('enm-newsletter-id' => $this->getId()));
 
 				$xml = $template->processDatasources();
@@ -225,7 +225,7 @@ class EmailNewsletter{
 						'recipient'		=> $recipient
 					)
 				);
-	
+
 				$this->_markRecipient($recipient['email'], 'sent');
 			}
 			catch(EmailTemplateException $e){
@@ -247,7 +247,7 @@ class EmailNewsletter{
 			return $groups_arr;
 		}
 		foreach($groups_arr as $group){
-			if(!in_array($group, array_map('trim', explode(', ', $groups[0]['completed_recipients']))) || $filter_complete == false){ 
+			if(!in_array($group, array_map('trim', explode(', ', $groups[0]['completed_recipients']))) || $filter_complete == false){
 				try{
 					$grp = RecipientGroupManager::create($group);
 					$grp->newsletter_id = $this->getId();
@@ -269,7 +269,7 @@ class EmailNewsletter{
 		}
 		return $sndr;
 	}
-	
+
 	public function getTemplate(){
 		$tmpl = Symphony::Database()->fetchCol('template','SELECT template from tbl_email_newsletters where id = \'' . $this->getId() .'\'');
 		try{
@@ -326,11 +326,11 @@ class EmailNewsletter{
 		}
 		return Symphony::Database()->update(array('recipients' => implode(', ', $recipients)), 'tbl_email_newsletters', 'id = \'' . $this->getId() . '\'');
 	}
-	
+
 	public function setSender($sender){
 		return Symphony::Database()->update(array('sender' => $sender), 'tbl_email_newsletters', 'id = ' . $this->getId());
 	}
-	
+
 	public function setTemplate($template){
 		return Symphony::Database()->update(array('template' => $template), 'tbl_email_newsletters', 'id = \'' . $this->getId() . '\'');
 	}

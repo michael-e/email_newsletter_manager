@@ -263,7 +263,7 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 		$this->_useTemplate = 'viewEdit';
 		$this->__viewEdit(true);
 	}
-	
+
 	function __viewTest(){
 		require_once(ENMDIR . '/lib/class.emailnewslettermanager.php');
 		EmailNewsletterManager::updateRecipientsHandle('test', 'huib');
@@ -272,7 +272,7 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 		//$newsletter->start();
 		exit();
 	}
-	
+
 	function __viewPreview(){
 		$this->setPageType('index');
 		$this->setTitle(__("Symphony - Newsletter Recipient Groups Preview"));

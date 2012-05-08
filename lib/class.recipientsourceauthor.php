@@ -3,14 +3,14 @@
 require_once('class.recipientsource.php');
 
 Class RecipientSourceAuthor extends RecipientSource{
-	
+
 	public $dsParamLIMIT = 10;
 	public $dsParamPAGINATERESULTS = 'yes';
 	public $dsParamSTARTPAGE = 1;
 
 	/**
 	 * Fetch recipient data.
-	 * 
+	 *
 	 * @todo bugtesting and error handling
 	 * @return array
 	 */
@@ -24,9 +24,9 @@ Class RecipientSourceAuthor extends RecipientSource{
 		$return['entries-per-page'] = $this->dsParamLIMIT;
 		$return['start'] = (((int)$this->dsParamSTARTPAGE - 1) * (int)$this->dsParamLIMIT) + 1;
 		$return['current-page'] = (int)$this->dsParamSTARTPAGE;
-		
+
 		require_once(TOOLKIT . '/util.validators.php');
-		
+
 		foreach($authors as $author){
 			$return['records'][] = array(
 				'id' => $author->get('id'),
@@ -35,7 +35,7 @@ Class RecipientSourceAuthor extends RecipientSource{
 				'valid' => @preg_match($validators['email'], $author->get('email'))?true:false
 			);
 		}
-		
+
 		if($this->newsletter_id !== NULL){
 			$newsletter = EmailNewsletterManager::create($this->newsletter_id);
 			if(is_a($newsletter, 'EmailNewsletter')){
@@ -44,7 +44,7 @@ Class RecipientSourceAuthor extends RecipientSource{
 				}
 			}
 		}
-		
+
 		return $return;
 	}
 

@@ -13,14 +13,14 @@ Class RecipientSource extends DataSource{
 	public $dsParamLIMIT = '10';
 	public $dsParamSTARTPAGE = '1';
 	public $_dependencies = array();
-	
+
 	// Properties.
 	protected $_count = null;
 	protected $_param_pool = array();
 	protected $_XSLTProc;
 	protected $_where;
 	protected $_joins;
-	
+
 	public function __construct(&$parent, $env = array(), $process_params=true, $param_pool = array()){
 		parent::__construct($parent, (array)$env, $process_params);
 		$this->_param_pool = $param_pool;
@@ -52,16 +52,16 @@ Class RecipientSource extends DataSource{
 
 	public function processDependencies(array $params = array()) {
 		$this->DatasourceManager = new DatasourceManager($this->_Parent);
-		
+
 		$datasources = $this->getDependencies();
-		
+
 		if(!is_array($datasources) || empty($datasources)){
 			return;
 		}
-		
+
 		$datasources = array_map(create_function('$a', "return str_replace('\$ds-', '', \$a);"), $datasources);
 		$datasources = array_map(create_function('$a', "return str_replace('-', '_', \$a);"), $datasources);
-		
+
 		$this->_env['pool'] = $params;
 		$pool = $params;
 		$dependencies = array();
