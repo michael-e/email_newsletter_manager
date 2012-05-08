@@ -70,6 +70,10 @@ class EmailNewsletter{
 			$this->setStatus('error');
 			return;
 		}
+		$rec_groups = $this->getRecipientGroups();
+		if(empty($rec_groups)){
+			$this->setStatus('error');
+			return;
 		}
 		if($this->getStatus() == 'stopped'){
 			throw new EmailNewsletterException('Can not restart a stopped process. Please start a new process if you need to send again.');
