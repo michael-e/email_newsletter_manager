@@ -63,10 +63,13 @@ class EmailNewsletter{
 
 	public function start(){
 		if(!is_object($this->getSender())){
-			throw new Exception('No sender is set.');
+			$this->setStatus('error');
+			return;
 		}
 		if(!is_object($this->getTemplate())){
-			throw new Exception('No template is set.');
+			$this->setStatus('error');
+			return;
+		}
 		}
 		if($this->getStatus() == 'stopped'){
 			throw new EmailNewsletterException('Can not restart a stopped process. Please start a new process if you need to send again.');
