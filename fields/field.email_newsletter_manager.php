@@ -739,7 +739,8 @@
 
 			// sender
 			$sender = new XMLElement('sender');
-			General::array_to_xml($sender, (array)$newsletter->getSender()->about());
+			$about = is_object($newsletter->getSender()) ? $newsletter->getSender()->about() : array();
+			General::array_to_xml($sender, $about);
 			$node->appendChild($sender);
 
 			// recipients
