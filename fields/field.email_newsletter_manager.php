@@ -811,12 +811,12 @@
 			}
 			$gui->appendChild(Widget::Input(
 				'fields['.$this->get('element_name').'][sender]',
-				$newsletter->getSender()->getHandle(),
+				is_object($newsletter->getSender())?$newsletter->getSender()->getHandle():'none',
 				'hidden')
 			);
 			$gui->appendChild(Widget::Input(
 				'fields['.$this->get('element_name').'][template]',
-				$newsletter->getTemplate()->getHandle(),
+				is_object($newsletter->getTemplate())?$newsletter->getTemplate()->getHandle():'none',
 				'hidden')
 			);
 			$gui->appendChild(Widget::Input(
@@ -839,13 +839,13 @@
 
 			$info = null;
 			if($displayTemplate){
-				$info .= sprintf(__('Email Template: %s'), $newsletter->getTemplate()->about['name']);
+				$info .= sprintf(__('Email Template: %s'), is_object($newsletter->getTemplate())?$newsletter->getTemplate()->about['name']:'none');
 			}
 			if($displayTemplate && $displayRecipientGroups){
 				$info .= '<br />';
 			}
 			if($displaySender){
-				$info .= sprintf(__('Sender: %s'), $newsletter->getSender()->getName());
+				$info .= sprintf(__('Sender: %s'), is_object($newsletter->getSender())?$newsletter->getSender()->getName():'none');
 			}
 			if($displayRecipientGroups && $displaySender){
 				$info .= '<br />';
