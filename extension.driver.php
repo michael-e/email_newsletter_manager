@@ -129,10 +129,10 @@ class extension_email_newsletter_manager extends extension{
 				try{
 					$newsletter = EmailNewsletterManager::create($data['newsletter_id']);
 					$array = array(
-						'template'	=>	$newsletter->getTemplate()->getHandle(),
-						'sender'	=> 	$newsletter->getSender()->getHandle(),
-						'recipients'=>	implode(', ', $newsletter->getRecipientGroups(false, true)),
-						'started_by'=>	Administration::instance()->Author->get('id'));
+						'template'   => is_object($newsletter->getTemplate()) ? $newsletter->getTemplate()->getHandle() : NULL,
+						'sender'     => is_object($newsletter->getSender()) ? $newsletter->getSender()->getHandle() : NULL,
+						'recipients' => implode(', ', $newsletter->getRecipientGroups(false, true)),
+						'started_by' => Administration::instance()->Author->get('id'));
 					$news = EmailNewsletterManager::save($array);
 					$context['entry']->setData($field_id, array('author_id'=>Administration::instance()->Author->get('id'), 'entry_id'=>$entry_id, 'newsletter_id'=>$news->getId()));
 					//$news->start();
