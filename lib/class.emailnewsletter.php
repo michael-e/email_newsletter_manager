@@ -62,11 +62,11 @@ class EmailNewsletter{
 	}
 
 	public function start(){
-		if(!is_object($this->getSender())){
+		if(!is_object($this->getTemplate())){
 			$this->setStatus('error');
 			return;
 		}
-		if(!is_object($this->getTemplate())){
+		if(!is_object($this->getSender())){
 			$this->setStatus('error');
 			return;
 		}
