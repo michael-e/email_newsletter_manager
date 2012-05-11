@@ -228,7 +228,7 @@ class EmailNewsletter{
 
 				$this->_markRecipient($recipient['email'], 'sent');
 			}
-			catch(EmailTemplateException $e){
+			catch(Exception $e){
 				Symphony::$Log->pushToLog(__('Email Newsletter Manager: ') . $e->getMessage(), null, true);
 				$this->_markRecipient($recipient['email'], 'failed');
 				continue;
