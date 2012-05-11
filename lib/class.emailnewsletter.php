@@ -226,7 +226,7 @@ class EmailNewsletter{
 				$this->_markRecipient($recipient['email'], 'sent');
 			}
 			catch(Exception $e){
-				Symphony::$Log->pushToLog(__('Email Newsletter Manager: ') . $e->getMessage(), null, true);
+				file_put_contents(DOCROOT . '/manifest/newsletter-log.txt', '['.DateTimeObj::get('Y/m/d H:i:s').'] newsletter-id: '.$this->getId().' - ' . $e->getMessage() . "\r\n", FILE_APPEND);
 				$this->_markRecipient($recipient['email'], 'failed');
 				continue;
 			}
