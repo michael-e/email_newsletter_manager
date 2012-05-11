@@ -165,15 +165,9 @@ class EmailNewsletter{
 					)
 				);
 
-				require_once(TOOLKIT . '/util.validators.php');
-				if(General::validateString($recipient['email'], $validators['email']) && !is_null($recipient['email'])){
-					$email->setRecipients(array($recipient['name'] => $recipient['email']));
-					$template->recipients = '"'.$recipient['name'] . '" <' . $recipient['email'] . '>';
-					$template->addParams(array('etm-recipient' => $recipient['email']));
-				}
-				else{
-					throw new EmailNewsletterException("Email address invalid: ".$recipient['email']);
-				}
+				$email->setRecipients(array($recipient['name'] => $recipient['email']));
+				$template->recipients = '"'.$recipient['name'] . '" <' . $recipient['email'] . '>';
+				$template->addParams(array('etm-recipient' => $recipient['email']));
 
 				$email->setReplyToName($about['reply-to-name']);
 				$template->reply_to_name = $about['reply-to-name'];
