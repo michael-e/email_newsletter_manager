@@ -172,7 +172,7 @@ class EmailNewsletter{
 					$template->addParams(array('etm-recipient' => $recipient['email']));
 				}
 				else{
-					throw new EmailTemplateException("Email address invalid: ".$recipient['email']);
+					throw new EmailNewsletterException("Email address invalid: ".$recipient['email']);
 				}
 
 				$email->setReplyToName($about['reply-to-name']);
@@ -194,7 +194,7 @@ class EmailNewsletter{
 					$email->subject = $content['subject'];
 				}
 				else{
-					throw new EmailTemplateException("Can not send emails without a subject");
+					throw new EmailNewsletterException("Can not send emails without a subject");
 				}
 
 				if(isset($content['plain']))
