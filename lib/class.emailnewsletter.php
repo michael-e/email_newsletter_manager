@@ -189,6 +189,9 @@ class EmailNewsletter{
 				$template->setXML($xml->generate());
 
 				$content = $template->render();
+				if(empty($content)){
+					throw new EmailNewsletterException("ETM template could not be rendered");
+				}
 
 				if(!empty($content['subject'])){
 					$email->subject = $content['subject'];
