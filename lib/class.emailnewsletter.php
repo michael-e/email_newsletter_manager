@@ -151,7 +151,7 @@ class EmailNewsletter{
 					$email->setSenderEmailAddress($about['sendmail']['from_address']);
 				}
 				else{
-					Throw new EmailNewsletterException('Currently only sendmail and SMTP are supported. This will be fixed when the API supports it.');
+					throw new EmailNewsletterException('Currently only sendmail and SMTP are supported. This will be fixed when the API supports it.');
 				}
 
 				Symphony::ExtensionManager()->notifyMembers(
