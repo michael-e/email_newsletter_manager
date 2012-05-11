@@ -71,5 +71,5 @@ try{
 	}
 }
 catch(Exception $e){
-	file_put_contents(DOCROOT . '/manifest/newsletter-log.txt', '['.DateTimeObj::get('Y/m/d H:i:s').'] pid: '.getmypid().' - ' . $e->getMessage() . "\r\n", FILE_APPEND);
+	file_put_contents(DOCROOT . '/manifest/newsletter-log.txt', '['.DateTimeObj::get('Y/m/d H:i:s').'] newsletter-id: '.$newsletter_id.' - ' . $e->getMessage() . "\r\n", FILE_APPEND);
 }
