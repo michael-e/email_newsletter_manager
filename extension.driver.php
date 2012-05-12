@@ -183,7 +183,6 @@ class extension_email_newsletter_manager extends extension{
 
 			$field_id = $vars[1];
 			$entry_id = $vars[2];
-			$domain = $vars[3];
 
 			$data = $this->_getEntryData($field_id, $entry_id);
 			if(!empty($data)){
