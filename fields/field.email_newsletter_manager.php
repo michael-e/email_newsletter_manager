@@ -624,14 +624,6 @@
 			$status = self::__OK__;
 			if(empty($data)) return NULL;
 
-			/*
-				TODO when saving a newsletter, we __must__ check if
-				the properties are valid (i.e. configured in the
-				section editor);
-				otherwise it would be super-simple to send with
-				unwanted or invalid properties;
-			*/
-
 			$entry_data = array();
 			if($entry_id){
 				// grab existing entry data
@@ -648,11 +640,34 @@
 			if(!is_array($data['recipient_groups'])){
 				$data['recipient_groups'] = array();
 			}
+
+			// Prevent DOM hacking: When saving newsletter data, we __must__
+			// check if properties are valid (i.e. configured in the section
+			// editor); otherwise it would be super-simple to send with
+			// unwanted or invalid properties;
+			$template = NULL;
+			if(in_array($data['template'], explode(',', $this->get('templates')))){
+				$template = $data['template'];
+			}
+
+			$sender = NULL;
+			if(in_array($data['sender'], explode(',', $this->get('senders')))){
+				$sender = $data['sender'];
+			}
+
+			$recipient_groups = array();
+			foreach($data['recipient_groups'] as $group){
+				if(in_array($group, explode(',', $this->get('recipient_groups')))){
+					$recipient_groups[] = $group;
+				}
+			}
+
+			// save
 			$newsletter = EmailNewsletterManager::save(array(
 				'id'               => $entry_data['newsletter_id'],
-				'template'         => $data['template'],
-				'recipients'       => implode(', ', $data['recipient_groups']),
-				'sender'           => $data['sender'],
+				'template'         => $template,
+				'recipients'       => implode(', ', $recipient_groups),
+				'sender'           => $sender,
 				'started_by'       => Administration::instance()->Author->get('id'),
 			));
 
