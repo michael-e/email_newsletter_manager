@@ -663,16 +663,24 @@
 			}
 
 			// save
+			$author_id = 0;
+			$Members = Symphony::ExtensionManager()->create('members');
+			if(is_object(Symphony::Engine()->Author)){
+				$author_id = Symphony::Engine()->Author->get('id');
+			}
+			elseif(is_object($Members->getMemberDriver())){
+				$author_id = $Members->getMemberDriver()->getMemberID();
+			}
 			$newsletter = EmailNewsletterManager::save(array(
 				'id'               => $entry_data['newsletter_id'],
 				'template'         => $template,
 				'recipients'       => implode(', ', $recipient_groups),
 				'sender'           => $sender,
-				'started_by'       => Administration::instance()->Author->get('id'),
+				'started_by'       => $author_id,
 			));
 
 			$result = array(
-				'author_id' => Administration::instance()->Author->get('id'),
+				'author_id' => $author_id,
 				'newsletter_id' => $newsletter->getId(),
 			);
 			return $result;
