@@ -665,10 +665,10 @@
 			// save
 			$author_id = 0;
 			$Members = Symphony::ExtensionManager()->create('members');
-			if(is_object(Symphony::Engine()->Author)){
-				$author_id = Symphony::Engine()->Author->get('id');
+			if(Symphony::Engine() instanceof Administration){
+				$author_id = Administration::instance()->Author->get('id');
 			}
-			elseif(is_object($Members->getMemberDriver())){
+			elseif(Symphony::Engine() instanceof Frontend && is_object($Members->getMemberDriver())){
 				$author_id = $Members->getMemberDriver()->getMemberID();
 			}
 			$newsletter = EmailNewsletterManager::save(array(
