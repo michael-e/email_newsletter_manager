@@ -238,8 +238,6 @@
 				case 'paused':
 					$value = __('Paused');
 					break;
-				default:
-					$value = 'none';
 			}
 			return parent::prepareTableValue(array('value' => $value), $link);
 		}
