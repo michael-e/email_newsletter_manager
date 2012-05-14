@@ -227,6 +227,9 @@
 					$value = __('Stopped');
 					break;
 				case 'error':
+				case 'error_template':
+				case 'error_sender':
+				case 'error_recipients':
 					$value = __('Failed');
 					break;
 				case 'completed':
