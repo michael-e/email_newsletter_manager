@@ -226,7 +226,6 @@ class extension_email_newsletter_manager extends extension{
 							`failed` int(11) DEFAULT '0',
 							`started_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 							`started_by` int(10) unsigned NOT NULL,
-							`flag` varchar(255) CHARACTER SET utf8 DEFAULT 'idle',
 							`status` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
 							`pauth` varchar(23) CHARACTER SET utf8 DEFAULT NULL,
 							`pid` varchar(13) CHARACTER SET utf8 DEFAULT NULL,
