@@ -215,7 +215,7 @@ class extension_email_newsletter_manager extends extension{
 						KEY `field_id` (`field_id`)
 					) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
 
-					Symphony::Database()->query("CREATE TABLE `tbl_email_newsletters` (
+					Symphony::Database()->query("CREATE TABLE IF NOT EXISTS `tbl_email_newsletters` (
 							`id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 							`template` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
 							`recipients` text CHARACTER SET utf8,
@@ -249,18 +249,7 @@ class extension_email_newsletter_manager extends extension{
 
 	public function uninstall(){
 		Symphony::Database()->query("DROP TABLE `tbl_fields_email_newsletter_manager`");
-
-		/*
-			TODO should we drop the newsletters table upon uninstallation of the extension?
-		*/
-
-		// // drop database table
-		// Symphony::Database()->query("DROP TABLE `tbl_email_newsletters`");
-
-		/*
-			TODO shoud we remove the template files upon uninstallation of the extension?
-		*/
-
+		Symphony::Database()->query("DROP TABLE `tbl_email_newsletters`");
 		return true;
 	}
 
