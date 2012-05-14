@@ -15,7 +15,7 @@ Class RecipientSource extends DataSource{
 	public $_dependencies = array();
 
 	// Properties.
-	protected $_count = null;
+	protected $_count = NULL;
 	protected $_param_pool = array();
 	protected $_XSLTProc;
 	protected $_where;

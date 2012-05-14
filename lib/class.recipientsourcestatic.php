@@ -93,7 +93,7 @@ Class RecipientSourceStatic extends RecipientSource{
 		}
 		else{
 			$email = trim($string, " \t\n\r\0\x0B");
-			$name = null;
+			$name = NULL;
 		}
 		if(strlen($email) == 0){
 			unset($string);

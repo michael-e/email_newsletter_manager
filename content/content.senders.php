@@ -187,7 +187,7 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 
 	function action(){
 		if($this->_context[2] == 'saved'){
-			$this->_context[2] = null;
+			$this->_context[2] = NULL;
 		}
 		$fields = new XMLElement('fields');
 		General::array_to_xml($fields, (array)$_POST['fields']);

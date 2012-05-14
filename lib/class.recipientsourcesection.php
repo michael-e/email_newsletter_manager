@@ -6,9 +6,9 @@ require_once(TOOLKIT . '/class.xsltprocess.php');
 
 Class RecipientSourceSection extends RecipientSource{
 
-	public $emailField = null;
+	public $emailField = NULL;
 	public $nameFields = Array();
-	public $nameXslt = null;
+	public $nameXslt = NULL;
 
 	public $dsParamLIMIT = 10;
 	public $dsParamPAGINATERESULTS = 'yes';
@@ -148,8 +148,8 @@ Class RecipientSourceSection extends RecipientSource{
 	 * @return array
 	 */
 	public function getWhereJoinsAndGroup($count_only = false){
-		$where = null;
-		$joins = null;
+		$where = NULL;
+		$joins = NULL;
 		$entryManager = new EntryManager($this->_Parent);
 		if(is_array($this->dsParamFILTERS) && !empty($this->dsParamFILTERS)){
 			foreach($this->dsParamFILTERS as $field_id => $filter){

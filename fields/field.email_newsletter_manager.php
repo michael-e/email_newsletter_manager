@@ -213,7 +213,7 @@
 		 */
 		public function prepareTableValue($data, XMLElement $link=NULL){
 			if(!is_array($data) || empty($data)) return;
-			$value = null;
+			$value = NULL;
 			if(isset($data['newsletter_id'])){
 				$newsletter = EmailNewsletterManager::get($data['newsletter_id']);;
 				$stats = $newsletter->getStats();
@@ -651,7 +651,7 @@
 		/**
 		 * Prepares field values for database.
 		 */
-		public function processRawFieldData($data, &$status, $simulate = false, $entry_id = null){
+		public function processRawFieldData($data, &$status, $simulate = false, $entry_id = NULL){
 			$status = self::__OK__;
 			if(empty($data)) return NULL;
 
@@ -826,7 +826,7 @@
 		public function displayDatasourceFilterPanel(&$wrapper, $data=NULL, $errors=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL){
 			$wrapper->appendChild(new XMLElement('h4', $this->get('label') . ' <i>'.$this->Name().'</i>'));
 			$label = Widget::Label(__('Newsletter ID'));
-			$label->appendChild(Widget::Input('fields[filter]'.($fieldnamePrefix ? '['.$fieldnamePrefix.']' : '').'['.$this->get('id').']'.($fieldnamePostfix ? '['.$fieldnamePostfix.']' : ''), ($data ? General::sanitize($data) : null)));
+			$label->appendChild(Widget::Input('fields[filter]'.($fieldnamePrefix ? '['.$fieldnamePrefix.']' : '').'['.$this->get('id').']'.($fieldnamePostfix ? '['.$fieldnamePostfix.']' : ''), ($data ? General::sanitize($data) : NULL)));
 			$wrapper->appendChild($label);
 		}
 
@@ -898,7 +898,7 @@
 				$recipient_groups[] = $about['name'];
 			}
 
-			$info = null;
+			$info = NULL;
 			if($displayTemplate){
 				$info .= sprintf(__('Email Template: %s'), is_object($newsletter->getTemplate())?$newsletter->getTemplate()->about['name']:'none');
 			}

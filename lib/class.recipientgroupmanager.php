@@ -48,7 +48,7 @@ class RecipientgroupManager{
 					$path = self::__getDriverPath($f);
 
 					$can_parse = false;
-					$type = null;
+					$type = NULL;
 
 					if(method_exists($classname,'allowEditorToParse')) {
 						$can_parse = call_user_func(array($classname, 'allowEditorToParse'));
@@ -79,7 +79,7 @@ class RecipientgroupManager{
 
 						if($about = self::about($f)){
 							$about['can_parse'] = false;
-							$about['type'] = null;
+							$about['type'] = NULL;
 							$result[$f] = $about;
 						}
 					}
@@ -124,11 +124,11 @@ class RecipientgroupManager{
 
 	}
 
-	public static function save($handle = null, $fields){
+	public static function save($handle = NULL, $fields){
 		if(strlen(Lang::createHandle($fields['name'], 255, '_')) == 0){
 			return false;
 		}
-		if($handle == Lang::createHandle($fields['name'], 255, '_') || (($handle == null) && (self::__getClassPath(Lang::createHandle($fields['name'], 255, '_')) == false))){
+		if($handle == Lang::createHandle($fields['name'], 255, '_') || (($handle == NULL) && (self::__getClassPath(Lang::createHandle($fields['name'], 255, '_')) == false))){
 			if(self::_writeRecipientSource(Lang::createHandle($fields['name'], 255, '_'), self::_parseTemplate($fields))){
 				Symphony::ExtensionManager()->notifyMembers(
 					'PostRecipientgroupSaved',
@@ -162,7 +162,7 @@ class RecipientgroupManager{
 		}
 	}
 
-	public static function delete($handle = null){
+	public static function delete($handle = NULL){
 		Symphony::ExtensionManager()->notifyMembers(
 			'PreRecipientgroupDelete',
 			'/extension/email_newsletter_manager/',

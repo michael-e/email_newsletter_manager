@@ -73,7 +73,7 @@ Class SenderManager{
 
 						if($about = self::about($f)){
 							$about['can_parse'] = false;
-							$about['type'] = null;
+							$about['type'] = NULL;
 							$result[$f] = $about;
 						}
 					}
@@ -112,8 +112,8 @@ Class SenderManager{
 
 	}
 
-	public static function save($handle = null, $fields){
-		if($handle == Lang::createHandle($fields['name'], 255, '_') || $handle == null){
+	public static function save($handle = NULL, $fields){
+		if($handle == Lang::createHandle($fields['name'], 255, '_') || $handle == NULL){
 			if(self::_writeSender(Lang::createHandle($fields['name'], 255, '_'), self::_parseTemplate($fields))){
 				Symphony::ExtensionManager()->notifyMembers(
 					'PostSenderSaved',
@@ -147,7 +147,7 @@ Class SenderManager{
 		}
 	}
 
-	public static function delete($handle = null){
+	public static function delete($handle = NULL){
 		Symphony::ExtensionManager()->notifyMembers(
 			'PreSenderDelete',
 			'/extension/email_newsletter_manager/',

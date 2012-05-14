@@ -4,7 +4,7 @@ require_once(TOOLKIT . '/class.administrationpage.php');
 
 Class ExtensionPage extends AdministrationPage{
 
-	protected $_useTemplate = null;
+	protected $_useTemplate = NULL;
 	public $viewDir = '';
 	protected $_XSLTProc;
 
@@ -63,7 +63,7 @@ Class ExtensionPage extends AdministrationPage{
 			else{
 				Administration::instance()->errorPageNotFound();
 			}
-			$this->Form = null;
+			$this->Form = NULL;
 			$this->Contents->setValue($html);
 		}
 		return parent::generate();
