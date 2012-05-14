@@ -435,6 +435,54 @@
 					));
 					break;
 
+				case "error_template":
+					$heading = new XMLElement('p',__('Error: No template selected.'), array('class'=>'status error'));
+					$gui->appendChild($heading);
+					$this->_addHiddenFields($newsletter, &$gui);
+					$gui->appendChild(new XMLElement(
+						'button',
+						__('Restart'),
+						array(
+							'name' => 'action[save]',
+							'type' => 'submit',
+							'value' => 'enm-restart:'.$this->_field_id.':'.$this->_entry_id,
+							'class' => 'button',
+						)
+					));
+					break;
+
+				case "error_sender":
+					$heading = new XMLElement('p',__('Error: No sender selected.'), array('class'=>'status error'));
+					$gui->appendChild($heading);
+					$this->_addHiddenFields($newsletter, &$gui);
+					$gui->appendChild(new XMLElement(
+						'button',
+						__('Restart'),
+						array(
+							'name' => 'action[save]',
+							'type' => 'submit',
+							'value' => 'enm-restart:'.$this->_field_id.':'.$this->_entry_id,
+							'class' => 'button',
+						)
+					));
+					break;
+
+				case "error_recipients":
+					$heading = new XMLElement('p',__('Error: No recipient group selected.'), array('class'=>'status error'));
+					$gui->appendChild($heading);
+					$this->_addHiddenFields($newsletter, &$gui);
+					$gui->appendChild(new XMLElement(
+						'button',
+						__('Restart'),
+						array(
+							'name' => 'action[save]',
+							'type' => 'submit',
+							'value' => 'enm-restart:'.$this->_field_id.':'.$this->_entry_id,
+							'class' => 'button',
+						)
+					));
+					break;
+
 				case "error":
 					$heading = new XMLElement('p',__('Sending failed. Check the log for details.'), array('class'=>'status error'));
 					$gui->appendChild($heading);

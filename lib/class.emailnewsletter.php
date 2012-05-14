@@ -63,16 +63,16 @@ class EmailNewsletter{
 
 	public function start(){
 		if(!is_object($this->getTemplate())){
-			$this->setStatus('error');
+			$this->setStatus('error_template');
 			return;
 		}
 		if(!is_object($this->getSender())){
-			$this->setStatus('error');
+			$this->setStatus('error_sender');
 			return;
 		}
 		$rec_groups = $this->getRecipientGroups();
 		if(empty($rec_groups)){
-			$this->setStatus('error');
+			$this->setStatus('error_recipients');
 			return;
 		}
 		if($this->getStatus() == 'stopped'){
