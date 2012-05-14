@@ -645,11 +645,6 @@
 					}
 			}
 			$wrapper->appendChild($gui);
-
-			// // standard:
-			// if($flagWithError != NULL) $wrapper->appendChild(Widget::wrapFormElementWithError($label, $flagWithError));
-			// else $wrapper->appendChild($label);
-
 		}
 
 		/**
