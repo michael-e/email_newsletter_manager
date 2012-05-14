@@ -235,9 +235,6 @@
 				case 'paused':
 					$value = __('Paused');
 					break;
-				case 'idle':
-					$value = __('Ready to send');
-					break;
 				default:
 					$value = 'none';
 			}
