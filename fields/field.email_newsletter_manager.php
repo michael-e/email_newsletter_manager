@@ -437,7 +437,7 @@
 					break;
 
 				case "error_template":
-					$heading = new XMLElement('p',__('Error: No template selected.'), array('class'=>'status error'));
+					$heading = new XMLElement('p',__('Error: No email template selected.'), array('class'=>'status error'));
 					$gui->appendChild($heading);
 					$this->_addHiddenFields($newsletter, &$gui);
 					$gui->appendChild(new XMLElement(
