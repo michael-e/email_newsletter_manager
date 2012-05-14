@@ -360,9 +360,7 @@
 				case "sending":
 					$heading = new XMLElement('p',__('Sending'), array('class'=>'status sending'));
 					$gui->appendChild($heading);
-					$gui->appendChild(new XMLElement('p', sprintf(__("%d emails sent"), $stats['sent']), array('class'=>'stats')));
-					$gui->appendChild(new XMLElement('p', sprintf(__("%d emails failed"), $stats['failed']), array('class'=>'stats')));
-					$gui->appendChild(new XMLElement('p', sprintf(__("Started %s"), DateTimeObj::get(__SYM_DATETIME_FORMAT__, strftime($stats['started_on']))), array('class'=>'stats')));
+					$this->_addStatistics($stats, &$gui);
 					$this->_addInfoIfApplicable($newsletter, &$gui);
 					$this->_addHiddenFields($newsletter, &$gui);
 					$gui->appendChild(new XMLElement(
@@ -392,9 +390,7 @@
 				case "stopped":
 					$heading = new XMLElement('p',__('Stopped'), array('class'=>'status stopped'));
 					$gui->appendChild($heading);
-					$gui->appendChild(new XMLElement('p', sprintf(__("%d emails sent"), $stats['sent']), array('class'=>'stats')));
-					$gui->appendChild(new XMLElement('p', sprintf(__("%d emails failed"), $stats['failed']), array('class'=>'stats')));
-					$gui->appendChild(new XMLElement('p', sprintf(__("Started %s"), DateTimeObj::get(__SYM_DATETIME_FORMAT__, strftime($stats['started_on']))), array('class'=>'stats')));
+					$this->_addStatistics($stats, &$gui);
 					$this->_addInfoIfApplicable($newsletter, &$gui);
 					$this->_addHiddenFields($newsletter, &$gui);
 					$gui->appendChild(new XMLElement(
@@ -413,9 +409,7 @@
 				case "paused":
 					$heading = new XMLElement('p',__('Paused'), array('class'=>'status paused'));
 					$gui->appendChild($heading);
-					$gui->appendChild(new XMLElement('p', sprintf(__("%d emails sent"), $stats['sent']), array('class'=>'stats')));
-					$gui->appendChild(new XMLElement('p', sprintf(__("%d emails failed"), $stats['failed']), array('class'=>'stats')));
-					$gui->appendChild(new XMLElement('p', sprintf(__("Started %s"), DateTimeObj::get(__SYM_DATETIME_FORMAT__, strftime($stats['started_on']))), array('class'=>'stats')));
+					$this->_addStatistics($stats, &$gui);
 					$this->_addInfoIfApplicable($newsletter, &$gui);
 					$this->_addHiddenFields($newsletter, &$gui);
 					$gui->appendChild(new XMLElement(
@@ -444,9 +438,7 @@
 				case "error":
 					$heading = new XMLElement('p',__('Sending failed. Check the log for details.'), array('class'=>'status error'));
 					$gui->appendChild($heading);
-					$gui->appendChild(new XMLElement('p', sprintf(__("%d emails sent"), $stats['sent']), array('class'=>'stats')));
-					$gui->appendChild(new XMLElement('p', sprintf(__("%d emails failed"), $stats['failed']), array('class'=>'stats')));
-					$gui->appendChild(new XMLElement('p', sprintf(__("Started %s"), DateTimeObj::get(__SYM_DATETIME_FORMAT__, strftime($stats['started_on']))), array('class'=>'stats')));
+					$this->_addStatistics($stats, &$gui);
 					$this->_addInfoIfApplicable($newsletter, &$gui);
 					$this->_addHiddenFields($newsletter, &$gui);
 					$gui->appendChild(new XMLElement(
@@ -476,9 +468,7 @@
 				case "completed":
 					$heading =  new XMLElement('p',__('Completed'), array('class'=>'status completed'));
 					$gui->appendChild($heading);
-					$gui->appendChild(new XMLElement('p', sprintf(__("%d emails sent"), $stats['sent']), array('class'=>'stats')));
-					$gui->appendChild(new XMLElement('p', sprintf(__("%d emails failed"), $stats['failed']), array('class'=>'stats')));
-					$gui->appendChild(new XMLElement('p', sprintf(__("Started %s"), DateTimeObj::get(__SYM_DATETIME_FORMAT__, strftime($stats['started_on']))), array('class'=>'stats')));
+					$this->_addStatistics($stats, &$gui);
 					$this->_addInfoIfApplicable($newsletter, &$gui);
 					$this->_addHiddenFields($newsletter, &$gui);
 					$gui->appendChild(new XMLElement(
@@ -845,6 +835,12 @@
 				$newsletter->getId(),
 				'hidden')
 			);
+		}
+
+		protected function _addStatistics($stats, &$gui){
+			$gui->appendChild(new XMLElement('p', sprintf(__("%d emails sent"), $stats['sent']), array('class'=>'stats')));
+			$gui->appendChild(new XMLElement('p', sprintf(__("%d emails failed"), $stats['failed']), array('class'=>'stats')));
+			$gui->appendChild(new XMLElement('p', sprintf(__("Started %s"), DateTimeObj::get(__SYM_DATETIME_FORMAT__, strftime($stats['started_on']))), array('class'=>'stats')));
 		}
 
 		protected function _addInfoIfApplicable($newsletter, &$gui){
