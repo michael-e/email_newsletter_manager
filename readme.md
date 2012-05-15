@@ -198,8 +198,8 @@ Newsletter Recipients allows defining multiple recipient groups for the newslett
 Email Templates provides clean interface, separated from default Symphony pages, for managing email templates.  
 For the sake of an example, we will go step-by-step through creating basic newsletter.
 
-1. **Model recipients section.**   
-For details about sections in Symphony view: [“Sections” – Concepts – Learn – Symphony.](http://symphony-cms.com/learn/concepts/view/sections/)
+* **Model recipients section.**   
+For details about sections in Symphony view: ["Sections" – Concepts – Learn – Symphony.](http://symphony-cms.com/learn/concepts/view/sections/)
 
 	* Required minimum data for recipient is name and email address.   
 	Create two text input fields called `name` and `email`.
@@ -208,7 +208,7 @@ For details about sections in Symphony view: [“Sections” – Concepts – Le
 
 	* If you want to refer to recipient dynamically in the email template (for example: to begin the email with Hi `name`) then create regular data source called `Recipient` and filter the email address field by `{$etm-recipient}` parameter.
 
-2. **Model newsletter sction.**   
+* **Model newsletter sction.**   
 In this section emails will be created and sent.
 
 	* In our example email template will only require `subject` text input field and `content` textarea. Create section with those.
@@ -219,7 +219,7 @@ In this section emails will be created and sent.
 
 	* Create regular data source called `Newsletter` and include both `subject` and `content` elements to it.
 
-3. **Create email template.**
+* **Create email template.**
 
 	* Head back to Blueprints -> Email Templates and create new template.   
 	Name it in a meaningful way and select `Newsletter` and `Recipient` data sources.
@@ -233,13 +233,13 @@ In this section emails will be created and sent.
 
 	* Edit HTML and Plain text templates to match your needs. Remember that you can refer to filtered recipient per every email sent using `{/data/recipient/entry}` data source output.
 
-4. **Add Email Newsletter Manager field to newsletter section.**
+* **Add Email Newsletter Manager field to newsletter section.**
 
 	* Add `Email Newsletter Manager` field to `Newsletter` section. Select the template, recipients groups and senders.
 
 	* Open `Newsletter` data source and filter `Email Newsletter Manager` field by `{$enm-newsletter-id}` so that proper entry is used for sent emails.
 
-5. **Remember few simple email styling rules.**
+* **Remember few simple email styling rules.**
 
 	* Use tables instead of divs.
 
@@ -257,7 +257,7 @@ In this section emails will be created and sent.
 	* Test everything before sending, especially if you are doing this for a client.   
 	Test at least in Outlook, Thunderbird and Gmail. Apple Mail if you use Mac.
 
-6. **Enjoy.**
+* **Enjoy.**
 
 
 
