@@ -105,7 +105,7 @@ The configuration is split into 4 parts:
 
 *Symphony: Blueprints -> Newsletter Senders*
 
-Newsletter Senders section allows defining multiple senders for the newsletter. There needs to be at least one sender defined before sending the newsletter.
+Newsletter Senders allows defining multiple senders for the newsletter. There needs to be at least one sender defined before sending the newsletter.
 
 *Sender Properties*
 
@@ -149,7 +149,7 @@ Newsletter Senders section allows defining multiple senders for the newsletter. 
 
 *Symphony: Blueprints -> Newsletter Recipients*
 
-Newsletter Recipients section allows defining multiple recipient groups for the newsletter. There needs to be at least one recipient group defined before sending newsletter.
+Newsletter Recipients allows defining multiple recipient groups for the newsletter. There needs to be at least one recipient group defined before sending newsletter.
 
 *Essentials*
 
@@ -195,8 +195,8 @@ Newsletter Recipients section allows defining multiple recipient groups for the 
 *Symphony: Blueprints -> Email Templates  
 [Email Template Manager](https://github.com/creativedutchmen/email_template_manager) extension has to be installed first.*
 
-Email Templates section provides clean interface, separated from default Symphony pages, for managing email templates.  
-For the sake of an example we will go step-by-step through creating basic internal company newsletter.
+Email Templates provides clean interface, separated from default Symphony pages, for managing email templates.  
+For the sake of an example, we will go step-by-step through creating basic newsletter.
 
 1. **Model recipients section.**   
 For details about sections in Symphony view: [“Sections” – Concepts – Learn – Symphony.](http://symphony-cms.com/learn/concepts/view/sections/)
@@ -204,9 +204,9 @@ For details about sections in Symphony view: [“Sections” – Concepts – Le
 	* Required minimum data for recipient is name and email address.   
 	Create two text input fields called `name` and `email`.
 
-	* Go to Blueprints -> Newsletter Recipients, create new recipients group and make created recipients section as it's source.
+	* Go to Blueprints -> Newsletter Recipients, create new recipients group and make created recipients section as it's source. Fill other fields appropriately.
 
-	* If you want to refer to recipient dynamically in the email template (for example: to begin the email with Hi `name`) then create regular data source called `Recipient` and filter the email field by `{$etm-recipient}` parameter.
+	* If you want to refer to recipient dynamically in the email template (for example: to begin the email with Hi `name`) then create regular data source called `Recipient` and filter the email address field by `{$etm-recipient}` parameter.
 
 2. **Model newsletter sction.**   
 In this section emails will be created and sent.
@@ -217,7 +217,7 @@ In this section emails will be created and sent.
 
 	* To make testing the email template easier, create the first entry and fill it with content.
 
-	* Create regular data source called `Newsletter` and include both `subject` and `content: formatted` elements to it.
+	* Create regular data source called `Newsletter` and include both `subject` and `content` elements to it.
 
 3. **Create email template.**
 
@@ -228,7 +228,7 @@ In this section emails will be created and sent.
 
 	* Ignore `Recipients`, `Reply-To Name` and `Reply-To Email Address` fields in *Email Settings*. These were already provided in *Blueprints -> Newsletter Senders*.
 
-	* As we want dynamic subject based on `Newsletter` section's `Subject` field, provide proper XPath.  
+	* As we want dynamic subject based on `Newsletter` section's `Subject` field, provide proper XPath to it.  
 	`{/data/newsletter/entry/subject}`
 
 	* Edit HTML and Plain text templates to match your needs. Remember that you can refer to filtered recipient per every email sent using `{/data/recipient/entry}` data source output.
