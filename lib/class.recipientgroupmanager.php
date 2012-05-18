@@ -158,7 +158,7 @@ class RecipientgroupManager{
 			return true;
 		}
 		else{
-			throw new Exception('Recipientsource ' . $fields['handle'] . ' already exists. Please choose another name.');
+			throw new Exception('Recipientsource ' . $fields['handle'] . ' already exists. Please choose a different name.');
 		}
 	}
 
