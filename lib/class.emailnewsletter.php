@@ -64,19 +64,17 @@ class EmailNewsletter{
 	public function start(){
 		if(!is_object($this->getTemplate())){
 			$this->setStatus('error_template');
-			return;
 		}
 		if(!is_object($this->getSender())){
 			$this->setStatus('error_sender');
-			return;
 		}
 		$rec_groups = $this->getRecipientGroups();
 		if(empty($rec_groups)){
 			$this->setStatus('error_recipients');
-			return;
 		}
-		if($this->getStatus() == 'stopped'){
-			throw new EmailNewsletterException('Can not restart a stopped process. Please start a new process if you need to send again.');
+		// Never start if the newsletter has no virgin state
+		if($this->getStatus() !== NULL){
+			return;
 		}
 		$this->generatePAuth();
 		Symphony::Database()->query("CREATE TABLE IF NOT EXISTS `tbl_tmp_email_newsletters_sent_". $this->getId() . "` (
