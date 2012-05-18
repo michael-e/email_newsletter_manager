@@ -168,8 +168,15 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 			$errors->appendChild(new XMLElement('name', __('This field must at least contain a number or a letter')));
 		}
 		else{
-			SenderManager::save($this->_context[1], $fields);
-			redirect(SYMPHONY_URL . '/extension/email_newsletter_manager/senders/edit/' . Lang::createHandle($fields['name'], 225, '_') . '/saved');
+			try{
+				if(SenderManager::save($this->_context[1], $fields)){
+					redirect(SYMPHONY_URL . '/extension/email_newsletter_manager/senders/edit/' . Lang::createHandle($fields['name'], 225, '_') . '/saved');
+					return true;
+				}
+			}
+			catch(Exception $e){
+				$this->pageAlert(__('Could not save: ' . $e->getMessage()),Alert::ERROR);
+			}
 		}
 		$this->_XML->appendChild($errors);
 	}
