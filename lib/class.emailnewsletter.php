@@ -75,8 +75,8 @@ class EmailNewsletter{
 			$this->setStatus('error_recipients');
 			return;
 		}
-		// Never start if the newsletter has no virgin state
-		if($this->getStatus() !== NULL){
+		// Never start if the newsletter is sending or completed
+		if($this->getStatus() == 'sending' || $this->getStatus() == 'completed'){
 			return;
 		}
 		$this->generatePAuth();
