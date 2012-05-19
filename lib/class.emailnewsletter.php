@@ -64,13 +64,16 @@ class EmailNewsletter{
 	public function start(){
 		if(!is_object($this->getTemplate())){
 			$this->setStatus('error_template');
+			return;
 		}
 		if(!is_object($this->getSender())){
 			$this->setStatus('error_sender');
+			return;
 		}
 		$rec_groups = $this->getRecipientGroups();
 		if(empty($rec_groups)){
 			$this->setStatus('error_recipients');
+			return;
 		}
 		// Never start if the newsletter has no virgin state
 		if($this->getStatus() !== NULL){
