@@ -772,6 +772,15 @@
 		 * Append element to datasource output
 		 */
 		public function appendFormattedElement(&$wrapper, $data, $encode = false){
+
+			// In an ideal world we wouldn't need the following hack.
+			// We want to output handles here, so we are indirectly using the
+			// Language class.
+			// For some reason, on ETM preview pages the Language class ist
+			// not 'activated', although Lang::get() seems to return the
+			// system language. This means that the preview breaks. Solved by:
+			Lang::activate();
+
 			$node = new XMLElement($this->get('element_name'));
 
 			$newsletter = EmailNewsletterManager::create($data['newsletter_id']);
