@@ -755,6 +755,7 @@
 		 * @return: string email newsletter sender ID (i.e. handle)
 		 */
 		public function getParameterPoolValue($data){
+			Lang::activate();
 			$newsletter = EmailNewsletterManager::create($data['newsletter_id']);
 			return $newsletter->getSender()->getHandle();
 		}
