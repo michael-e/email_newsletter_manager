@@ -752,10 +752,11 @@
 
 		/**
 		 * get param pool value
-		 * @return: string email newsletter sender ID
+		 * @return: string email newsletter sender ID (i.e. handle)
 		 */
 		public function getParameterPoolValue($data){
-			return $data['sender_id'];
+			$newsletter = new EmailNewsletter($data['newsletter_id']);
+			return $newsletter->getSender()->getHandle();
 		}
 
 		/**
