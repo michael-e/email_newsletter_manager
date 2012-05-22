@@ -75,7 +75,7 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 				$posted_array[$_POST['settings']['gateway']] = $_POST['settings']['email_' . $_POST['settings']['gateway']];
 			}
 			$about = (empty($_POST['fields']) && empty($_POST['settings']))?(array)$sender->about():$posted_array;
-			$about['handle'] = Lang::createHandle($about['name'], 225, '_');
+			$about['handle'] = Lang::createHandle($about['name'], 225, '-');
 			$entry = new XMLElement('entry');
 			General::array_to_xml($entry, $about);
 			$senders->appendChild($entry);

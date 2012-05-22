@@ -40,7 +40,7 @@ Class RecipientSource extends DataSource{
 
 	public function getHandle(){
 		$about = $this->about();
-		return Lang::createHandle($about['name'], 255, '_');
+		return Lang::createHandle($about['name'], 255, '-');
 	}
 
 	public function getProperties(){

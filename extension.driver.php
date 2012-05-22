@@ -90,7 +90,7 @@ class extension_email_newsletter_manager extends extension{
 	 */
 	public function senderSaved($context){
 		$old_handle = $context['handle'];
-		$new_handle = Lang::createHandle($context['fields']['name'], 255, '_');
+		$new_handle = Lang::createHandle($context['fields']['name'], 255, '-');
 		EmailNewsletterManager::updateSenderHandle($old_handle, $new_handle);
 	}
 
@@ -102,7 +102,7 @@ class extension_email_newsletter_manager extends extension{
 	 */
 	public function groupSaved($context){
 		$old_handle = $context['handle'];
-		$new_handle = Lang::createHandle($context['fields']['name'], 255, '_');
+		$new_handle = Lang::createHandle($context['fields']['name'], 255, '-');
 		EmailNewsletterManager::updateRecipientsHandle($old_handle, $new_handle);
 		return true;
 	}
@@ -115,7 +115,7 @@ class extension_email_newsletter_manager extends extension{
 	 */
 	public function templateSaved($context){
 		$old_handle = $context['old_handle'];
-		$new_handle = Lang::createHandle($context['config']['name'], 255, '_');
+		$new_handle = Lang::createHandle($context['config']['name'], 255, '-');
 		EmailNewsletterManager::updateTemplateHandle($old_handle, $new_handle);
 	}
 

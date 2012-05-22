@@ -9,6 +9,6 @@ class NewsletterSender{
 
 	public function getHandle(){
 		$about = $this->about();
-		return Lang::createHandle($this->getName(), 255, '_');
+		return Lang::createHandle($this->getName(), 255, '-');
 	}
 }

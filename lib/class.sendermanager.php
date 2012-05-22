@@ -7,21 +7,21 @@ Class SenderManager{
 
 	public static function __getHandleFromFilename($filename){
 		$result = sscanf($filename, 'sender.%[^.].php');
-		return $result[0];
+		return str_replace('_', '-', $result[0]);
 	}
 
 	public static function __getClassName($handle){
-		return sprintf('sender%s', ucfirst($handle));
+		return sprintf('sender%s', ucfirst(str_replace('-', '_', $handle)));
 	}
 
 	public static function __getClassPath($handle, $new = false){
-		if(is_file(WORKSPACE . "/email-newsletters/sender.$handle.php") || $new == true) return WORKSPACE . '/email-newsletters';
+		if(is_file(WORKSPACE . "/email-newsletters/sender.".str_replace('-', '_', $handle).".php") || $new == true) return WORKSPACE . '/email-newsletters';
 		else{
 			$extensions = Symphony::ExtensionManager()->listInstalledHandles();
 
 			if(is_array($extensions) && !empty($extensions)){
 				foreach($extensions as $e){
-					if(is_file(EXTENSIONS . "/$e/email-newsletters/sender.$handle.php")) return EXTENSIONS . "/$e/email-newsletters";
+					if(is_file(EXTENSIONS . "/$e/email-newsletters/sender.".str_replace('-', '_', $handle).".php")) return EXTENSIONS . "/$e/email-newsletters";
 				}
 			}
 		}
@@ -30,7 +30,7 @@ Class SenderManager{
 	}
 
 	public static function __getDriverPath($handle){
-		return self::__getClassPath($handle, true) . "/sender.$handle.php";
+		return self::__getClassPath($handle, true) . '/sender.'.str_replace('-', '_', $handle).'.php';
 	}
 
 	public static function listAll(){
@@ -116,7 +116,7 @@ Class SenderManager{
 		if(strlen(Lang::createHandle($fields['name'], 255, '_')) == 0){
 			return false;
 		}
-		if($handle == Lang::createHandle($fields['name'], 255, '_') || (($handle == NULL) && (self::__getClassPath(Lang::createHandle($fields['name'], 255, '_')) == false))){
+		if($handle == Lang::createHandle($fields['name'], 255, '-') || (($handle == NULL) && (self::__getClassPath(Lang::createHandle($fields['name'], 255, '-')) == false))){
 			if(self::_writeSender(Lang::createHandle($fields['name'], 255, '_'), self::_parseTemplate($fields))){
 				Symphony::ExtensionManager()->notifyMembers(
 					'PostSenderSaved',
@@ -132,7 +132,7 @@ Class SenderManager{
 				return false;
 			}
 		}
-		elseif(false == self::__getClassPath(Lang::createHandle($fields['name'], 255, '_'))){
+		elseif(false == self::__getClassPath(Lang::createHandle($fields['name'], 255, '-'))){
 			if(!self::_writeSender(Lang::createHandle($fields['name'], 255, '_'), self::_parseTemplate($fields))) return false;
 			if(!@unlink(self::__getDriverPath($handle))) return false;
 			Symphony::ExtensionManager()->notifyMembers(
