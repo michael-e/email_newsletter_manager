@@ -45,7 +45,7 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 
 	function __viewEdit($new = false){
 		$this->setPageType('form');
-		$this->setTitle(sprintf(__("Symphony - Newsletter Recipient Groups - %s", Array(), false), ucfirst(Lang::createHandle($this->_context[1], 225, '_'))));
+		$this->setTitle(sprintf(__("Symphony - Newsletter Recipient Groups - %s", Array(), false), ucfirst($this->_context[1])));
 
 		$errors = new XMLElement('errors');
 
