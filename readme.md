@@ -114,7 +114,7 @@ Newsletter Senders allows defining multiple senders for the newsletter. There ne
 *Email Gateway*
 
 * **Gateway:** The Symphony core includes two gateways, and more gateways can be installed using extensions. The core gateways are:
-	* Sendmail: The “traditional” way to send emails, using PHP’s mail() function and the server’s Sendmail socket. 
+	* Sendmail: The “traditional” way to send emails, using PHP’s mail() function and the server’s Sendmail socket.
 	* STMP: Allows the system to send emails using a remote SMTP server. This method is generally more reliable and can be especially helpful when mail/Sendmail is unavailable (e.g. on localhost, or on cloud setups).
 
 * **From Name:** Name displayed to email newsletter recipient, for examply blog author name or company name.
@@ -168,7 +168,7 @@ Newsletter Recipients allows defining multiple recipient groups for the newslett
 
 *Recipients: Static Recipients only*
 
-* Static Recipients use the [*mailbox syntax* as described in RFC2822](http://tools.ietf.org/html/rfc2822#section-3.4) (like many email clients do). Like so:  
+* Static Recipients use the [*mailbox syntax* as described in RFC2822](http://tools.ietf.org/html/rfc2822#section-3.4) (like many email clients do). Like so:
 `"John Doe" <john@example.com>, chief@example.com, "Jane" jane@example.com`
 
 *Filter Results: Dynamic Source only*
@@ -179,36 +179,36 @@ Newsletter Recipients allows defining multiple recipient groups for the newslett
 
 	* The full name is stored in field called `name`:
 
-		`<xsl:template match="/entry">  
-			<xsl:value-of select="name"/>  
+		`<xsl:template match="/entry">
+			<xsl:value-of select="name"/>
 		</xsl:template>`
 
 	* Two fields, `first name` and `last name`:
 
-		`<xsl:template match="/entry">  
-			<xsl:value-of select="concat(first-name, ' ', last-name)"/>  
+		`<xsl:template match="/entry">
+			<xsl:value-of select="concat(first-name, ' ', last-name)"/>
 		</xsl:template>`
 
 
 ### Email Template Manager: basic email newsletter step-by-step
 
-*Symphony: Blueprints -> Email Templates  
+*Symphony: Blueprints -> Email Templates
 [Email Template Manager](https://github.com/creativedutchmen/email_template_manager) extension has to be installed first.*
 
-Email Templates provides clean interface, separated from default Symphony pages, for managing email templates.  
+Email Templates provides clean interface, separated from default Symphony pages, for managing email templates.
 For the sake of an example, we will go step-by-step through creating basic newsletter.
 
-* **Model recipients section.**   
+* **Model recipients section.**
 For details about sections in Symphony view: ["Sections" – Concepts – Learn – Symphony.](http://symphony-cms.com/learn/concepts/view/sections/)
 
-	* Required minimum data for recipient is name and email address.   
+	* Required minimum data for recipient is name and email address.
 	Create two text input fields called `name` and `email`.
 
 	* Go to Blueprints -> Newsletter Recipients, create new recipients group and make created recipients section as it's source. Fill other fields appropriately.
 
 	* If you want to refer to recipient dynamically in the email template (for example: to begin the email with Hi `name`) then create regular data source called `Recipient` and filter the email address field by `{$etm-recipient}` parameter.
 
-* **Model newsletter sction.**   
+* **Model newsletter sction.**
 In this section emails will be created and sent.
 
 	* In our example email template will only require `subject` text input field and `content` textarea. Create section with those.
@@ -221,14 +221,14 @@ In this section emails will be created and sent.
 
 * **Create email template.**
 
-	* Head back to Blueprints -> Email Templates and create new template.   
+	* Head back to Blueprints -> Email Templates and create new template.
 	Name it in a meaningful way and select `Newsletter` and `Recipient` data sources.
 
 	* It is advised to send both HTML and Plain text emails so use both layouts if possible.
 
 	* Ignore `Recipients`, `Reply-To Name` and `Reply-To Email Address` fields in *Email Settings*. These were already provided in *Blueprints -> Newsletter Senders*.
 
-	* As we want dynamic subject based on `Newsletter` section's `Subject` field, provide proper XPath to it.  
+	* As we want dynamic subject based on `Newsletter` section's `Subject` field, provide proper XPath to it.
 	`{/data/newsletter/entry/subject}`
 
 	* Edit HTML and Plain text templates to match your needs. Remember that you can refer to filtered recipient per every email sent using `{/data/recipient/entry}` data source output.
@@ -249,12 +249,12 @@ In this section emails will be created and sent.
 
 	* Do not assume images will be viewed. Most email clients block images by default and average users leave them that way.
 
-	* Include `view in the browser` link. Put it at the top of the email.  
+	* Include `view in the browser` link. Put it at the top of the email.
 	Create regular Symphony page that will hold all email templates filtered by title, subject or whatever suitable.
 
 	* Always include Plain text version unless you specifically know your audience.
 
-	* Test everything before sending, especially if you are doing this for a client.   
+	* Test everything before sending, especially if you are doing this for a client.
 	Test at least in Outlook, Thunderbird and Gmail. Apple Mail if you use Mac.
 
 * **Enjoy.**
