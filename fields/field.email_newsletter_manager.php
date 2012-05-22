@@ -815,6 +815,8 @@
 				$el->setAttribute('id', $rgroup_handle);
 				$el->setValue($rgroup_name);
 				$rgroup->replaceChildAt(0, $el);
+				$rgroup_count = RecipientgroupManager::create($rgroup_handle)->getCount();
+				$rgroup->setAttribute('count', $rgroup_count);
 				$recipients->appendChild($rgroup);
 			}
 			$node->appendChild($recipients);
@@ -841,6 +843,7 @@
 			// nothing to show here
 			return;
 		}
+
 /*-------------------------------------------------------------------------
 	Filtering
 -------------------------------------------------------------------------*/
