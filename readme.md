@@ -33,7 +33,7 @@ Upon sending it will:
 - Read and process recipients using pagination, which means that there is virtually no limit to the number of recipients.
 
 
-#### What this extension won't do
+### What this extension won't do
 
 At the time of writing the following features are supposed to be built in separate extensions (when the time comes):
 
@@ -41,7 +41,7 @@ At the time of writing the following features are supposed to be built in separa
 - email bounce management
 
 
-#### Advantages over the Email Newsletters extension
+### Advantages over the Email Newsletters extension
 
 - Newsletter setup is a lot easier, and so is maintenance.
 - Removed the SwiftMailer framework dependancy. (Sending is done using Symphony's Core Emai API).
@@ -60,12 +60,12 @@ This allows for interesting use cases (especially in conjunction with the Member
 Of course these possibilitie still require a bit of custom code. But the public API of the extension should really help you.
 
 
-#### Disadvantages over the Email Newsletters extension
+### Disadvantages over the Email Newsletters extension
 
 * It is not possible to use multiple Datasources to build up a recipient group.
 
 
-#### Requirement: The PHP CLI
+### Requirement: The PHP CLI
 
 In simple words, the CLI SAPI allows to run PHP scripts from the command line, and **this can be initiated from within PHP scripts** even on hosting accounts without shell access. The Email Newsletter Manager extension runs the actual (background) mailing processes using the PHP CLI SAPI. Some useful articles on this topic:
 
@@ -101,7 +101,7 @@ The configuration is split into 4 parts:
 * Email Newsletter Manager field in your newsletter section
 
 
-#### Newsletter Senders
+### Newsletter Senders
 
 *Symphony: Blueprints -> Newsletter Senders*
 
@@ -145,7 +145,7 @@ Newsletter Senders allows defining multiple senders for the newsletter. There ne
 
 * **Time per batch:** The time reserved for each batch. Do not(!) set this value higher than the timeout value of php.
 
-#### Newsletter Recipients
+### Newsletter Recipients
 
 *Symphony: Blueprints -> Newsletter Recipients*
 
@@ -190,7 +190,7 @@ Newsletter Recipients allows defining multiple recipient groups for the newslett
 		</xsl:template>`
 
 
-#### Email Template Manager: basic email newsletter step-by-step
+### Email Template Manager: basic email newsletter step-by-step
 
 *Symphony: Blueprints -> Email Templates  
 [Email Template Manager](https://github.com/creativedutchmen/email_template_manager) extension has to be installed first.*
