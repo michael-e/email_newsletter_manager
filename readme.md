@@ -97,7 +97,7 @@ The configuration is split into 4 parts:
 
 * Newsletter Senders - found under Blueprints in Symphony
 * Newsletter Recipients - found under Blueprints in Symphony
-* Template (handled by Email Template Manager extension)
+* Templates (handled by the Email Template Manager extension)
 * Email Newsletter Manager field in your newsletter section
 
 
@@ -268,7 +268,7 @@ This Symphony extension is released under the MIT/X11 license. The license file 
 
 Please be aware of morality and legal conditions in your country concerning mass mailings. In many countries special recipient opt-in and opt-out procedures may be required, and you might encounter the need to store opt-in evidence on your server. Meeting such regulations is beyond the scope of this extension.
 
-Never use this extension for SPAM. If you do so we, will hate you.
+Never use this extension for SPAM. If you do so, we will hate you.
 
 
 
@@ -304,7 +304,7 @@ The XML output allows for advanced email customization using XSLT. You may, for 
 
 ## Param Pool value
 
-If you use the Email Newsletter field to be output to the param pool (for Data Source chaining), output will be the __sender ID__! (This seems to be the most useful output.)
+If you use the Email Newsletter field to be output to the param pool (for Data Source chaining), output will be the __sender ID (i.e. the handle)__! (This seems to be the most useful output.)
 
 
 
