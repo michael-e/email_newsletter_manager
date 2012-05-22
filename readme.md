@@ -12,50 +12,50 @@ Conceptually this is a brand-new extension. It is not compatible with the Email 
 
 The Email Newsletter Manager is another big step in a strategy to make Symphony the best emailing platform of all CMSs/frameworks. It builds on top of:
 
-- The Email Template Manager (ETM) extension (used through its public API).
-- The Core Email API (which has been introduced with Symphony 2.2).
+* The Email Template Manager (ETM) extension (used through its public API).
+* The Core Email API (which has been introduced with Symphony 2.2).
 
 In short words, the Email Newsletter Manager (plus the Email Template Manager) will:
 
-- Allow to define multiple recipient groups based on sections in Symphony (with a datasource-like editor).
-- Allow to define multiple senders.
-- Add an Email Newsletter Manager field to sections (which in itself allows to choose which recipient groups and senders should be available for this special newsletter).
-- Use templates defined in the ETM to render the email content.
-- Send HTML and/or plain text emails (defined in the Email Template Manager extension).
-- Use flexible recipient personalization (by using filtered datasources in the templates).
-- Even perform "sender personalization" in XSLT (using the field's datasource output which includes the sender ID and value).
+* Allow to define multiple recipient groups based on sections in Symphony (with a datasource-like editor).
+* Allow to define multiple senders.
+* Add an Email Newsletter Manager field to sections (which in itself allows to choose which recipient groups and senders should be available for this special newsletter).
+* Use templates defined in the ETM to render the email content.
+* Send HTML and/or plain text emails (defined in the Email Template Manager extension).
+* Use flexible recipient personalization (by using filtered datasources in the templates).
+* Even perform "sender personalization" in XSLT (using the field's datasource output which includes the sender ID and value).
 
 Upon sending it will:
 
-- Use a stable background process.
-- Prevent duplicate emails (to the same address).
-- Give feedback in the publish panel (and in the entry overview table).
-- Read and process recipients using pagination, which means that there is virtually no limit to the number of recipients.
+* Use a stable background process.
+* Prevent duplicate emails (to the same address).
+* Give feedback in the publish panel (and in the entry overview table).
+* Read and process recipients using pagination, which means that there is virtually no limit to the number of recipients.
 
 
 ### What this extension won't do
 
 At the time of writing the following features are supposed to be built in separate extensions (when the time comes):
 
-- email campaign statistics/tracking
-- email bounce management
+* email campaign statistics/tracking
+* email bounce management
 
 
 ### Advantages over the Email Newsletters extension
 
-- Newsletter setup is a lot easier, and so is maintenance.
-- Removed the SwiftMailer framework dependancy. (Sending is done using Symphony's Core Emai API).
-- Real-time preview of the number of recipients in groups.
-- No need anymore to use Symphony pages in order to generate email content or recipients lists.
-- Greatly improved scalability: The new concept has virtually no limits regarding the number of recipients.
-- Public API.
+* Newsletter setup is a lot easier, and so is maintenance.
+* Removed the SwiftMailer framework dependancy. (Sending is done using Symphony's Core Emai API).
+* Real-time preview of the number of recipients in groups.
+* No need anymore to use Symphony pages in order to generate email content or recipients lists.
+* Greatly improved scalability: The new concept has virtually no limits regarding the number of recipients.
+* Public API.
 
 The last point, the public API, is especially interesting. While to the user the Email Newsletter Manager which comes with this extension field looks rather similar to the field which was provided by the deprecated Email Newsletters extension, this field is now simply a *remote control* which plugs into the API of the extension. In other words: This field is just one possible way to send newsletters. Now you can also send mass emails using custom events!
 
 This allows for interesting use cases (especially in conjunction with the Members extension):
 
-- Send emails on a regular basis (e.g. "Please check if your contact data is still right") using a custom event and CRON.
-- Send notification emails to big recipient groups based on events in the system (e.g. creating an entry)
+* Send emails on a regular basis (e.g. "Please check if your contact data is still right") using a custom event and CRON.
+* Send notification emails to big recipient groups based on events in the system (e.g. creating an entry)
 
 Of course these possibilitie still require a bit of custom code. But the public API of the extension should really help you.
 
@@ -67,11 +67,11 @@ Of course these possibilitie still require a bit of custom code. But the public 
 
 ### Requirement: The PHP CLI
 
-In simple words, the CLI SAPI allows to run PHP scripts from the command line, and **this can be initiated from within PHP scripts** even on hosting accounts without shell access. The Email Newsletter Manager extension runs the actual (background) mailing processes using the PHP CLI SAPI. Some useful articles on this topic:
+In simple words, the CLI SAPI allows to run PHP scripts from the command line, and __this can be initiated from within PHP scripts__ even on hosting accounts without shell access. The Email Newsletter Manager extension runs the actual (background) mailing processes using the PHP CLI SAPI. Some useful articles on this topic:
 
-- <http://articles.sitepoint.com/article/php-command-line-1>
-- <http://articles.sitepoint.com/article/php-command-line-2>
-- <http://php.net/manual/en/features.commandline.php>
+* <http://articles.sitepoint.com/article/php-command-line-1>
+* <http://articles.sitepoint.com/article/php-command-line-2>
+* <http://php.net/manual/en/features.commandline.php>
 
 If you are unsure if the PHP CLI SAPI is installed and you have command line access, type
 
@@ -109,41 +109,42 @@ Newsletter Senders allows defining multiple senders for the newsletter. There ne
 
 *Sender Properties*
 
-* **Name:** Reference name used to select sender before sending the newsletter. Fill with anything providing meaningful description.
+* __Name:** Reference name used to select sender before sending the newsletter. Fill with anything providing meaningful description.
 
 *Email Gateway*
 
-* **Gateway:** The Symphony core includes two gateways, and more gateways can be installed using extensions. The core gateways are:
+* __Gateway:__ The Symphony core includes two gateways, and more gateways can be installed using extensions. The core gateways are:
 	* Sendmail: The “traditional” way to send emails, using PHP’s mail() function and the server’s Sendmail socket.
 	* STMP: Allows the system to send emails using a remote SMTP server. This method is generally more reliable and can be especially helpful when mail/Sendmail is unavailable (e.g. on localhost, or on cloud setups).
 
-* **From Name:** Name displayed to email newsletter recipient, for examply blog author name or company name.
+* __From Name:__ Name displayed to email newsletter recipient, for examply blog author name or company name.
 
-* **From Email Address:** Email used to send the newsletter. In case of Sendmail gateway it typically is limited to addresses from domains pointing to the server (email@domain.com); SMTP gives more flexibility.
+* __From Email Address:__ Email used to send the newsletter. In case of Sendmail gateway it typically is limited to addresses from domains pointing to the server (email@domain.com); SMTP gives more flexibility.
 
 *Email Gateway: SMTP only*
 
-* **Host:** IP or address of the host. For Gmail: `smtp.gmail.com`
+* __Host:__ IP or address of the host. For Gmail: `smtp.gmail.com`
 
-* **Port:** Port of the host. For Gmail: `587`
+* __Port:__ Port of the host. For Gmail: `587`
 
-* **Encryption:** Encryption of the host. For Gmail: `TLS encryption`
+* __Encryption:__ Encryption of the host. For Gmail: `TLS encryption`
 
-* **Requires Authentication:** Most SMTP servers require username and password. Check this field if that's the case. Enter your username (typically same as email address) and password in 2 fields below.
+* __Requires Authentication:__ Most SMTP servers require username and password. Check this field if that's the case. Enter your username (typically same as email address) and password in 2 fields below.
 
-* **Username:** Self explanatory.
+* __Username:__ Self explanatory.
 
-* **Password:** Self explanatory.
+* __Password:__ Self explanatory.
 
 *Advanced Settings*
 
-* **Reply-To Name:** Name to be used for reply by newsletter recipient's email client when replying.
+* __Reply-To Name:__ Name to be used for reply by newsletter recipient's email client when replying.
 
-* **Reply-To Email:** Email address to be used for reply by newsletter recipient's email client when replying.
+* __Reply-To Email:__ Email address to be used for reply by newsletter recipient's email client when replying.
 
-* **Emails per batch:** The amount of emails the system should send per batch. A value of 10 or lower is recommended.
+* __Emails per batch:__ The amount of emails the system should send per batch. A value of 10 or lower is recommended.
 
-* **Time per batch:** The time reserved for each batch. Do not(!) set this value higher than the timeout value of php.
+* __Time per batch:__ The time reserved for each batch. Do not(!) set this value higher than the timeout value of php.
+
 
 ### Newsletter Recipients
 
@@ -153,9 +154,9 @@ Newsletter Recipients allows defining multiple recipient groups for the newslett
 
 *Essentials*
 
-* **Name:** A unique name for the data source containing email recipients group.
+* __Name:__ A unique name for the data source containing email recipients group.
 
-* **Source:** The source from which data will be drawn.
+* __Source:__ The source from which data will be drawn.
 
 	* Dynamic Source: Any section or system source from your Symphony installation. Needs to be created in Symphony's Blueprints -> Sections and contains at least recipient's name and email address.
 	* Static Recipients: A Static Recipients group is the right choice if you only need to send to a handful of recipients which will not change dynamically (based on section data).
@@ -173,9 +174,9 @@ Newsletter Recipients allows defining multiple recipient groups for the newslett
 
 *Filter Results: Dynamic Source only*
 
-* **Email:** Specifies field storing email address for recipients.
+* __Email:__ Specifies field storing email address for recipients.
 
-* **Name Field(s) and XSLT:** The idea behind it is rather simple: You might have the full name of your recpients in a single field of your section, but you might as well have separate fields for the name, the family name, the gender, whatever. In these cases the simplest way to build a "full name" is to use XSLT. Here are some examples:
+* __Name Field(s) and XSLT:__ The idea behind it is rather simple: You might have the full name of your recpients in a single field of your section, but you might as well have separate fields for the name, the family name, the gender, whatever. In these cases the simplest way to build a "full name" is to use XSLT. Here are some examples:
 
 	* The full name is stored in field called `name`:
 
@@ -198,7 +199,7 @@ Newsletter Recipients allows defining multiple recipient groups for the newslett
 Email Templates provides clean interface, separated from default Symphony pages, for managing email templates.
 For the sake of an example, we will go step-by-step through creating basic newsletter.
 
-* **Model recipients section.**
+* __Model recipients section.__
 For details about sections in Symphony view: ["Sections" – Concepts – Learn – Symphony.](http://symphony-cms.com/learn/concepts/view/sections/)
 
 	* Required minimum data for recipient is name and email address.
@@ -208,7 +209,7 @@ For details about sections in Symphony view: ["Sections" – Concepts – Learn 
 
 	* If you want to refer to recipient dynamically in the email template (for example: to begin the email with Hi `name`) then create regular data source called `Recipient` and filter the email address field by `{$etm-recipient}` parameter.
 
-* **Model newsletter sction.**
+* __Model newsletter sction.__
 In this section emails will be created and sent.
 
 	* In our example email template will only require `subject` text input field and `content` textarea. Create section with those.
@@ -219,7 +220,7 @@ In this section emails will be created and sent.
 
 	* Create regular data source called `Newsletter` and include both `subject` and `content` elements to it.
 
-* **Create email template.**
+* __Create email template.__
 
 	* Head back to Blueprints -> Email Templates and create new template.
 	Name it in a meaningful way and select `Newsletter` and `Recipient` data sources.
@@ -233,13 +234,13 @@ In this section emails will be created and sent.
 
 	* Edit HTML and Plain text templates to match your needs. Remember that you can refer to filtered recipient per every email sent using `{/data/recipient/entry}` data source output.
 
-* **Add Email Newsletter Manager field to newsletter section.**
+* __Add Email Newsletter Manager field to newsletter section.__
 
 	* Add `Email Newsletter Manager` field to `Newsletter` section. Select the template, recipients groups and senders.
 
 	* Open `Newsletter` data source and filter `Email Newsletter Manager` field by `{$enm-newsletter-id}` so that proper entry is used for sent emails.
 
-* **Remember few simple email styling rules.**
+* __Remember few simple email styling rules.__
 
 	* Use tables instead of divs.
 
@@ -257,7 +258,7 @@ In this section emails will be created and sent.
 	* Test everything before sending, especially if you are doing this for a client.
 	Test at least in Outlook, Thunderbird and Gmail. Apple Mail if you use Mac.
 
-* **Enjoy.**
+* __Enjoy.__
 
 
 
@@ -275,10 +276,10 @@ Never use this extension for SPAM. If you do so we, will hate you.
 
 (This part of the README is still missing.)
 
-- select sender
-- select recipient group(s)
-- select ETM template
-- send
+* select sender
+* select recipient group(s)
+* select ETM template
+* send
 
 
 
@@ -286,16 +287,16 @@ Never use this extension for SPAM. If you do so we, will hate you.
 
 The data source output of the Email Newsletter field contains:
 
-- newsletter-id
-- author-id
-- status
-- total (emails)
-- sent (emails)
-- failed (emails)
-- subject
-- sender
-- recipient groups
-- email template ("about")
+* newsletter-id
+* author-id
+* status
+* total (emails)
+* sent (emails)
+* failed (emails)
+* subject
+* sender
+* recipient groups
+* email template ("about")
 
 The XML output allows for advanced email customization using XSLT. You may, for example, append custom headers or footers for certain sender IDs.
 
@@ -303,7 +304,7 @@ The XML output allows for advanced email customization using XSLT. You may, for 
 
 ## Param Pool value
 
-If you use the Email Newsletter field to be output to the param pool (for Data Source chaining), output will be the **sender ID**! (This seems to be the most useful output.)
+If you use the Email Newsletter field to be output to the param pool (for Data Source chaining), output will be the __sender ID__! (This seems to be the most useful output.)
 
 
 
@@ -313,8 +314,8 @@ The "Send" button actually is a "Save and Send" button, so it will save the entr
 
 There are bugs concerning HTML form button values in Internet Explorer 6 and 7 (which shouldn't be used for Symphony anyway). This means that:
 
-- You won't be able to send a newsletter in IE6 (who cares?)
-- You won't be able to handle multiple email newsletters (i.e. Email Newsletter Manager fields) **in the same section** using IE7. This is considered a rare setup (but is actually a supported feature in modern browsers).
+* You won't be able to send a newsletter in IE6 (who cares?)
+* You won't be able to handle multiple email newsletters (i.e. Email Newsletter Manager fields) __in the same section__ using IE7. This is considered a rare setup (but is actually a supported feature in modern browsers).
 
 These constraints are regarded a small price for having a combined "Save and Send" button (which is simply called "Send"). (We actually need the button's value to implement this functionality.)
 
@@ -324,17 +325,17 @@ These constraints are regarded a small price for having a combined "Save and Sen
 
 Please note that successfully sending mass mailings will require your email box to be set up "more than correctly". So please check the following:
 
-- correct MX records
-- SPF (Sender Policy Framework) record
-- optional: reverse DNS entry (PTR/Reverse DNS checks)
-- optional: Domain Keys / DKIM
+* correct MX records
+* SPF (Sender Policy Framework) record
+* optional: reverse DNS entry (PTR/Reverse DNS checks)
+* optional: Domain Keys / DKIM
 
 It is beyond the scope of this software to explain these measures in detail. Anyway the first two are really important if you don't want your email to be flagged as spam. If you don't know what it is, ask your provider or consult the web (i.e. Google, isn't it?).
 
 Here are some useful links concerning SPF records:
 
-- <http://phpmailer.codeworxtech.com/index.php?pg=tip_spf>
-- <http://old.openspf.org/wizard.html>
+* <http://phpmailer.codeworxtech.com/index.php?pg=tip_spf>
+* <http://old.openspf.org/wizard.html>
 
 Here is a simple example DNS record which worked very well in my tests:
 
