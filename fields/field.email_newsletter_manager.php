@@ -227,9 +227,9 @@
 					$value = __('Stopped');
 					break;
 				case 'error':
-				case 'error_template':
-				case 'error_sender':
-				case 'error_recipients':
+				case 'error-template':
+				case 'error-sender':
+				case 'error-recipients':
 					$value = __('Failed');
 					break;
 				case 'completed':
@@ -436,7 +436,7 @@
 					));
 					break;
 
-				case "error_template":
+				case "error-template":
 					$heading = new XMLElement('p',__('Error: No email template selected.'), array('class'=>'status error'));
 					$gui->appendChild($heading);
 					$this->_addHiddenFields($newsletter, &$gui);
@@ -452,7 +452,7 @@
 					));
 					break;
 
-				case "error_sender":
+				case "error-sender":
 					$heading = new XMLElement('p',__('Error: No sender selected.'), array('class'=>'status error'));
 					$gui->appendChild($heading);
 					$this->_addHiddenFields($newsletter, &$gui);
@@ -468,7 +468,7 @@
 					));
 					break;
 
-				case "error_recipients":
+				case "error-recipients":
 					$heading = new XMLElement('p',__('Error: No recipient group selected.'), array('class'=>'status error'));
 					$gui->appendChild($heading);
 					$this->_addHiddenFields($newsletter, &$gui);

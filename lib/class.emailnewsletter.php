@@ -63,16 +63,15 @@ class EmailNewsletter{
 
 	public function start(){
 		if(!is_object($this->getTemplate())){
-			$this->setStatus('error_template');
+			$this->setStatus('error-template');
 			return;
 		}
 		if(!is_object($this->getSender())){
-			$this->setStatus('error_sender');
+			$this->setStatus('error-sender');
 			return;
 		}
-		$rec_groups = $this->getRecipientGroups();
-		if(empty($rec_groups)){
-			$this->setStatus('error_recipients');
+		if(empty($this->_recipientgroups)){
+			$this->setStatus('error-recipients');
 			return;
 		}
 		// Never start if the newsletter is sending or completed
