@@ -6,6 +6,18 @@ Conceptually this is a brand-new extension. It is not compatible with the Email 
 
 
 
+## Attention
+
+If you are running a Beta version/development code prior to May 22nd 2012, you will need the following update procedure:
+
+1. Re-save all your recipient groups and senders.
+2. Re-save your newsletter field's configuration (in the section editor).
+2. In your database's email_newsletters table, change all `recipients`, `completed_recipients` and `senders`: __Replace underscores (`_`) by hyphens (`-`)__.
+
+This is due to a significant internal change. Handles in Symphony always use hyphens, so the ENM should do the same.
+
+
+
 ## Concept
 
 [The big picture diagram](https://github.com/downloads/creativedutchmen/email_newsletter_manager/EmailNewsletterManager.pdf) provides an overview of the connection between Email Newsletter Manager extension and Email Template Manager extension, fields and parameters used for filtering data sources containing newsletter content or recipients and use of Symphony's Core Email API by the extension.
