@@ -111,12 +111,6 @@ class EmailNewsletter{
 		}
 		$recipients = $this->_getRecipients($this->limit);
 
-		if(count($recipients) == 0){
-			Symphony::Database()->query('DROP TABLE IF EXISTS `tbl_tmp_email_newsletters_sent_'. $this->getId() . '`');
-			$this->setStatus('completed');
-			return 'completed';
-		}
-
 		foreach($recipients as $recipient){
 			try{
 				$template = $this->getTemplate();
@@ -233,6 +227,13 @@ class EmailNewsletter{
 		}
 		//To prevent timing problems, the completed recipient groups should only be marked as complete when the emails are actually sent.
 		Symphony::Database()->update(array('completed_recipients'=>implode(', ', $this->_completed)), 'tbl_email_newsletters', 'id = ' . $this->getId());
+
+		if(count($recipients) == 0){
+			Symphony::Database()->query('DROP TABLE IF EXISTS `tbl_tmp_email_newsletters_sent_'. $this->getId() . '`');
+			$this->setStatus('completed');
+			return 'completed';
+		}
+
 		return 'sent';
 	}
 
