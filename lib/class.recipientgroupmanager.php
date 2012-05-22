@@ -125,7 +125,7 @@ class RecipientgroupManager{
 	}
 
 	public static function save($handle = NULL, $fields){
-		if(strlen(Lang::createHandle($fields['name'], 255, '_')) == 0){
+		if(strlen(Lang::createHandle($fields['name'])) == 0){
 			return false;
 		}
 		if($handle == Lang::createHandle($fields['name'], 255, '-') || (($handle == NULL) && (self::__getClassPath(Lang::createHandle($fields['name'], 255, '-')) == false))){
