@@ -154,7 +154,6 @@ class EmailNewsletter{
 				else{
 					throw new EmailNewsletterException('Currently only sendmail and SMTP are supported. This will be fixed when the API supports it.');
 				}
-				$template->addParams(array('etm-sender' => $sender->getHandle()));
 
 				Symphony::ExtensionManager()->notifyMembers(
 					'preEmailGenerate',
