@@ -169,7 +169,7 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 		}
 		else{
 			try{
-				if(SenderManager::save($this->_context[1], $fields)){
+				if(SenderManager::save(str_replace('_', '-', $this->_context[1]), $fields)){
 					redirect(SYMPHONY_URL . '/extension/email_newsletter_manager/senders/edit/' . Lang::createHandle($fields['name'], 225, '_') . '/saved');
 					return true;
 				}
