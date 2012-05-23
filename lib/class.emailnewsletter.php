@@ -109,6 +109,7 @@ class EmailNewsletter{
 			$this->setStatus('error');
 			throw new EmailNewsletterException('Incorrect Process Auth used. This usually means there is more than one process running. Aborting.');
 		}
+		$this->_completed = explode(', ', $this->getCompletedRecipientGroups());
 		$recipients = $this->_getRecipients($this->limit);
 
 		foreach($recipients as $recipient){
@@ -300,10 +301,27 @@ class EmailNewsletter{
 	}
 
 	public function _markRecipientGroup($group){
-		$groups = $this->getCompletedRecipientGroups();
-		//lots of complicated stuff here. Because I do not assume this function will be called a lot (1000s of times), I have used quite a lot of filters to keep the completed_recipients output clean.
-		//what happens here is that the new group is merged, all empty values are cleared and all duplicates are removed. This should result in the cleanest possible value.
-		$this->_completed = array_filter(array_unique(array_merge(array_map('trim', explode(', ', $groups)), array(is_object($group)?$group->getHandle():$group))), 'strlen');
+		// Lots of complicated stuff here. Because I do not assume this function
+		// will be called a lot (1000s of times), I have used quite a lot of
+		// filters to keep the completed_recipients output clean.
+		// What happens here is that the new group is merged, all empty values
+		// are cleared and all duplicates are removed. This should result in
+		// the cleanest possible value.
+		// Because the database update does not take place immediately (but at
+		// the end of the `sendBatch` function, i.e. after actually sending a
+		// batch), we must merge the old value of this->_completed as well.
+		// Otherwise we would fail if multiple groups have to be marked before
+		// sending the batch takes place).
+		$this->_completed = array_filter(
+			array_unique(
+				array_merge(
+					array_map('trim', $this->_completed),
+					array_map('trim', explode(', ', $this->getCompletedRecipientGroups())),
+					array(is_object($group)?$group->getHandle():$group)
+				)
+			),
+			'strlen'
+		);
 		//return Symphony::Database()->update(array('completed_recipients'=>implode(', ', $completed)), 'tbl_email_newsletters', 'id = ' . $this->getId());
 	}
 
