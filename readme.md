@@ -8,7 +8,7 @@ Conceptually this is a brand-new extension. It is not compatible with the Email 
 
 ## Attention
 
-If you are running a Beta version/development code prior to May 23nd 2012, you will need to update your database using the follwing SQL query:
+If you are running a Beta version/development code prior to May 23nd 2012, you will need to update your database using the follwing SQL queries:
 
 	ALTER TABLE `sym_email_newsletters` ADD `completed_on` TIMESTAMP  NULL  AFTER `started_by`;
 	ALTER TABLE `sym_email_newsletters` CHANGE `started_on` `started_on` TIMESTAMP  NULL;
@@ -18,9 +18,9 @@ If you are running a Beta version/development code prior to May 22nd 2012, you w
 
 1. Re-save all your recipient groups and senders.
 2. Re-save your newsletter field's configuration (in the section editor).
-2. In your database's email_newsletters table, change all `recipients`, `completed_recipients` and `senders`: __Replace underscores (`_`) by hyphens (`-`)__.
+2. In your database's `email_newsletters` table, change all `recipients`, `completed_recipients` and `senders`: __Replace underscores (`_`) by hyphens (`-`)__.
 
-This is due to a significant internal change. Handles in Symphony always use hyphens, so the ENM should do the same.
+(This is due to a significant internal change: Handles in Symphony always use hyphens, so the ENM should do the same.)
 
 
 
@@ -211,23 +211,23 @@ Newsletter Recipients allows defining multiple recipient groups for the newslett
 
 ### Email Template Manager: basic email newsletter step-by-step
 
-*Symphony: Blueprints -> Email Templates
-[Email Template Manager](https://github.com/creativedutchmen/email_template_manager) extension has to be installed first.*
+_Symphony: Blueprints -> Email Templates ([Email Template Manager](https://github.com/creativedutchmen/email_template_manager) extension has to be installed first)._
 
 Email Templates provides clean interface, separated from default Symphony pages, for managing email templates.
 For the sake of an example, we will go step-by-step through creating basic newsletter.
 
 * __Model recipients section.__
-For details about sections in Symphony view: ["Sections" – Concepts – Learn – Symphony.](http://symphony-cms.com/learn/concepts/view/sections/)
 
-	* Required minimum data for recipient is name and email address.
-	Create two text input fields called `name` and `email`.
+	For details about sections in Symphony view: ["Sections" – Concepts – Learn – Symphony.](http://symphony-cms.com/learn/concepts/view/sections/)
+
+	* Required minimum data for recipient is name and email address. Create two text input fields called `name` and `email`.
 
 	* Go to Blueprints -> Newsletter Recipients, create new recipients group and make created recipients section as it's source. Fill other fields appropriately.
 
 	* If you want to refer to recipient dynamically in the email template (for example: to begin the email with Hi `name`) then create regular data source called `Recipient` and filter the email address field by `{$etm-recipient}` parameter.
 
-* __Model newsletter sction.__
+* __Model newsletter section.__
+
 In this section emails will be created and sent.
 
 	* In our example email template will only require `subject` text input field and `content` textarea. Create section with those.
@@ -306,7 +306,9 @@ Never use this extension for SPAM. If you do so, we will hate you.
 The data source output of the Email Newsletter field contains:
 
 * newsletter-id
-* author-id
+* started on (date and time)
+* started by (author ID resp. member ID)
+* completed on (data and time)
 * status
 * total (emails)
 * sent (emails)
