@@ -791,6 +791,7 @@
 
 			$node->setAttribute('newsletter-id', $data['newsletter_id']);
 			$node->setAttribute('author-id', $properties['started_by']);
+			$node->setAttribute('started-on', $properties['started_on']);
 			$node->setAttribute('completed-on', $properties['completed_on']);
 			$node->setAttribute('status', $properties['status']);
 			$node->setAttribute('total', $properties['total']);
