@@ -132,7 +132,7 @@ class extension_email_newsletter_manager extends extension{
 						'template'   => is_object($newsletter->getTemplate()) ? $newsletter->getTemplate()->getHandle() : NULL,
 						'sender'     => is_object($newsletter->getSender()) ? $newsletter->getSender()->getHandle() : NULL,
 						'recipients' => implode(', ', $newsletter->getRecipientGroups(false, true)),
-						'started_by' => Administration::instance()->Author->get('id'));
+					);
 					$news = EmailNewsletterManager::save($array);
 					$context['entry']->setData($field_id, array('author_id'=>Administration::instance()->Author->get('id'), 'entry_id'=>$entry_id, 'newsletter_id'=>$news->getId()));
 					//$news->start();
@@ -225,7 +225,7 @@ class extension_email_newsletter_manager extends extension{
 							`sent` int(11) DEFAULT '0',
 							`failed` int(11) DEFAULT '0',
 							`started_on` timestamp NULL,
-							`started_by` int(10) unsigned NOT NULL,
+							`started_by` int(10) unsigned NULL,
 							`completed_on` timestamp NULL,
 							`status` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
 							`pauth` varchar(23) CHARACTER SET utf8 DEFAULT NULL,

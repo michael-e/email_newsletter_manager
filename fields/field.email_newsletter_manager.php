@@ -702,12 +702,12 @@
 			elseif(Symphony::Engine() instanceof Frontend && is_object($Members->getMemberDriver())){
 				$author_id = $Members->getMemberDriver()->getMemberID();
 			}
+
 			$newsletter = EmailNewsletterManager::save(array(
 				'id'               => $entry_data['newsletter_id'],
 				'template'         => $template,
 				'recipients'       => implode(', ', $recipient_groups),
 				'sender'           => $sender,
-				'started_by'       => $author_id,
 			));
 
 			$result = array(

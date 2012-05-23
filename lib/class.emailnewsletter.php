@@ -87,7 +87,23 @@ class EmailNewsletter{
 		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
 		Symphony::Database()->query('DELETE FROM `tbl_tmp_email_newsletters_sent_'. $this->getId() . '` WHERE `result` = \'idle\'');
 		$this->setStatus('sending');
-		Symphony::Database()->update(array('started_on' => date('Y-m-d H:i:s', time())), 'tbl_email_newsletters', 'id = ' . $this->getId());
+
+		$author_id = 0;
+		$Members = Symphony::ExtensionManager()->create('members');
+		if(Symphony::Engine() instanceof Administration){
+			$author_id = Administration::instance()->Author->get('id');
+		}
+		elseif(Symphony::Engine() instanceof Frontend && is_object($Members->getMemberDriver())){
+			$author_id = $Members->getMemberDriver()->getMemberID();
+		}
+		Symphony::Database()->update(
+			array(
+				'started_on' => date('Y-m-d H:i:s', time()),
+				'started_by' => $author_id,
+			),
+			'tbl_email_newsletters',
+			'id = ' . $this->getId()
+		);
 		EmailBackgroundProcess::spawnProcess($this->getId(), $this->getPAuth());
 	}
 
