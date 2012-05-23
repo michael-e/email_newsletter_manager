@@ -134,7 +134,6 @@ Newsletter Senders allows defining multiple senders for the newsletter. There ne
 * __Gateway:__ The Symphony core includes two gateways, and more gateways can be installed using extensions. The core gateways are:
 	* Sendmail: The “traditional” way to send emails, using PHP’s mail() function and the server’s Sendmail socket.
 	* STMP: Allows the system to send emails using a remote SMTP server. This method is generally more reliable and can be especially helpful when mail/Sendmail is unavailable (e.g. on localhost, or on cloud setups).
-
 * __From Name:__ Name displayed to email newsletter recipient, for examply blog author name or company name.
 
 * __From Email Address:__ Email used to send the newsletter. In case of Sendmail gateway it typically is limited to addresses from domains pointing to the server (email@domain.com); SMTP gives more flexibility.
@@ -142,25 +141,17 @@ Newsletter Senders allows defining multiple senders for the newsletter. There ne
 *Email Gateway: SMTP only*
 
 * __Host:__ IP or address of the host. For Gmail: `smtp.gmail.com`
-
 * __Port:__ Port of the host. For Gmail: `587`
-
 * __Encryption:__ Encryption of the host. For Gmail: `TLS encryption`
-
 * __Requires Authentication:__ Most SMTP servers require username and password. Check this field if that's the case. Enter your username (typically same as email address) and password in 2 fields below.
-
 * __Username:__ Self explanatory.
-
 * __Password:__ Self explanatory.
 
 *Advanced Settings*
 
 * __Reply-To Name:__ Name to be used for reply by newsletter recipient's email client when replying.
-
 * __Reply-To Email:__ Email address to be used for reply by newsletter recipient's email client when replying.
-
 * __Emails per batch:__ The amount of emails the system should send per batch. A value of 10 or lower is recommended.
-
 * __Time per batch:__ The time reserved for each batch. Do not(!) set this value higher than the timeout value of php.
 
 
@@ -173,7 +164,6 @@ Newsletter Recipients allows defining multiple recipient groups for the newslett
 *Essentials*
 
 * __Name:__ A unique name for the data source containing email recipients group.
-
 * __Source:__ The source from which data will be drawn.
 
 	* Dynamic Source: Any section or system source from your Symphony installation. Needs to be created in Symphony's Blueprints -> Sections and contains at least recipient's name and email address.
@@ -182,7 +172,6 @@ Newsletter Recipients allows defining multiple recipient groups for the newslett
 *Filter Results: Dynamic Source only*
 
 * Filtering of email addresses per every email sent happens automatically. There is no need to filter by email address hence you are free to filter data source as required by your needs. In case of typical subscription based newsletter it would be used for filtering only recipients who confirmed their subscription.
-
 * For details about filtering data sources in Symphony refer to: ["Data Source Filters" - Concepts - Learn - Symphony.](http://symphony-cms.com/learn/concepts/view/data-source-filters/)
 
 *Recipients: Static Recipients only*
@@ -193,7 +182,6 @@ Newsletter Recipients allows defining multiple recipient groups for the newslett
 *Filter Results: Dynamic Source only*
 
 * __Email:__ Specifies field storing email address for recipients.
-
 * __Name Field(s) and XSLT:__ The idea behind it is rather simple: You might have the full name of your recpients in a single field of your section, but you might as well have separate fields for the name, the family name, the gender, whatever. In these cases the simplest way to build a "full name" is to use XSLT. Here are some examples:
 
 	* The full name is stored in field called `name`:
@@ -221,58 +209,42 @@ For the sake of an example, we will go step-by-step through creating basic newsl
 	For details about sections in Symphony view: ["Sections" – Concepts – Learn – Symphony.](http://symphony-cms.com/learn/concepts/view/sections/)
 
 	* Required minimum data for recipient is name and email address. Create two text input fields called `name` and `email`.
-
 	* Go to Blueprints -> Newsletter Recipients, create new recipients group and make created recipients section as it's source. Fill other fields appropriately.
-
 	* If you want to refer to recipient dynamically in the email template (for example: to begin the email with Hi `name`) then create regular data source called `Recipient` and filter the email address field by `{$etm-recipient}` parameter.
 
 * __Model newsletter section.__
 
-In this section emails will be created and sent.
+	In this section emails will be created and sent.
 
 	* In our example email template will only require `subject` text input field and `content` textarea. Create section with those.
-
 	* Do not add `Email Newsletter Manager` field to you your section yet.
-
 	* To make testing the email template easier, create the first entry and fill it with content.
-
 	* Create regular data source called `Newsletter` and include both `subject` and `content` elements to it.
 
 * __Create email template.__
 
 	* Head back to Blueprints -> Email Templates and create new template.
 	Name it in a meaningful way and select `Newsletter` and `Recipient` data sources.
-
 	* It is advised to send both HTML and Plain text emails so use both layouts if possible.
-
 	* Ignore `Recipients`, `Reply-To Name` and `Reply-To Email Address` fields in *Email Settings*. These were already provided in *Blueprints -> Newsletter Senders*.
-
 	* As we want dynamic subject based on `Newsletter` section's `Subject` field, provide proper XPath to it.
 	`{/data/newsletter/entry/subject}`
-
 	* Edit HTML and Plain text templates to match your needs. Remember that you can refer to filtered recipient per every email sent using `{/data/recipient/entry}` data source output.
 
 * __Add Email Newsletter Manager field to newsletter section.__
 
 	* Add `Email Newsletter Manager` field to `Newsletter` section. Select the template, recipients groups and senders.
-
 	* Open `Newsletter` data source and filter `Email Newsletter Manager` field by `{$enm-newsletter-id}` so that proper entry is used for sent emails.
 
 * __Remember few simple email styling rules.__
 
 	* Use tables instead of divs.
-
 	* Do not attach external stylesheet. Make use of inline CSS.
-
 	* Store images on your server and provide their source as a full, absolute url.
-
 	* Do not assume images will be viewed. Most email clients block images by default and average users leave them that way.
-
 	* Include `view in the browser` link. Put it at the top of the email.
 	Create regular Symphony page that will hold all email templates filtered by title, subject or whatever suitable.
-
 	* Always include Plain text version unless you specifically know your audience.
-
 	* Test everything before sending, especially if you are doing this for a client.
 	Test at least in Outlook, Thunderbird and Gmail. Apple Mail if you use Mac.
 
