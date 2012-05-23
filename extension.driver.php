@@ -224,7 +224,7 @@ class extension_email_newsletter_manager extends extension{
 							`total` int(11) DEFAULT '0',
 							`sent` int(11) DEFAULT '0',
 							`failed` int(11) DEFAULT '0',
-							`started_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+							`started_on` timestamp NULL,
 							`started_by` int(10) unsigned NOT NULL,
 							`completed_on` timestamp NULL,
 							`status` varchar(255) CHARACTER SET utf8 DEFAULT NULL,

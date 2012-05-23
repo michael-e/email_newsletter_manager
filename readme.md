@@ -11,6 +11,7 @@ Conceptually this is a brand-new extension. It is not compatible with the Email 
 If you are running a Beta version/development code prior to May 23nd 2012, you will need to update your database using the follwing SQL query:
 
 	ALTER TABLE `sym_email_newsletters` ADD `completed_on` TIMESTAMP  NULL  AFTER `started_by`;
+	ALTER TABLE `sym_email_newsletters` CHANGE `started_on` `started_on` TIMESTAMP  NULL;
 
 If you are running a Beta version/development code prior to May 22nd 2012, you will additionally need the following update procedure:
 
