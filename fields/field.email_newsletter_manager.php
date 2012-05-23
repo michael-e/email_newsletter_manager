@@ -791,6 +791,7 @@
 
 			$node->setAttribute('newsletter-id', $data['newsletter_id']);
 			$node->setAttribute('author-id', $properties['started_by']);
+			$node->setAttribute('completed-on', $properties['completed_on']);
 			$node->setAttribute('status', $properties['status']);
 			$node->setAttribute('total', $properties['total']);
 			$node->setAttribute('sent', $properties['sent']);
@@ -919,7 +920,17 @@
 		protected function _addStatistics($stats, &$gui){
 			$gui->appendChild(new XMLElement('p', sprintf(__("%d emails sent"), $stats['sent']), array('class'=>'stats')));
 			$gui->appendChild(new XMLElement('p', sprintf(__("%d emails failed"), $stats['failed']), array('class'=>'stats')));
-			$gui->appendChild(new XMLElement('p', sprintf(__("Started %s"), DateTimeObj::get(__SYM_DATETIME_FORMAT__, strftime($stats['started_on']))), array('class'=>'stats')));
+			$gui->appendChild(new XMLElement(
+				'p',
+				sprintf(
+					__("Started: %s"),
+					!empty($stats['started_on']) ? DateTimeObj::get(__SYM_DATETIME_FORMAT__, strftime($stats['started_on'])) : '-')
+				.'<br />'
+				.sprintf(
+					__("Completed: %s"),
+					!empty($stats['completed_on']) ? DateTimeObj::get(__SYM_DATETIME_FORMAT__, strftime($stats['completed_on'])) : '-')
+				,
+				array('class'=>'stats')));
 		}
 
 		protected function _addInfoIfApplicable($newsletter, &$gui){

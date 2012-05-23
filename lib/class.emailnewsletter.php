@@ -232,6 +232,7 @@ class EmailNewsletter{
 		if(count($recipients) == 0){
 			Symphony::Database()->query('DROP TABLE IF EXISTS `tbl_tmp_email_newsletters_sent_'. $this->getId() . '`');
 			$this->setStatus('completed');
+			Symphony::Database()->update(array('completed_on' => date('Y-m-d H:i:s', time())), 'tbl_email_newsletters', 'id = ' . $this->getId());
 			return 'completed';
 		}
 
@@ -352,7 +353,7 @@ class EmailNewsletter{
 	}
 
 	public function getStats(){
-		$results = Symphony::Database()->fetch('SELECT started_on, started_by, status, sent, total, failed FROM `tbl_email_newsletters` WHERE `id`=\'' . $this->getId() . '\'');
+		$results = Symphony::Database()->fetch('SELECT started_on, started_by, completed_on, status, sent, total, failed FROM `tbl_email_newsletters` WHERE `id`=\'' . $this->getId() . '\'');
 		return $results[0];
 	}
 

@@ -8,7 +8,11 @@ Conceptually this is a brand-new extension. It is not compatible with the Email 
 
 ## Attention
 
-If you are running a Beta version/development code prior to May 22nd 2012, you will need the following update procedure:
+If you are running a Beta version/development code prior to May 23nd 2012, you will need to update your database using the follwing SQL query:
+
+	ALTER TABLE `sym_email_newsletters` ADD `completed_on` TIMESTAMP  NULL  AFTER `started_by`;
+
+If you are running a Beta version/development code prior to May 22nd 2012, you will additionally need the following update procedure:
 
 1. Re-save all your recipient groups and senders.
 2. Re-save your newsletter field's configuration (in the section editor).
