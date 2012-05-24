@@ -221,6 +221,7 @@ class extension_email_newsletter_manager extends extension{
 							`recipients` text CHARACTER SET utf8,
 							`completed_recipients` text CHARACTER SET utf8,
 							`sender` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+							`pseudo_root` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
 							`total` int(11) DEFAULT '0',
 							`sent` int(11) DEFAULT '0',
 							`failed` int(11) DEFAULT '0',

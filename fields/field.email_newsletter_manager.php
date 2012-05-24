@@ -708,6 +708,7 @@
 				'template'         => $template,
 				'recipients'       => implode(', ', $recipient_groups),
 				'sender'           => $sender,
+				'pseudo_root'      => URL,
 			));
 
 			$result = array(

@@ -8,6 +8,10 @@ Conceptually this is a brand-new extension. It is not compatible with the Email 
 
 ## Attention
 
+If you are running a Beta version/development code prior to May 24th 2012, you will need to update your database using the follwing SQL queries:
+
+	ALTER TABLE `sym_email_newsletters` ADD `pseudo_root` varchar(255) CHARACTER SET utf8 DEFAULT NULL AFTER `sender`;
+
 If you are running a Beta version/development code prior to May 23nd 2012, you will need to update your database using the follwing SQL queries:
 
 	ALTER TABLE `sym_email_newsletters` ADD `completed_on` TIMESTAMP  NULL  AFTER `started_by`;
@@ -297,6 +301,14 @@ The XML output allows for advanced email customization using XSLT. You may, for 
 ## Param Pool value
 
 If you use the Email Newsletter field to be output to the param pool (for Data Source chaining), output will be the __sender ID (i.e. the handle)__! (This seems to be the most useful output.)
+
+
+
+## $root and $workspace parameters
+
+The ENM adds the `pseudo_root` value to the email newsletters database table. This allows to inject `$root` and `$workspace` parameters to the Email Templates Manager's (ETM) XSLT process although newsletter sending in the ENM is running as a background process (i.e. without any Apache context).
+
+If you are using the ENM field in the Symphony backend, the `$root` parameter value will be the __root of the backend__. So if your Symphony backend runs on a special domain or protocol, please double-check that the parameters provide the desired results in your email templates.
 
 
 

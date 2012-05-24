@@ -190,6 +190,15 @@ class EmailNewsletter{
 
 				$template->addParams(array('enm-newsletter-id' => $this->getId()));
 
+				// add root and workspace parameters
+				$pseudo_root = $this->getPseudoRoot();
+				$template->addParams(
+					array(
+						'root' => !empty($pseudo_root) ? $pseudo_root : NULL,
+						'workspace' => !empty($pseudo_root) ? $pseudo_root.'/workspace' : NULL,
+					)
+				);
+
 				$xml = $template->processDatasources();
 				$template->setXML($xml->generate());
 
@@ -309,6 +318,16 @@ class EmailNewsletter{
 			$this->_markRecipientGroup($group);
 		}
 		return $recipients;
+	}
+
+	/**
+	 * Get the saved pseudo root.
+	 *
+	 * @return string
+	 **/
+	public function getPseudoRoot(){
+		$pr = Symphony::Database()->fetchCol('pseudo_root','SELECT pseudo_root from tbl_email_newsletters where id = \'' . $this->getId() .'\'');
+		return $pr[0];
 	}
 
 	public function _markRecipient($recipient, $status = 'sent'){
