@@ -58,6 +58,11 @@ class extension_email_newsletter_manager extends extension{
 				'callback' => 'initEmailNewsletter'
 			),
 			array(
+				'page' => '/publish/new/',
+				'delegate' => 'EntryPostCreate',
+				'callback' => 'initEmailNewsletter'
+			),
+			array(
 				'page' => '/extension/email_newsletter_manager/',
 				'delegate' => 'PostSenderSaved',
 				'callback' => 'senderSaved'

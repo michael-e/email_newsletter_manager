@@ -534,13 +534,9 @@
 					break;
 
 				default:
-					if(isset($this->_entry_id)){
-						$heading = new XMLElement('p',__('Ready to send'), array('class'=>'status idle'));
-					}
-					else{
-						$heading = new XMLElement('p',__('Waiting for input'), array('class'=>'status idle'));
-					}
+					$heading = new XMLElement('p',__('Ready to send'), array('class'=>'status idle'));
 					$gui->appendChild($heading);
+
 					// build selector for email templates
 					if(count($templates_options) > 1){
 						$options = array();
@@ -628,22 +624,16 @@
 					}
 
 					// build 'save and send' button
-					if(isset($this->_entry_id)){
-						$gui->appendChild(new XMLElement(
-							'button',
-							__('Send'),
-							array(
-								'name' => 'action[save]',
-								'type' => 'submit',
-								'value' => 'enm-send:'.$this->_field_id.':'.$this->_entry_id,
-								'class' => 'button create'
-							)
-						));
-					}
-					else{
-						$p = new XMLElement('p', __('The entry has not been created yet. No emails can be sent.'));
-						$gui->appendChild($p);
-					}
+					$gui->appendChild(new XMLElement(
+						'button',
+						__('Send'),
+						array(
+							'name' => 'action[save]',
+							'type' => 'submit',
+							'value' => 'enm-send:'.$this->_field_id,
+							'class' => 'button create'
+						)
+					));
 			}
 			$wrapper->appendChild($gui);
 		}
