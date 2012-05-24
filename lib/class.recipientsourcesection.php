@@ -193,7 +193,9 @@ Class RecipientSourceSection extends RecipientSource{
 					$where = preg_replace('/`t\d+`.value/', '`e`.creation_date', $where);
 				}
 				else{
-					if(!$fieldPool[$field_id]->buildDSRetrievalSQL($value, $joins, $where, ($filter_type == DS_FILTER_AND ? true : false))){ $this->_force_empty_result = true; return; }
+					// For deprecated reasons, call the old, typo'd function name until the switch to the
+					// properly named buildDSRetrievalSQL function. This is necessary, e.g. for the SBL field.
+					if(!$fieldPool[$field_id]->buildDSRetrivalSQL($value, $joins, $where, ($filter_type == DS_FILTER_AND ? true : false))){ $this->_force_empty_result = true; return; }
 					if(!$group) $group = $fieldPool[$field_id]->requiresSQLGrouping();
 				}
 			}
