@@ -123,7 +123,7 @@ class extension_email_newsletter_manager extends extension{
 		if(substr($_POST['action']['save'], 0, 12) == 'enm-restart:'){
 			$vars = explode(":",$_POST['action']['save']);
 			$field_id = $vars[1];
-			$entry_id = $vars[2];
+			$entry_id = $context['entry']->get('id');
 			$data = $this->_getEntryData($field_id, $entry_id);
 			if(!empty($data)){
 				try{
@@ -145,7 +145,7 @@ class extension_email_newsletter_manager extends extension{
 		if(substr($_POST['action']['save'], 0, 9) == 'enm-stop:'){
 			$vars = explode(":",$_POST['action']['save']);
 			$field_id = $vars[1];
-			$entry_id = $vars[2];
+			$entry_id = $context['entry']->get('id');
 			$data = $this->_getEntryData($field_id, $entry_id);
 			if(!empty($data)){
 				try{
@@ -160,7 +160,7 @@ class extension_email_newsletter_manager extends extension{
 		if(substr($_POST['action']['save'], 0, 10) == 'enm-pause:'){
 			$vars = explode(":",$_POST['action']['save']);
 			$field_id = $vars[1];
-			$entry_id = $vars[2];
+			$entry_id = $context['entry']->get('id');
 			$data = $this->_getEntryData($field_id, $entry_id);
 			if(!empty($data)){
 				try{
@@ -182,7 +182,7 @@ class extension_email_newsletter_manager extends extension{
 			$vars = explode(":",$_POST['action']['save']);
 
 			$field_id = $vars[1];
-			$entry_id = $vars[2];
+			$entry_id = $context['entry']->get('id');
 
 			$data = $this->_getEntryData($field_id, $entry_id);
 			if(!empty($data)){

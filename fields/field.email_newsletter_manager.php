@@ -370,7 +370,7 @@
 						array(
 							'name' => 'action[save]',
 							'type' => 'submit',
-							'value' => 'enm-pause:'.$this->_field_id.':'.$this->_entry_id,
+							'value' => 'enm-pause:'.$this->_field_id,
 							'class' => 'button'
 						)
 					));
@@ -380,7 +380,7 @@
 						array(
 							'name' => 'action[save]',
 							'type' => 'submit',
-							'value' => 'enm-stop:'.$this->_field_id.':'.$this->_entry_id,
+							'value' => 'enm-stop:'.$this->_field_id,
 							'class' => 'button delete confirm',
 							'data-message' => __('Are you sure you want to cancel sending?')
 						)
@@ -400,7 +400,7 @@
 						array(
 							'name' => 'action[save]',
 							'type' => 'submit',
-							'value' => 'enm-restart:'.$this->_field_id.':'.$this->_entry_id,
+							'value' => 'enm-restart:'.$this->_field_id,
 							'class' => 'button confirm',
 							'data-message' => __('Restarting will send duplicate emails. Are you sure you want to continue?')
 						)
@@ -419,7 +419,7 @@
 						array(
 							'name' => 'action[save]',
 							'type' => 'submit',
-							'value' => 'enm-send:'.$this->_field_id.':'.$this->_entry_id,
+							'value' => 'enm-send:'.$this->_field_id,
 							'class' => 'button create'
 						)
 					));
@@ -429,7 +429,7 @@
 						array(
 							'name' => 'action[save]',
 							'type' => 'submit',
-							'value' => 'enm-stop:'.$this->_field_id.':'.$this->_entry_id,
+							'value' => 'enm-stop:'.$this->_field_id,
 							'class' => 'button delete confirm',
 							'data-message' => __('Are you sure you want to cancel sending?')
 						)
@@ -446,7 +446,7 @@
 						array(
 							'name' => 'action[save]',
 							'type' => 'submit',
-							'value' => 'enm-restart:'.$this->_field_id.':'.$this->_entry_id,
+							'value' => 'enm-restart:'.$this->_field_id,
 							'class' => 'button',
 						)
 					));
@@ -462,7 +462,7 @@
 						array(
 							'name' => 'action[save]',
 							'type' => 'submit',
-							'value' => 'enm-restart:'.$this->_field_id.':'.$this->_entry_id,
+							'value' => 'enm-restart:'.$this->_field_id,
 							'class' => 'button',
 						)
 					));
@@ -478,7 +478,7 @@
 						array(
 							'name' => 'action[save]',
 							'type' => 'submit',
-							'value' => 'enm-restart:'.$this->_field_id.':'.$this->_entry_id,
+							'value' => 'enm-restart:'.$this->_field_id,
 							'class' => 'button',
 						)
 					));
@@ -496,7 +496,7 @@
 						array(
 							'name' => 'action[save]',
 							'type' => 'submit',
-							'value' => 'enm-send:'.$this->_field_id.':'.$this->_entry_id,
+							'value' => 'enm-send:'.$this->_field_id,
 							'class' => 'button create',
 
 						)
@@ -507,7 +507,7 @@
 						array(
 							'name' => 'action[save]',
 							'type' => 'submit',
-							'value' => 'enm-restart:'.$this->_field_id.':'.$this->_entry_id,
+							'value' => 'enm-restart:'.$this->_field_id,
 							'class' => 'button confirm',
 							'data-message' => __('Restarting will send duplicate emails. Are you sure you want to continue?')
 						)
@@ -526,7 +526,7 @@
 						array(
 							'name' => 'action[save]',
 							'type' => 'submit',
-							'value' => 'enm-restart:'.$this->_field_id.':'.$this->_entry_id,
+							'value' => 'enm-restart:'.$this->_field_id,
 							'class' => 'button confirm',
 							'data-message' => __('Restarting will send duplicate emails. Are you sure you want to continue?')
 						)
