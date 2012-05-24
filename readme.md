@@ -12,11 +12,12 @@ If you are running a Beta version/development code prior to May 24th 2012, you w
 
 	ALTER TABLE `sym_email_newsletters` ADD `pseudo_root` varchar(255) CHARACTER SET utf8 DEFAULT NULL AFTER `sender`;
 
-If you are running a Beta version/development code prior to May 23nd 2012, you will need to update your database using the follwing SQL queries:
+If you are running a Beta version/development code prior to May 23rd 2012, you will additionally need to update your database using the follwing SQL queries:
 
 	ALTER TABLE `sym_email_newsletters` ADD `completed_on` TIMESTAMP  NULL  AFTER `started_by`;
 	ALTER TABLE `sym_email_newsletters` CHANGE `started_on` `started_on` TIMESTAMP  NULL;
 	ALTER TABLE `sym_email_newsletters` CHANGE `started_by` `started_by` INT(10)  UNSIGNED  NULL;
+	ALTER TABLE `sym_email_newsletters` DROP `flag`;
 
 If you are running a Beta version/development code prior to May 22nd 2012, you will additionally need the following update procedure:
 
