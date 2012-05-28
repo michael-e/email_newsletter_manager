@@ -748,7 +748,7 @@
 		public function getParameterPoolValue($data){
 			Lang::activate();
 			$newsletter = EmailNewsletterManager::create($data['newsletter_id']);
-			return $newsletter->getSender()->getHandle();
+			return is_object($newsletter->getSender()) ? $newsletter->getSender()->getHandle() : NULL;
 		}
 
 		/**
