@@ -133,6 +133,7 @@ class EmailNewsletter{
 				$template = $this->getTemplate();
 				$sender = $this->getSender();
 				$about = $sender->about();
+				$additional_headers = $sender->additional_headers;
 
 				if(is_array($about['smtp'])){
 					$email = Email::create('smtp');
@@ -190,6 +191,12 @@ class EmailNewsletter{
 				$email->setReplyToEmailAddress($about['reply-to-email']);
 				$template->reply_to_email_address = $about['reply-to-email'];
 				$template->addParams(array('etm-reply-to-email-address' => $about['reply-to-email']));
+
+				if(!empty($additional_headers)){
+					foreach ($additional_headers as $name => $body){
+						$email->appendHeaderField($name, $body);
+					}
+				}
 
 				$template->addParams(array('enm-newsletter-id' => $this->getId()));
 
