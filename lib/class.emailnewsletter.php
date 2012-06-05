@@ -165,8 +165,11 @@ class EmailNewsletter{
 					throw new EmailNewsletterException('Currently only sendmail and SMTP are supported. This will be fixed when the API supports it.');
 				}
 
+				/**
+				 * @delegate PreEmailGenerate
+				 */
 				Symphony::ExtensionManager()->notifyMembers(
-					'preEmailGenerate',
+					'PreEmailGenerate',
 					'/extension/email_newsletter_manager/',
 					array(
 						'newsletter'	=> &$this,
@@ -219,8 +222,11 @@ class EmailNewsletter{
 				if(isset($content['html']))
 					$email->text_html = $content['html'];
 
+				/**
+				 * @delegate PreEmailSend
+				 */
 				Symphony::ExtensionManager()->notifyMembers(
-					'preEmailSend',
+					'PreEmailSend',
 					'/extension/email_newsletter_manager/',
 					array(
 						'newsletter'	=> &$this,
@@ -232,8 +238,11 @@ class EmailNewsletter{
 
 				$email->send();
 
+				/**
+				 * @delegate PostEmailSend
+				 */
 				Symphony::ExtensionManager()->notifyMembers(
-					'postEmailSend',
+					'PostEmailSend',
 					'/extension/email_newsletter_manager/',
 					array(
 						'newsletter'	=> &$this,
