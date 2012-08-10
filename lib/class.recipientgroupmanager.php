@@ -1,6 +1,5 @@
 <?php
 
-require_once(TOOLKIT . '/class.manager.php');
 if(!defined('ENMDIR')) define('ENMDIR', EXTENSIONS . "/email_newsletter_manager");
 
 class RecipientgroupManager{

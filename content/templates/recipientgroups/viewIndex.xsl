@@ -8,10 +8,6 @@
 	indent="yes" />
 
 <xsl:template match="/">
-	<h2>
-		<span>Newsletter Recipient Groups</span>
-		<a href="{concat($root, '/symphony/extension/email_newsletter_manager/recipientgroups/new')}" class="create button">Create New</a>
-	</h2>
 	<form method="post" action="{$current-url}">
 		<table class="selectable">
 			<thead>
@@ -35,11 +31,15 @@
 			</tbody>
 		</table>
 		<div class="actions">
-			<select name="with-selected">
-				<option value="">With Selected...</option>
-				<option class="confirm" value="delete">Delete</option>
-			</select>
-			<input type="submit" value="Apply" name="action[apply]" />
+			<fieldset class="apply inactive">
+				<div>
+					<select name="with-selected">
+						<option value="">With Selected...</option>
+						<option class="confirm" value="delete">Delete</option>
+					</select>
+				</div>
+				<button name="action[apply]">Apply</button>
+			</fieldset>
 		</div>
 	</form>
 </xsl:template>

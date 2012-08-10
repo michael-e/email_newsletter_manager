@@ -6,25 +6,6 @@ require_once(ENMDIR . '/lib/class.emailnewslettermanager.php');
 
 class extension_email_newsletter_manager extends extension{
 
-	public function about(){
-		return array(
-			'name' => 'Email Newsletter Manager',
-			'version' => '1.0.2',
-			'author' => array(
-				array(
-					'name'=>'Huib Keemink',
-					'website' => 'http://www.creativedutchmen.com',
-					'email' => 'huib.keemink@creativedutchmen.com',
-				),
-				array(
-					'name' => 'Michael Eichelsdoerfer',
-					'website' => 'http://www.michael-eichelsdoerfer.de',
-					'email' => 'info@michael-eichelsdoerfer.de',
-				)
-			)
-		);
-	}
-
 	public function fetchNavigation(){
 		return array(
 			array(
@@ -81,7 +62,7 @@ class extension_email_newsletter_manager extends extension{
 	}
 
 	public function appendStyles($context){
-		$callback = $context['parent']->getPageCallback();
+		$callback = Administration::instance()->getPageCallback();
 
 		if ($callback['driver'] == 'recipientgroups' && $callback['classname'] == 'contentExtensionEmail_newsletter_managerRecipientgroups' && $callback['context'][0] == 'preview')
 			$context['parent']->Page->addStylesheetToHead(URL . '/extensions/email_newsletter_manager/assets/email_newsletter_manager.recipientgroups.preview.css', 'screen', 1000);

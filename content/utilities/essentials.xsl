@@ -34,7 +34,7 @@
 			<div>
 				<label>
 					<xsl:text>Source</xsl:text>
-					<select id="context" name="fields[source]">
+					<select id="ds-context" name="fields[source]">
 						<optgroup label="Sections">
 							<xsl:for-each select="/data/sections/entry">
 								<option value="{id}">

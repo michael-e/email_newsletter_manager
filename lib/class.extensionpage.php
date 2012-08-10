@@ -7,6 +7,8 @@ Class ExtensionPage extends AdministrationPage{
 	protected $_useTemplate = NULL;
 	public $viewDir = '';
 	protected $_XSLTProc;
+	
+	const CRLF = "\r\n";
 
 	function __construct($params){
 		$this->_XSLTProc = new XsltProcess();

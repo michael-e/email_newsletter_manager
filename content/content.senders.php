@@ -31,6 +31,10 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 	function __viewIndex(){
 		$this->setPageType('index');
 		$this->setTitle(__("Symphony - Email Senders"));
+		$this->appendSubheading(__('Email Newsletter Senders'), Widget::Anchor(
+			__('Create New'), SYMPHONY_URL . '/extension/email_newsletter_manager/senders/new/',
+			__('Create a new sender'), 'create button'
+		));
 		$results = SenderManager::listAll();
 		$senders = new XMLElement('senders');
 		foreach($results as $result){
@@ -64,6 +68,10 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 		}
 
 		$senders = new XMLElement('senders');
+		$title = __('New Sender');
+		$breadcrumbs = array(
+			Widget::Anchor(__('Email Newsletter Senders'), SYMPHONY_URL . '/extension/email_newsletter_manager/senders/')
+		);
 
 		if(!$new){
 			$sender = SenderManager::create($this->_context[1]);
@@ -79,6 +87,8 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 			$entry = new XMLElement('entry');
 			General::array_to_xml($entry, $about);
 			$senders->appendChild($entry);
+			$title = $about['name'];
+			//$breadcrumbs[] = Widget::Anchor('hi', SYMPHONY_URL . '/extension/email_newsletter_manager/senders/edit/' . $sender->getHandle());
 		}
 
 		$el_gateways = new XMLElement('gateways');
@@ -119,7 +129,8 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 			}
 		}
 		$senders->appendChild($el_gateways);
-
+		$this->insertBreadcrumbs($breadcrumbs);
+		$this->appendSubheading($title);
 		$this->_XML->appendChild($senders);
 	}
 

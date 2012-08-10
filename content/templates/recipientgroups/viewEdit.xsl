@@ -13,15 +13,6 @@
 	indent="yes"/>
 
 <xsl:template match="/">
-	<h2>
-		<xsl:choose>
-			<xsl:when test="/data/recipientgroups/entry/name">
-				<span><xsl:value-of select="/data/recipientgroups/entry/name" /></span>
-				<a href="{concat($root, '/symphony/extension/email_newsletter_manager/recipientgroups/preview/', /data/context/item[@index = 2])}" class="button">Preview Recipients</a>
-			</xsl:when>
-			<xsl:otherwise><span>New Recipient Group</span></xsl:otherwise>
-		</xsl:choose>
-	</h2>
 	<form method="post">
 		<!-- <xsl:call-template name="debug" /> -->
 		<xsl:call-template name="essentials" />

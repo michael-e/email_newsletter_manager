@@ -18,6 +18,11 @@
 		</author>
 	</authors>
 	<releases>
+		<release version="1.1" date="2012-08-11" min="2.3">
+			<![CDATA[
+- Fixed 2.3 compatibility
+			]]>
+		</release>
 		<release version="1.0.2" date="2012-08-10" min="2.2.5" max="2.2.x">
 			<![CDATA[
 - Bugfix: Advanced Recipient Group filtering (chaining DSs, DS param output).

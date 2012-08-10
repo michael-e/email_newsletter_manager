@@ -23,6 +23,10 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 	function __viewIndex(){
 		$this->setPageType('index');
 		$this->setTitle(__("Symphony - Newsletter Recipient Groups"));
+		$this->appendSubheading(__('Email Newsletter Recipients'), Widget::Anchor(
+			__('Create New'), SYMPHONY_URL . '/extension/email_newsletter_manager/recipientgroups/new/',
+			__('Create a new group'), 'create button'
+		));
 		$groups = RecipientgroupManager::listAll();
 		$recipientgroups = new XMLElement('recipientgroups');
 		foreach($groups as $group){
@@ -76,6 +80,10 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 		}
 		$this->_XML->appendChild($section_xml);
 
+		$title = __('New Group');
+		$breadcrumbs = array(
+			Widget::Anchor(__('Email Newsletter Recipients'), SYMPHONY_URL . '/extension/email_newsletter_manager/recipientgroups/')
+		);
 		$recipientgroups = new XMLElement('recipientgroups');
 
 		if($this->_context[2] == 'saved' || $this->_context[3] == 'saved'){
@@ -184,6 +192,7 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 						}
 					}
 					$entry->appendChild($filters);
+					$title = $properties['name'];
 				}
 
 				if($properties['source'] == 'static_recipients'){
@@ -197,6 +206,8 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 				Administration::instance()->errorPageNotFound();
 			}
 		}
+		$this->insertBreadcrumbs($breadcrumbs);
+		$this->appendSubheading($title);
 	}
 
 	function __actionEdit($new = false){
