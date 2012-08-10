@@ -685,11 +685,11 @@
 
 			// save
 			$author_id = 0;
-			$Members = Symphony::ExtensionManager()->create('members');
 			if(Symphony::Engine() instanceof Administration){
 				$author_id = Administration::instance()->Author->get('id');
 			}
-			elseif(Symphony::Engine() instanceof Frontend && is_object($Members->getMemberDriver())){
+			elseif(Symphony::Engine() instanceof Frontend && (Symphony::ExtensionManager()->fetchStatus('members') == EXTENSION_ENABLED)){
+				$Members = Symphony::ExtensionManager()->create('members');
 				$author_id = $Members->getMemberDriver()->getMemberID();
 			}
 
