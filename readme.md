@@ -179,12 +179,34 @@ Newsletter Recipients allows defining multiple recipient groups for the newslett
 * Filtering of email addresses per every email sent happens automatically. There is no need to filter by email address hence you are free to filter data source as required by your needs. In case of typical subscription based newsletter it would be used for filtering only recipients who confirmed their subscription.
 * For details about filtering data sources in Symphony refer to: ["Data Source Filters" - Concepts - Learn - Symphony.](http://symphony-cms.com/learn/concepts/view/data-source-filters/)
 
+Starting with ENM version 1.0.2 it is actually possible to _chain_ recipient groups and datsources (and use dynamic parameter output) like you are used to do it in Symphony. The ENM provides the following parameters to filter datasources:
+
+* $today
+* $current-time
+* $this-year
+* $this-month
+* $this-day
+* $timezone
+* $enm-newsletter-id
+
+Especially the `$enm-newsletter-id` parameter value may be useful in this context.
+
+In order to chain datasources to recipient groups, datasource __dependencies must be added manually__ to the recipient group file, like so:
+
+		public $_dependencies = array (
+	  0 => '$ds-enm-superfilter-param-output',
+	);
+
+(By default recipient group files will include an empty `$_dependencies` array.)
+
+Don't be afraid: __Dependencies will not be overwritten__ if you save the recipient group in the Symphony backend.
+
 *Recipients: Static Recipients only*
 
 * Static Recipients use the [*mailbox syntax* as described in RFC2822](http://tools.ietf.org/html/rfc2822#section-3.4) (like many email clients do). Like so:
 `"John Doe" <john@example.com>, chief@example.com, "Jane" jane@example.com`
 
-*Filter Results: Dynamic Source only*
+*Recipients output (Fields): Dynamic Source only*
 
 * __Email:__ Specifies field storing email address for recipients.
 * __Name Field(s) and XSLT:__ The idea behind it is rather simple: You might have the full name of your recpients in a single field of your section, but you might as well have separate fields for the name, the family name, the gender, whatever. In these cases the simplest way to build a "full name" is to use XSLT. Here are some examples:
