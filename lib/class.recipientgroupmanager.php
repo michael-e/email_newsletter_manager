@@ -92,20 +92,6 @@ class RecipientgroupManager{
 	}
 
 	public static function &create($handle){
-		$env =  array(
-			'today' => DateTimeObj::get('Y-m-d'),
-			'current-time' => DateTimeObj::get('H:i'),
-			'this-year' => DateTimeObj::get('Y'),
-			'this-month' => DateTimeObj::get('m'),
-			'this-day' => DateTimeObj::get('d'),
-			'timezone' => DateTimeObj::get('P'),
-			'website-name' => Symphony::Configuration()->get('sitename', 'general'),
-			'root' => URL,
-			'workspace' => URL . '/workspace',
-			'upload-limit' => min($upload_size_php, $upload_size_sym),
-			'symphony-version' => Symphony::Configuration()->get('version', 'symphony'),
-		);
-
 		$classname = self::__getClassName($handle);
 		$path = self::__getDriverPath($handle);
 
@@ -120,8 +106,7 @@ class RecipientgroupManager{
 
 		if(!class_exists($classname)) require_once($path);
 
-		return new $classname(Symphony::Engine(), $env, $process_params);
-
+		return new $classname(Symphony::Engine(), NULL, false);
 	}
 
 	public static function save($handle = NULL, $fields){

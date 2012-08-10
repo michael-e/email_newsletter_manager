@@ -34,8 +34,8 @@ Class RecipientSource extends DataSource{
 	public function getSlice($page = 1, $count = 10){
 	}
 
-	public function grab(&$param_pool=NULL){
-		$this->processDependencies();
+	public function grab(&$param_pool = array()){
+		$this->processDependencies($param_pool);
 	}
 
 	public function getHandle(){
@@ -62,8 +62,18 @@ Class RecipientSource extends DataSource{
 		$datasources = array_map(create_function('$a', "return str_replace('\$ds-', '', \$a);"), $datasources);
 		$datasources = array_map(create_function('$a', "return str_replace('-', '_', \$a);"), $datasources);
 
-		$this->_env['pool'] = $params;
-		$pool = $params;
+		$env = array(
+			'today' => DateTimeObj::get('Y-m-d'),
+			'current-time' => DateTimeObj::get('H:i'),
+			'this-year' => DateTimeObj::get('Y'),
+			'this-month' => DateTimeObj::get('m'),
+			'this-day' => DateTimeObj::get('d'),
+			'timezone' => DateTimeObj::get('P'),
+			'enm-newsletter-id' => $this->newsletter_id,
+		);
+
+		$this->_env['param'] = $env;
+		$this->_env['env']['pool'] = $params;
 		$dependencies = array();
 
 		foreach ($datasources as $handle) {
@@ -77,11 +87,11 @@ Class RecipientSource extends DataSource{
 
 		foreach ($dsOrder as $handle) {
 			$ds = $pool[$handle];
-			$ds->processParameters(array('env' => &$this->_env, 'param' => &$this->_param));
-			$ds->grab($this->_env['pool']);
+			$ds->processParameters($this->_env);
+			$ds->grab($this->_env['env']['pool']);
 			unset($ds);
 		}
-		$this->processParameters(array('env' => $this->_env, 'param' => $this->_param));
+		$this->processParameters($this->_env);
 	}
 
 	public function __findDatasourceOrder($dependenciesList){
