@@ -4,7 +4,7 @@ follows:
 
 ----- begin license block -----
 
-Copyright 2011 Huib Keemink, Michael Eichelsdoerfer
+Copyright 2011-2012 Huib Keemink, Michael Eichelsdoerfer
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

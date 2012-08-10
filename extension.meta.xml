@@ -18,6 +18,11 @@
 		</author>
 	</authors>
 	<releases>
+		<release version="1.0.2" date="2012-08-10" min="2.2.5" max="2.2.x">
+			<![CDATA[
+- Bugfix: Advanced Recipient Group filtering (chaining DSs, DS param output).
+			]]>
+		</release>
 		<release version="1.0.1" date="2012-05-28" min="2.2.5" max="2.2.x">
 			<![CDATA[
 - Bugfix: Using the ENM field's parameter output breaks pages and ETM layouts if there is no sender.
