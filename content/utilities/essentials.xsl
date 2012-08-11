@@ -5,8 +5,8 @@
 <xsl:template name="essentials">
 	<fieldset class="settings">
 		<legend>Essentials</legend>
-		<div class="group">
-			<div>
+		<div class="two columns">
+			<div class="column">
 				<xsl:if test="/data/errors/name">
 					<xsl:attribute name="class">
 						<xsl:text>invalid</xsl:text>
@@ -31,7 +31,7 @@
 					<p><xsl:value-of select="/data/errors/name"/></p>
 				</xsl:if>
 			</div>
-			<div>
+			<div class="column">
 				<label>
 					<xsl:text>Source</xsl:text>
 					<select id="ds-context" name="fields[source]">

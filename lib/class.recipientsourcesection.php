@@ -203,7 +203,7 @@ Class RecipientSourceSection extends RecipientSource{
 
 		$where .= ' AND `d`.`value` IS NOT NULL';
 
-		$joins .= ' LEFT JOIN tbl_entries_data_'.$entryManager->fieldManager->fetchFieldIDFromElementName($this->emailField, $this->getSource()).' AS `d` ON `e`.`id` = `d`.`entry_id`';
+		$joins .= ' LEFT JOIN tbl_entries_data_'.FieldManager::fetchFieldIDFromElementName($this->emailField, $this->getSource()).' AS `d` ON `e`.`id` = `d`.`entry_id`';
 
 		if($this->newsletter_id !== NULL){
 			$joins .= ' LEFT OUTER JOIN tbl_tmp_email_newsletters_sent_'.$this->newsletter_id.' AS `n` ON `d`.`value` = `n`.`email`';

@@ -208,6 +208,7 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 		}
 		$this->insertBreadcrumbs($breadcrumbs);
 		$this->appendSubheading($title);
+		$this->Body->setAttribute('id','blueprints-datasources');
 	}
 
 	function __actionEdit($new = false){

@@ -3,7 +3,7 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:template name="filters">
-	<fieldset class="settings contextual sections Sections authors System">
+	<fieldset class="settings contextual authors navigation Sections System">
 		<legend>Filter Results</legend>
 		<p class="help">Use <code>{$param}</code> syntax to filter by parameters.</p>
 		<div class="contextual authors">

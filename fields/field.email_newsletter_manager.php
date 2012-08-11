@@ -23,8 +23,8 @@
 		/**
 		 * Initialize as unrequired field
 		 */
-		function __construct(&$parent){
-			parent::__construct($parent);
+		function __construct(){
+			parent::__construct();
 			$this->_name = __('Email Newsletter Manager');
 			$this->_required = false;
 			$this->set('location', 'sidebar');

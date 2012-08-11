@@ -21,8 +21,8 @@ Class RecipientSource extends DataSource{
 	protected $_where;
 	protected $_joins;
 
-	public function __construct(&$parent, $env = array(), $process_params=true, $param_pool = array()){
-		parent::__construct($parent, (array)$env, $process_params);
+	public function __construct($env = array(), $process_params=true, $param_pool = array()){
+		parent::__construct((array)$env, $process_params);
 		$this->_param_pool = $param_pool;
 		$this->_XSLTProc = new XsltProcess();
 	}
