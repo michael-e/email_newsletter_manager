@@ -65,10 +65,7 @@ class extension_email_newsletter_manager extends extension{
 		$callback = Administration::instance()->getPageCallback();
 		if(is_a(Symphony::Engine(),'Administration')){
 			Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/email_newsletter_manager/assets/email_newsletter_manager.admin.js', 70);
-
-			if ($callback['driver'] == 'recipientgroups' && $callback['classname'] == 'contentExtensionEmail_newsletter_managerRecipientgroups' && $callback['context'][0] == 'preview'){
-				$context['parent']->Page->addStylesheetToHead(URL . '/extensions/email_newsletter_manager/assets/email_newsletter_manager.recipientgroups.preview.css', 'screen', 1000);
-			}
+			Symphony::Engine()->Page->addStylesheetToHead(URL . '/extensions/email_newsletter_manager/assets/email_newsletter_manager.recipientgroups.preview.css', 'screen', 1000);
 		}
 	}
 

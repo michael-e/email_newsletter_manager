@@ -39,9 +39,9 @@ Class RecipientSourceSection extends RecipientSource{
 		$entryManager = new EntryManager($this->_Parent);
 		$xsltproc = new XsltProcess();
 		foreach($this->nameFields as $nameField){
-			$field_ids[] = $entryManager->fieldManager->fetchFieldIDFromElementName($nameField, $this->getSource());
+			$field_ids[] = FieldManager::fetchFieldIDFromElementName($nameField, $this->getSource());
 		}
-		$email_field_id = $entryManager->fieldManager->fetchFieldIDFromElementName($this->emailField, $this->getSource());
+		$email_field_id = FieldManager::fetchFieldIDFromElementName($this->emailField, $this->getSource());
 		require_once(TOOLKIT . '/util.validators.php');
 		foreach((array)$entries['records'] as $entry){
 			$entry_data = $entry->getData();
@@ -50,7 +50,7 @@ Class RecipientSourceSection extends RecipientSource{
 			$email = '';
 			foreach($entry_data as $field_id => $data){
 				if(in_array($field_id, $field_ids)){
-					$field = $entryManager->fieldManager->fetch($field_id);
+					$field = FieldManager::fetch($field_id);
 					$field->appendFormattedElement($element, $data);
 				}
 				if($field_id == $email_field_id){
