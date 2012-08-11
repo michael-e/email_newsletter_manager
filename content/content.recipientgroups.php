@@ -316,6 +316,12 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 			)
 		);
 		$about = $source->about();
-		$this->appendSubheading($about['name'] . ' ' . __('preview'));
+		$this->appendSubheading(
+			$about['name'] . ' ' . __('preview'),
+			array(Widget::Anchor(
+				__('Edit %s group', array($layout)), SYMPHONY_URL . '/extension/email_newsletter_manager/recipientgroups/edit/' . $source->getHandle() . '/' . $layout,
+				__('Edit %s group', array($layout)), 'button'
+			))
+		);
 	}
 }
