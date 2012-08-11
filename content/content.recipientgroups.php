@@ -208,7 +208,6 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 		}
 		$this->insertBreadcrumbs($breadcrumbs);
 		$this->appendSubheading($title);
-		$this->Body->setAttribute('id','blueprints-datasources');
 	}
 
 	function __actionEdit($new = false){
@@ -308,5 +307,15 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 		General::array_to_xml($context, $this->_context);
 		$this->_XML->appendChild($context);
 		$this->_XML->appendChild($recipients);
+		$this->insertBreadcrumbs(
+			array(
+				Widget::Anchor(
+					__('Email Newsletter Recipients'),
+					SYMPHONY_URL . '/extension/email_newsletter_manager/recipientgroups/'
+				)
+			)
+		);
+		$about = $source->about();
+		$this->appendSubheading($about['name'] . ' ' . __('preview'));
 	}
 }
