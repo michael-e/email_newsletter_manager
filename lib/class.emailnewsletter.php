@@ -127,8 +127,8 @@ class EmailNewsletter{
 		}
 		$this->_completed = explode(', ', $this->getCompletedRecipientGroups());
 		$recipients = $this->_getRecipients($this->limit);
-
-		foreach($recipients as $recipient){
+		
+		if(count($recipients) > 0){
 			try{
 				$template = $this->getTemplate();
 				$sender = $this->getSender();
@@ -165,107 +165,116 @@ class EmailNewsletter{
 				else{
 					throw new EmailNewsletterException('Currently only sendmail and SMTP are supported. This will be fixed when the API supports it.');
 				}
-
-				/**
-				 * @delegate PreEmailGenerate
-				 */
-				Symphony::ExtensionManager()->notifyMembers(
-					'PreEmailGenerate',
-					'/extension/email_newsletter_manager/',
-					array(
-						'newsletter'	=> &$this,
-						'email'			=> &$email,
-						'template' 		=> &$template,
-						'recipient'		=> &$recipient
-					)
-				);
-
-				$email->setRecipients(array($recipient['name'] => $recipient['email']));
-				$template->recipients = '"'.$recipient['name'] . '" <' . $recipient['email'] . '>';
-				$template->addParams(array('etm-recipient' => $recipient['email']));
-
-				$email->setReplyToName($about['reply-to-name']);
-				$template->reply_to_name = $about['reply-to-name'];
-				$template->addParams(array('etm-reply-to-name' => $about['reply-to-name']));
-
-				$email->setReplyToEmailAddress($about['reply-to-email']);
-				$template->reply_to_email_address = $about['reply-to-email'];
-				$template->addParams(array('etm-reply-to-email-address' => $about['reply-to-email']));
-
-				if(!empty($additional_headers)){
-					foreach ($additional_headers as $name => $body){
-						$email->appendHeaderField($name, $body);
-					}
-				}
-
-				$template->addParams(array('enm-newsletter-id' => $this->getId()));
-
-				// add root and workspace parameters
-				$pseudo_root = $this->getPseudoRoot();
-				$template->addParams(
-					array(
-						'root' => !empty($pseudo_root) ? $pseudo_root : NULL,
-						'workspace' => !empty($pseudo_root) ? $pseudo_root.'/workspace' : NULL,
-					)
-				);
-
-				$xml = $template->processDatasources();
-				$template->setXML($xml->generate());
-
-				$content = $template->render();
-				if(empty($content)){
-					throw new EmailNewsletterException("ETM template could not be rendered");
-				}
-
-				if(!empty($content['subject'])){
-					$email->subject = $content['subject'];
-				}
-				else{
-					throw new EmailNewsletterException("Can not send emails without a subject");
-				}
-
-				if(isset($content['plain']))
-					$email->text_plain = $content['plain'];
-				if(isset($content['html']))
-					$email->text_html = $content['html'];
-
-				/**
-				 * @delegate PreEmailSend
-				 */
-				Symphony::ExtensionManager()->notifyMembers(
-					'PreEmailSend',
-					'/extension/email_newsletter_manager/',
-					array(
-						'newsletter'	=> &$this,
-						'email'			=> &$email,
-						'template' 		=> &$template,
-						'recipient'		=> $recipient
-					)
-				);
-
-				$email->send();
-
-				/**
-				 * @delegate PostEmailSend
-				 */
-				Symphony::ExtensionManager()->notifyMembers(
-					'PostEmailSend',
-					'/extension/email_newsletter_manager/',
-					array(
-						'newsletter'	=> &$this,
-						'email'			=> &$email,
-						'template' 		=> &$template,
-						'recipient'		=> $recipient
-					)
-				);
-
-				$this->_markRecipient($recipient['email'], 'sent');
 			}
 			catch(Exception $e){
 				file_put_contents(DOCROOT . '/manifest/newsletter-log.txt', '['.DateTimeObj::get('Y/m/d H:i:s').'] newsletter-id: '.$this->getId().' - ' . $e->getMessage() . "\r\n", FILE_APPEND);
-				$this->_markRecipient($recipient['email'], 'failed');
-				continue;
+				return false;
 			}
+			$email->openConnection();
+			foreach($recipients as $recipient){
+				try{
+					/**
+					 * @delegate PreEmailGenerate
+					 */
+					Symphony::ExtensionManager()->notifyMembers(
+						'PreEmailGenerate',
+						'/extension/email_newsletter_manager/',
+						array(
+							'newsletter'	=> &$this,
+							'email'			=> &$email,
+							'template' 		=> &$template,
+							'recipient'		=> &$recipient
+						)
+					);
+
+					$email->setRecipients(array($recipient['name'] => $recipient['email']));
+					$template->recipients = '"'.$recipient['name'] . '" <' . $recipient['email'] . '>';
+					$template->addParams(array('etm-recipient' => $recipient['email']));
+
+					$email->setReplyToName($about['reply-to-name']);
+					$template->reply_to_name = $about['reply-to-name'];
+					$template->addParams(array('etm-reply-to-name' => $about['reply-to-name']));
+
+					$email->setReplyToEmailAddress($about['reply-to-email']);
+					$template->reply_to_email_address = $about['reply-to-email'];
+					$template->addParams(array('etm-reply-to-email-address' => $about['reply-to-email']));
+
+					if(!empty($additional_headers)){
+						foreach ($additional_headers as $name => $body){
+							$email->appendHeaderField($name, $body);
+						}
+					}
+
+					$template->addParams(array('enm-newsletter-id' => $this->getId()));
+
+					// add root and workspace parameters
+					$pseudo_root = $this->getPseudoRoot();
+					$template->addParams(
+						array(
+							'root' => !empty($pseudo_root) ? $pseudo_root : NULL,
+							'workspace' => !empty($pseudo_root) ? $pseudo_root.'/workspace' : NULL,
+						)
+					);
+
+					$xml = $template->processDatasources();
+					$template->setXML($xml->generate());
+
+					$content = $template->render();
+					if(empty($content)){
+						throw new EmailNewsletterException("ETM template could not be rendered");
+					}
+
+					if(!empty($content['subject'])){
+						$email->subject = $content['subject'];
+					}
+					else{
+						throw new EmailNewsletterException("Can not send emails without a subject");
+					}
+
+					if(isset($content['plain']))
+						$email->text_plain = $content['plain'];
+					if(isset($content['html']))
+						$email->text_html = $content['html'];
+
+					/**
+					 * @delegate PreEmailSend
+					 */
+					Symphony::ExtensionManager()->notifyMembers(
+						'PreEmailSend',
+						'/extension/email_newsletter_manager/',
+						array(
+							'newsletter'	=> &$this,
+							'email'			=> &$email,
+							'template' 		=> &$template,
+							'recipient'		=> $recipient
+						)
+					);
+
+					$email->send();
+
+					/**
+					 * @delegate PostEmailSend
+					 */
+					Symphony::ExtensionManager()->notifyMembers(
+						'PostEmailSend',
+						'/extension/email_newsletter_manager/',
+						array(
+							'newsletter'	=> &$this,
+							'email'			=> &$email,
+							'template' 		=> &$template,
+							'recipient'		=> $recipient
+						)
+					);
+
+					$this->_markRecipient($recipient['email'], 'sent');
+				}
+				catch(Exception $e){
+					file_put_contents(DOCROOT . '/manifest/newsletter-log.txt', '['.DateTimeObj::get('Y/m/d H:i:s').'] newsletter-id: '.$this->getId().' - ' . $e->getMessage() . "\r\n", FILE_APPEND);
+					$this->_markRecipient($recipient['email'], 'failed');
+					continue;
+				}
+			}
+			$email->closeConnection();
 		}
 		//To prevent timing problems, the completed recipient groups should only be marked as complete when the emails are actually sent.
 		Symphony::Database()->update(array('completed_recipients'=>implode(', ', $this->_completed)), 'tbl_email_newsletters', 'id = ' . $this->getId());
