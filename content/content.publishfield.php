@@ -12,17 +12,15 @@ Class contentExtensionemail_newsletter_managerpublishfield extends AjaxPage{
 		$entry_id = $this->_context[1];
 		$this->_context['entry_id'] = $entry_id;
 		try{
-			$fieldManager = new FieldManager($this);
-			$entryManager = new EntryManager($this);
 
-			$entry = $entryManager->fetch($entry_id);
+			$entry = EntryManager::fetch($entry_id);
 			$entry = $entry[0];
 			if(!is_a($entry, 'Entry')){
 				$this->_status = 404;
 				return;
 			}
 
-			$field = $fieldManager->fetch($field_id);
+			$field = FieldManager::fetch($field_id);
 			if(!is_a($field, 'Field')){
 				$this->_status = 404;
 				return;

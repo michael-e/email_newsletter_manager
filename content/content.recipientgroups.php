@@ -9,6 +9,7 @@ if(!class_exists('ExtensionPage')){
 
 require_once(TOOLKIT . '/class.xsltprocess.php');
 require_once(TOOLKIT . '/class.sectionmanager.php');
+require_once(TOOLKIT . '/class.fieldmanager.php');
 require_once(ENMDIR . '/lib/class.recipientgroupmanager.php');
 
 Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionPage{
@@ -136,7 +137,6 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 				}
 				if(!empty($properties['filters'])){
 					$filters = new XMLElement('filters');
-					$fieldManager = new FieldManager($this);
 					foreach($properties['filters'] as $filter=>$val){
 						// Section and Author
 						if($filter == 'id'){
@@ -159,7 +159,7 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 						}
 						// Section Only
 						if(is_numeric($properties['source'])){
-							$section = $sectionManager->fetch($properties['source']);
+							$section = SectionManager::fetch($properties['source']);
 							if(is_object($section)){
 								$section_fields = $section->fetchFields();
 								foreach ($section_fields as $field) {
@@ -168,7 +168,7 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 								// only add filters to the duplicator if the field id
 								// belongs to the current section
 								if(is_numeric($filter) && in_array($filter, $field_ids)){
-									$filter_obj = $fieldManager->fetch($filter);
+									$filter_obj = FieldManager::fetch($filter);
 									if(is_object($filter_obj)){
 										$filter_entry = new XMLElement('entry', NULL, array('id'=>$filter, 'data-type'=>$fieldManager->fetchHandleFromID($filter)));
 										$filter_obj->displayDatasourceFilterPanel($filter_entry, $val, $errors, is_numeric($properties['source'])?$properties['source']:1);

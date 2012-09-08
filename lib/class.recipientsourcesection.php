@@ -36,7 +36,6 @@ Class RecipientSourceSection extends RecipientSource{
 		$return['start'] = (string)$entries['start'];
 		$return['current-page'] = (string)$this->dsParamSTARTPAGE;
 		$field_ids = array();
-		$entryManager = new EntryManager($this->_Parent);
 		$xsltproc = new XsltProcess();
 		foreach($this->nameFields as $nameField){
 			$field_ids[] = FieldManager::fetchFieldIDFromElementName($nameField, $this->getSource());
@@ -93,9 +92,8 @@ Class RecipientSourceSection extends RecipientSource{
 	public function grab(){
 		parent::grab();
 		$where_and_joins = $this->getWhereJoinsAndGroup();
-		$entryManager = new EntryManager($this->_Parent);
 
-		$entries = $entryManager->fetchByPage(
+		$entries = EntryManager::fetchByPage(
 			($this->dsParamSTARTPAGE > 0 ? $this->dsParamSTARTPAGE : 1),
 			$this->getSource(),
 			($this->dsParamLIMIT >= 0 ? $this->dsParamLIMIT : NULL),
@@ -150,7 +148,6 @@ Class RecipientSourceSection extends RecipientSource{
 	public function getWhereJoinsAndGroup($count_only = false){
 		$where = NULL;
 		$joins = NULL;
-		$entryManager = new EntryManager($this->_Parent);
 		if(is_array($this->dsParamFILTERS) && !empty($this->dsParamFILTERS)){
 			foreach($this->dsParamFILTERS as $field_id => $filter){
 
@@ -168,7 +165,7 @@ Class RecipientSourceSection extends RecipientSource{
 				else $value = $filter;
 
 				if(!isset($fieldPool[$field_id]) || !is_object($fieldPool[$field_id]))
-					$fieldPool[$field_id] =& $entryManager->fieldManager->fetch($field_id);
+					$fieldPool[$field_id] =& FieldManager::fetch($field_id);
 
 				if($field_id != 'id' && $field_id != 'system:date' && !($fieldPool[$field_id] instanceof Field)){
 					throw new Exception(
