@@ -18,7 +18,7 @@
 		</author>
 	</authors>
 	<releases>
-		<release version="1.1" date="2012-08-11" min="2.3">
+		<release version="1.1" date="2012-10-06" min="2.3">
 			<![CDATA[
 - Fixed 2.3 compatibility
 			]]>
