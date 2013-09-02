@@ -109,7 +109,8 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 			if(is_object($group)){
 				$entry = new XMLElement('entry');
 				$properties = $group->getProperties();
-				General::array_to_xml($entry, $group->about());
+				$about = $group->about();
+				General::array_to_xml($entry, $about);
 
 				$source = new XMLElement('source', $properties['source']);
 				$entry->appendChild($source);
@@ -192,7 +193,7 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 						}
 					}
 					$entry->appendChild($filters);
-					$title = $properties['name'];
+					$title = $about['name'];
 				}
 
 				if($properties['source'] == 'static_recipients'){
