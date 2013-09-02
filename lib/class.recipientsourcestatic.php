@@ -12,7 +12,7 @@ Class RecipientSourceStatic extends RecipientSource{
 	public function __construct(){
 		require_once(TOOLKIT . '/util.validators.php');
 		$this->_emailValidator = $validators['email'];
-		parent::__construct($this->_Parent);
+		parent::__construct();
 	}
 
 	/**
