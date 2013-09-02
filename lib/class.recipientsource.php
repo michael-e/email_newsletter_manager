@@ -51,8 +51,6 @@ Class RecipientSource extends DataSource{
 	}
 
 	public function processDependencies(array $params = array()) {
-		$this->DatasourceManager = new DatasourceManager($this->_Parent);
-
 		$datasources = $this->getDependencies();
 
 		if(!is_array($datasources) || empty($datasources)){
@@ -79,7 +77,7 @@ Class RecipientSource extends DataSource{
 		foreach ($datasources as $handle) {
 			Frontend::instance()->Profiler->seed();
 
-			$pool[$handle] =& $this->DatasourceManager->create($handle, NULL, false);
+			$pool[$handle] =& DatasourceManager::create($handle, NULL, false);
 			$dependencies[$handle] = $pool[$handle]->getDependencies();
 		}
 

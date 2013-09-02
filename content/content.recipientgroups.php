@@ -171,7 +171,7 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 								if(is_numeric($filter) && in_array($filter, $field_ids)){
 									$filter_obj = FieldManager::fetch($filter);
 									if(is_object($filter_obj)){
-										$filter_entry = new XMLElement('entry', NULL, array('id'=>$filter, 'data-type'=>$fieldManager->fetchHandleFromID($filter)));
+										$filter_entry = new XMLElement('entry', NULL, array('id'=>$filter, 'data-type'=>FieldManager::fetchHandleFromID($filter)));
 										$filter_obj->displayDatasourceFilterPanel($filter_entry, $val, $errors, is_numeric($properties['source'])?$properties['source']:1);
 										$filters->appendChild($filter_entry);
 									}

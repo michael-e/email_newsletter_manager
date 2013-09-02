@@ -92,12 +92,11 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 		}
 
 		$el_gateways = new XMLElement('gateways');
-		$emailGatewayManager = new EmailGatewayManager($this->_Parent);
-		$gateways = $emailGatewayManager->listAll();
+		$gateways = EmailGatewayManager::listAll();
 		foreach($gateways as $gateway){
 			// to be removed in later versions. Right now only smtp and sendmail are supported.
 			if(in_array($gateway['handle'], array('smtp', 'sendmail', 'amazon_ses'))){
-				$gw = $emailGatewayManager->create($gateway['handle']);
+				$gw = EmailGatewayManager::create($gateway['handle']);
 				if(!empty($about[$gateway['handle']])){
 					$config = $about[$gateway['handle']];
 					if($gateway['handle'] == 'smtp'){
