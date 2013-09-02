@@ -641,7 +641,7 @@
 		/**
 		 * Prepares field values for database.
 		 */
-		public function processRawFieldData($data, &$status, $simulate = false, $entry_id = NULL){
+		public function processRawFieldData($data, &$status, &$message = NULL, $simulate = false, $entry_id = NULL){
 			$status = self::__OK__;
 			if(empty($data)) return NULL;
 
