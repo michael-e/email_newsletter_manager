@@ -75,7 +75,8 @@ Class RecipientSource extends DataSource{
 		$dependencies = array();
 
 		foreach ($datasources as $handle) {
-			Frontend::instance()->Profiler->seed();
+			$profiler = Symphony::Profiler();
+			$profiler->seed();
 
 			$pool[$handle] =& DatasourceManager::create($handle, NULL, false);
 			$dependencies[$handle] = $pool[$handle]->getDependencies();
