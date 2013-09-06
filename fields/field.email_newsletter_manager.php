@@ -361,9 +361,9 @@
 				case "sending":
 					$heading = new XMLElement('p',__('Sending'), array('class'=>'status sending'));
 					$gui->appendChild($heading);
-					$this->_addStatistics($stats, &$gui);
-					$this->_addInfoIfApplicable($newsletter, &$gui);
-					$this->_addHiddenFields($newsletter, &$gui);
+					$this->_addStatistics($stats, $gui);
+					$this->_addInfoIfApplicable($newsletter, $gui);
+					$this->_addHiddenFields($newsletter, $gui);
 					$gui->appendChild(new XMLElement(
 						'button',
 						__('Pause'),
@@ -391,9 +391,9 @@
 				case "stopped":
 					$heading = new XMLElement('p',__('Stopped'), array('class'=>'status stopped'));
 					$gui->appendChild($heading);
-					$this->_addStatistics($stats, &$gui);
-					$this->_addInfoIfApplicable($newsletter, &$gui);
-					$this->_addHiddenFields($newsletter, &$gui);
+					$this->_addStatistics($stats, $gui);
+					$this->_addInfoIfApplicable($newsletter, $gui);
+					$this->_addHiddenFields($newsletter, $gui);
 					$gui->appendChild(new XMLElement(
 						'button',
 						__('Restart'),
@@ -410,9 +410,9 @@
 				case "paused":
 					$heading = new XMLElement('p',__('Paused'), array('class'=>'status paused'));
 					$gui->appendChild($heading);
-					$this->_addStatistics($stats, &$gui);
-					$this->_addInfoIfApplicable($newsletter, &$gui);
-					$this->_addHiddenFields($newsletter, &$gui);
+					$this->_addStatistics($stats, $gui);
+					$this->_addInfoIfApplicable($newsletter, $gui);
+					$this->_addHiddenFields($newsletter, $gui);
 					$gui->appendChild(new XMLElement(
 						'button',
 						__('Continue'),
@@ -439,7 +439,7 @@
 				case "error-template":
 					$heading = new XMLElement('p',__('Error: No email template selected.'), array('class'=>'status error'));
 					$gui->appendChild($heading);
-					$this->_addHiddenFields($newsletter, &$gui);
+					$this->_addHiddenFields($newsletter, $gui);
 					$gui->appendChild(new XMLElement(
 						'button',
 						__('Restart'),
@@ -455,7 +455,7 @@
 				case "error-sender":
 					$heading = new XMLElement('p',__('Error: No sender selected.'), array('class'=>'status error'));
 					$gui->appendChild($heading);
-					$this->_addHiddenFields($newsletter, &$gui);
+					$this->_addHiddenFields($newsletter, $gui);
 					$gui->appendChild(new XMLElement(
 						'button',
 						__('Restart'),
@@ -471,7 +471,7 @@
 				case "error-recipients":
 					$heading = new XMLElement('p',__('Error: No recipient group selected.'), array('class'=>'status error'));
 					$gui->appendChild($heading);
-					$this->_addHiddenFields($newsletter, &$gui);
+					$this->_addHiddenFields($newsletter, $gui);
 					$gui->appendChild(new XMLElement(
 						'button',
 						__('Restart'),
@@ -487,9 +487,9 @@
 				case "error":
 					$heading = new XMLElement('p',__('Sending failed. Check the log for details.'), array('class'=>'status error'));
 					$gui->appendChild($heading);
-					$this->_addStatistics($stats, &$gui);
-					$this->_addInfoIfApplicable($newsletter, &$gui);
-					$this->_addHiddenFields($newsletter, &$gui);
+					$this->_addStatistics($stats, $gui);
+					$this->_addInfoIfApplicable($newsletter, $gui);
+					$this->_addHiddenFields($newsletter, $gui);
 					$gui->appendChild(new XMLElement(
 						'button',
 						__('Continue'),
@@ -517,9 +517,9 @@
 				case "completed":
 					$heading =  new XMLElement('p',__('Completed'), array('class'=>'status completed'));
 					$gui->appendChild($heading);
-					$this->_addStatistics($stats, &$gui);
-					$this->_addInfoIfApplicable($newsletter, &$gui);
-					$this->_addHiddenFields($newsletter, &$gui);
+					$this->_addStatistics($stats, $gui);
+					$this->_addInfoIfApplicable($newsletter, $gui);
+					$this->_addHiddenFields($newsletter, $gui);
 					$gui->appendChild(new XMLElement(
 						'button',
 						__('Restart'),
