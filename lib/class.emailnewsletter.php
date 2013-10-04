@@ -83,7 +83,8 @@ class EmailNewsletter{
 		  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 		  `email` varchar(255),
 		  `result` varchar(255),
-		  PRIMARY KEY (`id`)
+		  PRIMARY KEY (`id`),
+		  KEY `email` (`email`)
 		) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
 		Symphony::Database()->query('DELETE FROM `tbl_tmp_email_newsletters_sent_'. $this->getId() . '` WHERE `result` = \'idle\'');
 		$this->setStatus('sending');
