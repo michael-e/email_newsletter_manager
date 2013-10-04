@@ -18,6 +18,12 @@
 		</author>
 	</authors>
 	<releases>
+		<release version="1.1.2" date="2013-10-04" min="2.3.1">
+			<![CDATA[
+- Add a key to temporary tables; makes tables joins far less expensive.
+- Fix for Symphony 2.3: Remove Lang::activate()
+			]]>
+		</release>
 		<release version="1.1.1" date="2013-09-02" min="2.3.1">
 			<![CDATA[
 - Bugfix (#51)
