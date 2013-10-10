@@ -126,7 +126,7 @@ Class RecipientSourceSection extends RecipientSource{
 		}
 		$where_and_joins = $this->getWhereJoinsAndGroup(true);
 		try{
-			$count = Symphony::Database()->fetchVar('count',0, sprintf('SELECT SQL_CACHE count(DISTINCT `d`.`value`) as `count` FROM `tbl_entries` AS `e` %s %s', $where_and_joins['joins'], $where_and_joins['where']));
+			$count = Symphony::Database()->fetchVar('count',0, sprintf('SELECT SQL_CACHE count(DISTINCT `d`.`value`) as `count` FROM `tbl_entries` AS `e` %s %s', $where_and_joins['joins'], ' WHERE 1 ' . $where_and_joins['where']));
 		}
 		catch(DatabaseException $e){
 			// Invalid, not supported field. Instead of giving an error we should just return 0 recipients.
