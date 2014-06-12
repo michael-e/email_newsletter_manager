@@ -6,8 +6,8 @@
 	<fieldset class="settings contextual authors navigation Sections System">
 		<legend>Filter Results</legend>
 		<p class="help">Use <code>{$param}</code> syntax to filter by parameters.</p>
-		<div class="contextual authors">
-			<ol class="filters-duplicator" data-add="Add filter" data-remove="Remove filter">
+		<div class="contextual frame filters-duplicator authors" data-interactive="data-interactive">
+			<ol class="suggestable" data-interactive="data-interactive" data-add="Add filter" data-remove="Remove filter">
 				<li class="unique template" data-type="id">
 					<header><h4>ID</h4></header>
 					<label>
@@ -58,7 +58,7 @@
 			</ol>
 		</div>
 		<xsl:for-each select="/data/sections/entry">
-			<div class="contextual {id}">
+			<div class="contextual {id} frame filters-duplicator" data-interactive="data-interactive">
 				<ol class="filters-duplicator" data-add="Add filter" data-remove="Remove filter">
 					<!--
 						Checking for strings in @name attributes looks rather dangerous;
