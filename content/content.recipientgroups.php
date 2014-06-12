@@ -110,6 +110,7 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 				$entry = new XMLElement('entry');
 				$properties = $group->getProperties();
 				$about = $group->about();
+				$title = $about['name'];
 				General::array_to_xml($entry, $about);
 
 				$source = new XMLElement('source', $properties['source']);
