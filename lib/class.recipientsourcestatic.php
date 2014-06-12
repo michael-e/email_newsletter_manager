@@ -122,9 +122,6 @@ Class RecipientSourceStatic extends RecipientSource{
 				$this->_tempTable = $name;
 				return true;
 			}
-			else{
-				throw new Exception(Symphony::Database()->getLastError());
-			}
 		}
 	}
 }

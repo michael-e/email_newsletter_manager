@@ -162,7 +162,7 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 			}
 			else{
 				$this->pageAlert(
-					__('Could not delete: ' . Symphony::Database()->getLastError()),
+					__('Could not delete. Database error.'),
 					Alert::ERROR
 				);
 				return true;
