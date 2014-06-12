@@ -92,7 +92,7 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 				__(
 					__('Email Recipient updated at %1$s. <a href="%2$s" accesskey="c">Create another?</a> <a href="%3$s" accesskey="a">View all Recipient Groups</a>'),
 					array(
-						DateTimeObj::getTimeAgo(__SYM_TIME_FORMAT__),
+						Widget::Time()->generate(),
 						SYMPHONY_URL . '/extension/email_newsletter_manager/recipientgroups/new/',
 						SYMPHONY_URL . '/extension/email_newsletter_manager/recipientgroups/',
 					)

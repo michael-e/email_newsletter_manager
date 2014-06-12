@@ -58,7 +58,7 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 				__(
 					__('Email Sender updated at %1$s. <a href="%2$s" accesskey="c">Create another?</a> <a href="%3$s" accesskey="a">View all Senders</a>'),
 					array(
-						DateTimeObj::getTimeAgo(__SYM_TIME_FORMAT__),
+						Widget::Time()->generate(),
 						SYMPHONY_URL . '/extension/email_newsletter_manager/senders/new/',
 						SYMPHONY_URL . '/extension/email_newsletter_manager/senders/',
 					)
