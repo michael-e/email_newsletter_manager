@@ -45,9 +45,6 @@ Class EmailNewsletterManager{
 				return self::create($id);
 			}
 		}
-		else{
-			throw new EmailNewsletterManagerException(Symphony::Database()->getLastError());
-		}
 	}
 
 	public function delete($id){
