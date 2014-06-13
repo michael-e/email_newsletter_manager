@@ -58,6 +58,16 @@ Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
 		General::array_to_xml($context, $this->_context);
 		$this->_XML->appendChild($context);
 
+		// Fix for 2.4 and XSRF
+		if ((Symphony::Configuration()->get("enable_xsrf", "symphony") == "yes") &&
+			(class_exists('XSRF'))) {
+			$xsrf_input = new XMLElement('xsrf_input');
+			$xsrf_input->appendChild(XSRF::formToken());
+			$this->_XML->appendChild(
+				$xsrf_input
+			);
+		}
+
 		$section_xml = new XMLElement('sections');
 		$sectionManager = new SectionManager($this);
 		$sections = $sectionManager->fetch();
