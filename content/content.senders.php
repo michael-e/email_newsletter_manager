@@ -73,6 +73,16 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 			Widget::Anchor(__('Email Newsletter Senders'), SYMPHONY_URL . '/extension/email_newsletter_manager/senders/')
 		);
 
+		// Fix for 2.4 and XSRF
+		if ((Symphony::Configuration()->get("enable_xsrf", "symphony") == "yes") &&
+			(class_exists('XSRF'))) {
+			$xsrf_input = new XMLElement('xsrf_input');
+			$xsrf_input->appendChild(XSRF::formToken());
+			$this->_XML->appendChild(
+				$xsrf_input
+			);
+		}
+
 		if(!$new){
 			$sender = SenderManager::create($this->_context[1]);
 
