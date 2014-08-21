@@ -70,7 +70,7 @@
 			$label->appendChild(Widget::Select('fields['.$this->get('sortorder').'][templates][]', $options, array('multiple'=>'multiple')));
 
 			if(isset($errors['templates'])){
-				$group->appendChild(Widget::wrapFormElementWithError($label, $errors['templates']));
+				$group->appendChild(Widget::Error($label, $errors['templates']));
 			}
 			else{
 				$group->appendChild($label);
@@ -98,7 +98,7 @@
 			$label = Widget::Label(__('Newsletter Senders'));
 			$label->appendChild(Widget::Select('fields['.$this->get('sortorder').'][senders][]', $options, array('multiple'=>'multiple')));
 			if(isset($errors['senders'])){
-				$group->appendChild(Widget::wrapFormElementWithError($label, $errors['senders']));
+				$group->appendChild(Widget::Error($label, $errors['senders']));
 			}
 			else{
 				$group->appendChild($label);
@@ -125,7 +125,7 @@
 			$label = Widget::Label(__('Newsletter Recipient Groups'));
 			$label->appendChild(Widget::Select('fields['.$this->get('sortorder').'][recipient_groups][]', $options, array('multiple'=>'multiple')));
 			if(isset($errors['recipient_groups'])){
-				$group->appendChild(Widget::wrapFormElementWithError($label, $errors['recipient_groups']));
+				$group->appendChild(Widget::Error($label, $errors['recipient_groups']));
 			}
 			else{
 				$group->appendChild($label);
