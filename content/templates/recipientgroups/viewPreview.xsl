@@ -34,14 +34,14 @@
 		<xsl:if test="/data/recipients/total-pages &gt; 1">
 			<ul class="page">
 				<li><xsl:if test="/data/recipients/current-page &gt; 1">
-						<a href="{concat($root, '/symphony/extension/email_newsletter_manager/recipientgroups/preview/', /data/context/item[@index = 2], '?pg=1')}">First</a>
+						<a href="{concat($symphony-url, '/extension/email_newsletter_manager/recipientgroups/preview/', /data/context/item[@index = 2], '?pg=1')}">First</a>
 					</xsl:if>
 					<xsl:if test="not(/data/recipients/current-page &gt; 1)">
 						First
 					</xsl:if></li>
 				<li>
 					<xsl:if test="/data/recipients/current-page &gt; 1">
-						<a href="{concat($root, '/symphony/extension/email_newsletter_manager/recipientgroups/preview/', /data/context/item[@index = 2], '?pg=', /data/recipients/current-page - 1)}">&#8592; Previous</a>
+						<a href="{concat($symphony-url, '/extension/email_newsletter_manager/recipientgroups/preview/', /data/context/item[@index = 2], '?pg=', /data/recipients/current-page - 1)}">&#8592; Previous</a>
 					</xsl:if>
 					<xsl:if test="not(/data/recipients/current-page &gt; 1)">
 						&#8592; Previous
@@ -50,7 +50,7 @@
 				<li title="Viewing {/data/recipients/start} - {/data/recipients/start + /data/recipients/entries-per-page - 1} of {/data/recipients/total-entries} entries">Page <xsl:value-of select="/data/recipients/current-page" /> of <xsl:value-of select="/data/recipients/total-pages" /></li>
 				<li>
 					<xsl:if test="/data/recipients/remaining-pages &gt; 0">
-						<a href="{concat($root, '/symphony/extension/email_newsletter_manager/recipientgroups/preview/', /data/context/item[@index = 2], '?pg=', /data/recipients/current-page + 1)}">Next &#8594;</a>
+						<a href="{concat($symphony-url, '/extension/email_newsletter_manager/recipientgroups/preview/', /data/context/item[@index = 2], '?pg=', /data/recipients/current-page + 1)}">Next &#8594;</a>
 					</xsl:if>
 					<xsl:if test="not(/data/recipients/remaining-pages &gt; 0)">
 						Next &#8594;
@@ -58,7 +58,7 @@
 				</li>
 				<li>
 					<xsl:if test="/data/recipients/remaining-pages &gt; 0">
-						<a href="{concat($root, '/symphony/extension/email_newsletter_manager/recipientgroups/preview/', /data/context/item[@index = 2], '?pg=', /data/recipients/total-pages)}">Last</a>
+						<a href="{concat($symphony-url, '/extension/email_newsletter_manager/recipientgroups/preview/', /data/context/item[@index = 2], '?pg=', /data/recipients/total-pages)}">Last</a>
 					</xsl:if>
 					<xsl:if test="not(/data/recipients/remaining-pages &gt; 0)">
 						Last
@@ -79,13 +79,13 @@
 		<td>
 			<xsl:choose>
 				<xsl:when test="../../source = 'system:authors'">
-					<a href="{concat($root, '/symphony/system/authors/edit/', id)}"><xsl:value-of select="name" /></a>
+					<a href="{concat($symphony-url, '/system/authors/edit/', id)}"><xsl:value-of select="name" /></a>
 				</xsl:when>
 				<xsl:when test="../../source = 'system:static_recipients'">
 					<xsl:value-of select="name" />
 				</xsl:when>
 				<xsl:otherwise>
-					<a href="{concat($root, '/symphony/publish/', ../../source, '/edit/', id)}"><xsl:value-of select="name" /></a>
+					<a href="{concat($symphony-url, '/publish/', ../../source, '/edit/', id)}"><xsl:value-of select="name" /></a>
 				</xsl:otherwise>
 			</xsl:choose>
 
