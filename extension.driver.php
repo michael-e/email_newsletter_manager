@@ -3,7 +3,6 @@
 if(!defined('ENMDIR')) define('ENMDIR', EXTENSIONS . "/email_newsletter_manager");
 require_once(ENMDIR . '/lib/class.emailnewslettermanager.php');
 
-
 class extension_email_newsletter_manager extends extension{
 
 	public function fetchNavigation(){
@@ -121,7 +120,7 @@ class extension_email_newsletter_manager extends extension{
 						'recipients' => implode(', ', $newsletter->getRecipientGroups(false, true)),
 					);
 					$news = EmailNewsletterManager::save($array);
-					$context['entry']->setData($field_id, array('author_id'=>Administration::instance()->Author->get('id'), 'entry_id'=>$entry_id, 'newsletter_id'=>$news->getId()));
+					$context['entry']->setData($field_id, array('author_id'=>Symphony::Author()->get('id'), 'entry_id'=>$entry_id, 'newsletter_id'=>$news->getId()));
 					//$news->start();
 				}
 				catch(Exception $e){

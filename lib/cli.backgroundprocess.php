@@ -33,6 +33,11 @@ define('DOCROOT', realpath(rtrim(dirname(__FILE__) . '/../../../', '\\/')));
 define('DOMAIN', rtrim(rtrim($_SERVER['HTTP_HOST'], '\\/') . dirname($_SERVER['PHP_SELF']), '.\\/'));
 define('HTTP_HOST', $_SERVER['HTTP_HOST']);
 
+
+// Include autoloader:
+require_once DOCROOT . '/vendor/autoload.php';
+
+// Include the boot script:
 require_once(DOCROOT . '/symphony/lib/boot/bundle.php');
 
 //Inside bundle.php, the error_reporting is set again, but we don't want to be stopped by any other than fatal errors.

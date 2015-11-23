@@ -91,7 +91,7 @@ class EmailNewsletter{
 
 		$author_id = 0;
 		if(Symphony::Engine() instanceof Administration){
-			$author_id = Administration::instance()->Author->get('id');
+			$author_id = Symphony::Author()->get('id');
 		}
 		elseif(Symphony::Engine() instanceof Frontend && (Symphony::ExtensionManager()->fetchStatus('members') == EXTENSION_ENABLED)){
 			$Members = Symphony::ExtensionManager()->create('members');

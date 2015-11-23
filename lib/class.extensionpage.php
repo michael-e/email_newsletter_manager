@@ -44,6 +44,7 @@ Class ExtensionPage extends AdministrationPage{
 					'timezone' => DateTimeObj::get('P'),
 					'website-name' => Symphony::Configuration()->get('sitename', 'general'),
 					'root' => URL,
+					'symphony-url' => SYMPHONY_URL,
 					'workspace' => URL . '/workspace',
 					'current-page' => strtolower($this->_type) . ucfirst($this->_function),
 					'current-path' => $current_path,

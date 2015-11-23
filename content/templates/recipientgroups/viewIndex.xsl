@@ -47,7 +47,7 @@
 <xsl:template match="recipientgroups/entry">
 	<tr>
 		<td>
-			<a href="{concat($root, '/symphony/extension/email_newsletter_manager/recipientgroups/edit/', handle)}"><xsl:value-of select="name"/></a>
+			<a href="{concat($symphony-url, '/extension/email_newsletter_manager/recipientgroups/edit/', handle)}"><xsl:value-of select="name"/></a>
 			<input name="items[{handle}]" type="checkbox" />
 		</td>
 		<td>
@@ -55,7 +55,7 @@
 			<xsl:value-of select="count"/>
 		</td>
 		<td>
-			<a href="{concat($root, '/symphony/extension/email_newsletter_manager/recipientgroups/preview/', handle)}">Preview</a>
+			<a href="{concat($symphony-url, '/extension/email_newsletter_manager/recipientgroups/preview/', handle)}">Preview</a>
 		</td>
 	</tr>
 </xsl:template>
