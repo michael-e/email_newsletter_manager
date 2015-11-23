@@ -14,7 +14,7 @@
 			<thead>
 				<tr>
 					<th scope="col">Name</th>
-					<th scope="col">Email Adress</th>
+					<th scope="col">Email Address</th>
 					<th scope="col">Valid</th>
 				</tr>
 			</thead>
