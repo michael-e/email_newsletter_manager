@@ -41,7 +41,7 @@ Class RecipientSourceSection extends RecipientSource{
 			$field_ids[] = FieldManager::fetchFieldIDFromElementName($nameField, $this->getSource());
 		}
 		$email_field_id = FieldManager::fetchFieldIDFromElementName($this->emailField, $this->getSource());
-		require_once(TOOLKIT . '/util.validators.php');
+		require TOOLKIT . '/util.validators.php';
 		foreach((array)$entries['records'] as $entry){
 			$entry_data = $entry->getData();
 			$element = new XMLElement('entry');
@@ -62,7 +62,7 @@ Class RecipientSourceSection extends RecipientSource{
 					'id'	=> $entry->get('id'),
 					'email' => $email,
 					'name'	=> $name,
-					'valid' => @preg_match($validators['email'], $email)?true:false
+					'valid' => General::validateString($email, $validators['email']) ? true : false
 				);
 			}
 		}

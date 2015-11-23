@@ -25,14 +25,14 @@ Class RecipientSourceAuthor extends RecipientSource{
 		$return['start'] = (((int)$this->dsParamSTARTPAGE - 1) * (int)$this->dsParamLIMIT) + 1;
 		$return['current-page'] = (int)$this->dsParamSTARTPAGE;
 
-		require_once(TOOLKIT . '/util.validators.php');
+		require TOOLKIT . '/util.validators.php';
 
 		foreach($authors as $author){
 			$return['records'][] = array(
 				'id' => $author->get('id'),
 				'name' => $author->get('first_name') . ' ' . $author->get('last_name'),
 				'email' => $author->get('email'),
-				'valid' => @preg_match($validators['email'], $author->get('email'))?true:false
+				'valid' => General::validateString($author->get('email'), $validators['email']) ? true : false
 			);
 		}
 

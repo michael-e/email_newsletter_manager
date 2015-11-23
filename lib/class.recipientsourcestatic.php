@@ -6,14 +6,7 @@ Class RecipientSourceStatic extends RecipientSource{
 
 	public $dsParamLIMIT = 10;
 	public $dsParamSTARTPAGE = 1;
-	protected $_emailValidator;
 	protected $_tempTable;
-
-	public function __construct(){
-		require_once(TOOLKIT . '/util.validators.php');
-		$this->_emailValidator = $validators['email'];
-		parent::__construct();
-	}
 
 	/**
 	 * Fetch recipient data, and include useful data.
@@ -99,10 +92,12 @@ Class RecipientSourceStatic extends RecipientSource{
 			unset($string);
 		}
 		else{
+			require TOOLKIT . '/util.validators.php';
+
 			return array(
 				'name'	=> $name,
 				'email' => $email,
-				'valid' => General::validateString($this->_emailValidator, $recipient['email'])?true:false
+				'valid' => General::validateString($email, $validators['email']) ? true : false
 			);
 		}
 	}

@@ -71,7 +71,7 @@
 
 <xsl:template match="recipients/records/item">
 	<tr>
-		<xsl:if test="not(valid)">
+		<xsl:if test="not(valid = 1)">
 			<xsl:attribute name="class">
 				<xsl:text>invalid</xsl:text>
 			</xsl:attribute>
@@ -97,7 +97,7 @@
 			<xsl:if test="valid = 1">
 				<xsl:text>yes</xsl:text>
 			</xsl:if>
-			<xsl:if test="not(valid)">
+			<xsl:if test="not(valid = 1)">
 				<xsl:text>no</xsl:text>
 			</xsl:if>
 		</td>
