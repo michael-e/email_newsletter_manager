@@ -1,10 +1,13 @@
-tr.invalid, tr.invalid a{
+.etm-recipients-preview-item-invalid,
+.etm-recipients-preview-item-invalid a {
 	color:white;
 }
-tr.invalid td{
+
+.etm-recipients-preview-item-invalid td {
 	background-color:#e28584;
 	border-color:#dfa8a7;
 }
-tr.invalid:nth-child(2n) td{
+
+.etm-recipients-preview-item-invalid:nth-child(2n) td {
 	background-color:#e88f8f;
 }

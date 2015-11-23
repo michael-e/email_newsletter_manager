@@ -10,7 +10,7 @@
 <xsl:template match="/">
 	<form method="post" action="{$current-url}">
 		<!-- <xsl:call-template name="debug" /> -->
-		<table>
+		<table class="etm-recipients-preview">
 			<thead>
 				<tr>
 					<th scope="col">Name</th>
@@ -73,7 +73,7 @@
 	<tr>
 		<xsl:if test="not(valid = 1)">
 			<xsl:attribute name="class">
-				<xsl:text>invalid</xsl:text>
+				<xsl:text>etm-recipients-preview-item-invalid</xsl:text>
 			</xsl:attribute>
 		</xsl:if>
 		<td>
