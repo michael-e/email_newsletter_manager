@@ -124,7 +124,7 @@ class extension_email_newsletter_manager extends extension{
 					//$news->start();
 				}
 				catch(Exception $e){
-					Administration::instance()->customError(__('Error restarting email newsletter'), __($e->getMessage()));
+					Administration::instance()->throwCustomError(__('Error restarting email newsletter'), __($e->getMessage()));
 				}
 			}
 		}
@@ -139,7 +139,7 @@ class extension_email_newsletter_manager extends extension{
 					$newsletter->stop();
 				}
 				catch(Exception $e){
-					Administration::instance()->customError(__('Error stopping email newsletter'), __($e->getMessage()));
+					Administration::instance()->throwCustomError(__('Error stopping email newsletter'), __($e->getMessage()));
 				}
 			}
 		}
@@ -154,7 +154,7 @@ class extension_email_newsletter_manager extends extension{
 					$newsletter->pause();
 				}
 				catch(Exception $e){
-					Administration::instance()->customError(__('Error pausing email newsletter'), __($e->getMessage()));
+					Administration::instance()->throwCustomError(__('Error pausing email newsletter'), __($e->getMessage()));
 				}
 			}
 		}
@@ -180,7 +180,7 @@ class extension_email_newsletter_manager extends extension{
 				// This is the last resort. All checks should be done before saving the entry, so this error should ideally never be shown. Ever.
 				// Because the delegate this function hooks into can not undo the saving, or display any warning messages, a "hard" error is the only way to communicate what is going wrong.
 				catch(Exception $e){
-					Administration::instance()->customError(__('Error sending email newsletter'), __($e->getMessage()));
+					Administration::instance()->throwCustomError(__('Error sending email newsletter'), __($e->getMessage()));
 				}
 			}
 		}
