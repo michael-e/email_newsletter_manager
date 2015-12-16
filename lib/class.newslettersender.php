@@ -1,14 +1,18 @@
 <?php
 
-class NewsletterSender{
+class newslettersender
+{
+    public function getName()
+    {
+        $about = $this->about();
 
-	public function getName(){
-		$about = $this->about();
-		return $about['name'];
-	}
+        return $about['name'];
+    }
 
-	public function getHandle(){
-		$about = $this->about();
-		return Lang::createHandle($this->getName(), 255, '-');
-	}
+    public function getHandle()
+    {
+        $about = $this->about();
+
+        return Lang::createHandle($this->getName(), 255, '-');
+    }
 }

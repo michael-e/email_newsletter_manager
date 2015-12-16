@@ -3,7 +3,7 @@
 	 * ENM core interactions
 	 */
 	$(document).ready(function() {
-		
+
 		var html = $('html').addClass('active'),
 			body = html.find('body'),
 			wrapper = html.find('#wrapper'),
@@ -17,25 +17,25 @@
 			form = contents.find('> form'),
 			user = session.find('li:first a'),
 			pagination = contents.find('ul.page');
-		
+
 		/*--------------------------------------------------------------------------
 			ENM - Sender Editor (taken from admin.js)
 		--------------------------------------------------------------------------*/
 		contents.find('select[name="settings[gateway]"]').symphonyPickable();
-		
+
 		/*--------------------------------------------------------------------------
 			ENM - Recipient group Editor (taken from admin.js)
 		--------------------------------------------------------------------------*/
-		if(body.is('#extensionemail_newsletter_managerrecipientgroups')) {
+		if (body.is('#extensionemail_newsletter_managerrecipientgroups')) {
 			var maxRecord = $('input[name*=max_records]'),
 				pageNumber = $('input[name*=page_number]');
 
 			// Update Data Source output parameter
-			contents.find('input[name="fields[name]"]').on('blur.admin input.admin', function(){
+			contents.find('input[name="fields[name]"]').on('blur.admin input.admin', function() {
 				var value = $(this).val();
 
-				if(value == '' || $('select[name="fields[param][]"]:visible').length == 0) {
-					$('select[name="fields[param][]"] option').each(function(){
+				if (value == '' || $('select[name="fields[param][]"]:visible').length == 0) {
+					$('select[name="fields[param][]"] option').each(function() {
 						var item = $(this),
 							field = item.text().split('.')[1];
 
@@ -52,7 +52,7 @@
 					async: false,
 					url: Symphony.Context.get('root') + '/symphony/ajax/handle/',
 					success: function(result) {
-						$('select[name="fields[param][]"] option').each(function(){
+						$('select[name="fields[param][]"] option').each(function() {
 							var item = $(this),
 								field = item.text().split('.')[1];
 
@@ -78,7 +78,7 @@
 
 				// Show only relevant options based on context
 				$('#ds-context').on('change.admin', function() {
-					if($(this).find('option:selected').text() == label) {
+					if ($(this).find('option:selected').text() == label) {
 						select.find('option.optgroup').remove();
 						select.append(options.clone(true));
 					}
@@ -111,7 +111,7 @@
 			contents.find('input[name*=paginate_results]').on('change.admin', function(event) {
 
 				// Turn on pagination
-				if($(this).is(':checked')) {
+				if ($(this).is(':checked')) {
 					maxRecord.attr('disabled', false);
 					pageNumber.attr('disabled', false);
 				}

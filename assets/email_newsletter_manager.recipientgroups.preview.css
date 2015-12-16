@@ -1,17 +1,17 @@
 .etm-recipients-preview {
-	margin-bottom: 7.1rem;
+    margin-bottom: 7.1rem;
 }
 
 .etm-recipients-preview-item-invalid,
 .etm-recipients-preview-item-invalid a {
-	color:white;
+    color: white;
 }
 
 .etm-recipients-preview-item-invalid td {
-	background-color:#e28584;
-	border-color:#dfa8a7;
+    border-color: #dfa8a7;
+    background-color: #e28584;
 }
 
 .etm-recipients-preview-item-invalid:nth-child(2n) td {
-	background-color:#e88f8f;
+    background-color: #e88f8f;
 }
