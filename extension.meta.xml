@@ -18,6 +18,13 @@
 		</author>
 	</authors>
 	<releases>
+		<release version="3.0" date="2015-12-16" min="2.6" max="2.6.x">
+			<![CDATA[
+- Full Symphony 2.6 compatibility
+- Fixed custom errors
+- Fixed recipients previews (especially email address validation)
+			]]>
+		</release>
 		<release version="2.0.2" date="2015-09-30" min="2.6">
 			<![CDATA[
 - Update to support Symphony 2.6.x
