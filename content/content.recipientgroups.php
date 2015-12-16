@@ -7,9 +7,6 @@ if(!class_exists('ExtensionPage')){
 	require_once(ENMDIR . '/lib/class.extensionpage.php');
 }
 
-require_once(TOOLKIT . '/class.xsltprocess.php');
-require_once(TOOLKIT . '/class.sectionmanager.php');
-require_once(TOOLKIT . '/class.fieldmanager.php');
 require_once(ENMDIR . '/lib/class.recipientgroupmanager.php');
 
 Class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionPage{

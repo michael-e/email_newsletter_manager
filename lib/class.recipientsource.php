@@ -1,9 +1,6 @@
 <?php
 
-require_once(TOOLKIT . '/class.datasource.php');
-
-
-Class RecipientSource extends DataSource{
+Class RecipientSource extends Datasource{
 
 	// Used to filter out addresses that have been sent to already.
 	public $newsletter_id;

@@ -1,13 +1,11 @@
 <?php
 
-require_once(TOOLKIT . '/class.administrationpage.php');
-
 Class ExtensionPage extends AdministrationPage{
 
 	protected $_useTemplate = NULL;
 	public $viewDir = '';
 	protected $_XSLTProc;
-	
+
 	const CRLF = "\r\n";
 
 	function __construct($params){

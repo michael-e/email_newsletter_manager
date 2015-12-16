@@ -2,8 +2,6 @@
 
 if(!defined('ENMDIR')) define('ENMDIR', EXTENSIONS . "/email_newsletter_manager");
 if(!defined('ENVIEWS')) define('ENVIEWS', ENMDIR . "/content/templates");
-require_once(TOOLKIT . '/class.fieldmanager.php');
-require_once(TOOLKIT . '/class.entrymanager.php');
 
 Class contentExtensionemail_newsletter_managerpublishfield extends AjaxPage{
 	public function view(){

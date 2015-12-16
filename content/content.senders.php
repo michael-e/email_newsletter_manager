@@ -7,8 +7,6 @@ if(!class_exists('ExtensionPage')){
 	require_once(ENMDIR . '/lib/class.extensionpage.php');
 }
 
-require_once(TOOLKIT . '/class.xsltprocess.php');
-require_once(TOOLKIT . '/class.emailgatewaymanager.php');
 require_once(ENMDIR . '/lib/class.sendermanager.php');
 require_once(ENMDIR . '/lib/class.emailnewslettermanager.php');
 
@@ -180,7 +178,6 @@ Class contentExtensionemail_newsletter_managersenders extends ExtensionPage{
 		}
 
 		$errors = new XMLElement('errors');
-		require_once(TOOLKIT . '/util.validators.php');
 		if(empty($fields['name'])){
 			$errors->appendChild(new XMLElement('name', __('This field can not be empty.')));
 		}

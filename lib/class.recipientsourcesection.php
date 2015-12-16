@@ -1,8 +1,6 @@
 <?php
 
 require_once('class.recipientsource.php');
-require_once(TOOLKIT . '/class.entrymanager.php');
-require_once(TOOLKIT . '/class.xsltprocess.php');
 
 Class RecipientSourceSection extends RecipientSource{
 
@@ -180,7 +178,6 @@ Class RecipientSourceSection extends RecipientSource{
 					$where = " AND `e`.id IN ('".implode("', '", $value)."') ";
 				}
 				else if($field_id == 'system:date') {
-					require_once(TOOLKIT . '/fields/field.date.php');
 					$date = new fieldDate(Frontend::instance());
 
 					// Create an empty string, we don't care about the Joins, we just want the WHERE clause.
