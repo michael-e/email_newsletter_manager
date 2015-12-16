@@ -18,6 +18,11 @@
 		</author>
 	</authors>
 	<releases>
+		<release version="3.1" date="2015-12-16" min="2.6" max="2.6.x">
+			<![CDATA[
+- Major cleanup (coding style, whitespace etc.)
+			]]>
+		</release>
 		<release version="3.0" date="2015-12-16" min="2.6" max="2.6.x">
 			<![CDATA[
 - Full Symphony 2.6 compatibility
