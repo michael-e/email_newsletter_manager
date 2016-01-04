@@ -162,7 +162,7 @@ class recipientsourcesection extends RecipientSource
                 if (!is_array($filter)) {
                     $filter_type = $this->__determineFilterType($filter);
 
-                    $value = preg_split('/'.($filter_type == DS_FILTER_AND ? '\+' : '(?<!\\\\),').'\s*/', $filter, -1, PREG_SPLIT_NO_EMPTY);
+                    $value = preg_split('/'.($filter_type == Datasource::FILTER_AND ? '\+' : '(?<!\\\\),').'\s*/', $filter, -1, PREG_SPLIT_NO_EMPTY);
                     $value = array_map('trim', $value);
 
                     $value = array_map(array('Datasource', 'removeEscapedCommas'), $value);
@@ -188,11 +188,11 @@ class recipientsourcesection extends RecipientSource
 
                     // Create an empty string, we don't care about the Joins, we just want the WHERE clause.
                     $empty = "";
-                    $date->buildDSRetrievalSQL($value, $empty, $where, ($filter_type == DS_FILTER_AND ? true : false));
+                    $date->buildDSRetrievalSQL($value, $empty, $where, ($filter_type == Datasource::FILTER_AND ? true : false));
 
                     $where = preg_replace('/`t\d+`.value/', '`e`.creation_date', $where);
                 } else {
-                    if (!$fieldPool[$field_id]->buildDSRetrievalSQL($value, $joins, $where, ($filter_type == DS_FILTER_AND ? true : false))) { $this->_force_empty_result = true; return; }
+                    if (!$fieldPool[$field_id]->buildDSRetrievalSQL($value, $joins, $where, ($filter_type == Datasource::FILTER_AND ? true : false))) { $this->_force_empty_result = true; return; }
                     if (!$group) {
                         $group = $fieldPool[$field_id]->requiresSQLGrouping();
                     }
