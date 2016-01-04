@@ -27,7 +27,7 @@ class extension_email_newsletter_manager extends extension
         return array(
             array(
                 'page' => '/backend/',
-                'delegate' => 'InitaliseAdminPageHead',
+                'delegate' => 'InitialiseAdminPageHead',
                 'callback' => 'appendStyles'
             ),
             array(
