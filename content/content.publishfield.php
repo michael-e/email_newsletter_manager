@@ -3,7 +3,7 @@
 if (!defined('ENMDIR')) define('ENMDIR', EXTENSIONS . "/email_newsletter_manager");
 if (!defined('ENVIEWS')) define('ENVIEWS', ENMDIR . "/content/templates");
 
-class contentExtensionemail_newsletter_managerpublishfield extends AjaxPage
+class contentExtensionemail_newsletter_managerpublishfield extends XMLPage
 {
     public function view()
     {
