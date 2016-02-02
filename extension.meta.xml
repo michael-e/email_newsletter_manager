@@ -18,6 +18,11 @@
 		</author>
 	</authors>
 	<releases>
+		<release version="3.2.1" date="2016-02-01" min="2.6" max="2.6.x">
+			<![CDATA[
+- Bugfixes (#69, #70)
+			]]>
+		</release>
 		<release version="3.2" date="2016-01-11" min="2.6" max="2.6.x">
 			<![CDATA[
 - Replace deprecated delegate and extended class
