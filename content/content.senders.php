@@ -112,6 +112,7 @@ class contentExtensionemail_newsletter_managersenders extends ExtensionPage
                 if (!empty($about[$gateway['handle']])) {
                     $config = $about[$gateway['handle']];
                     if ($gateway['handle'] == 'smtp') {
+                        $gw->setHeloHostname($config['helo_hostname']);
                         $gw->setFrom($config['from_address'], $config['from_name']);
                         $gw->setHost($config['host']);
                         $gw->setSecure($config['secure']);
