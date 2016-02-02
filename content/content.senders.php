@@ -116,9 +116,15 @@ class contentExtensionemail_newsletter_managersenders extends ExtensionPage
                         $gw->setHost($config['host']);
                         $gw->setSecure($config['secure']);
                         $gw->setPort($config['port']);
-                        $gw->setAuth($config['auth']);
-                        $gw->setUser($config['username']);
-                        $gw->setPass($config['password']);
+                        if ($config['auth'] == 1) {
+                            $gw->setAuth(true);
+                            $gw->setUser($config['username']);
+                            $gw->setPass($config['password']);
+                        } else {
+                            $gw->setAuth(false);
+                            $gw->setUser('');
+                            $gw->setPass('');
+                        }
                     }
                     if ($gateway['handle'] == 'amazon_ses') {
                         $gw->setFrom($config['from_address'], $config['from_name']);
