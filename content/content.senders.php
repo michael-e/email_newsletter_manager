@@ -115,8 +115,9 @@ class contentExtensionemail_newsletter_managersenders extends ExtensionPage
                         $gw->setHeloHostname($config['helo_hostname']);
                         $gw->setFrom($config['from_address'], $config['from_name']);
                         $gw->setHost($config['host']);
-                        $gw->setSecure($config['secure']);
                         $gw->setPort($config['port']);
+                        $gw->setSecure($config['secure']);
+
                         if ($config['auth'] == 1) {
                             $gw->setAuth(true);
                             $gw->setUser($config['username']);
