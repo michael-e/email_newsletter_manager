@@ -249,6 +249,9 @@ class EmailNewsletter
                     if (isset($content['html'])) {
                         $email->text_html = $content['html'];
                     }
+                    if (isset($content['attachments'])) {
+                        $email->attachments = $content['attachments'];
+                    }
 
                     /**
                      * @delegate PreEmailSend
