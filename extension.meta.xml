@@ -18,6 +18,11 @@
 		</author>
 	</authors>
 	<releases>
+		<release version="3.3.0" date="2016-11-03" min="2.6" max="2.6.x">
+			<![CDATA[
+- Make ENM work with ETM attachments; requires ETM 7.3.0+
+			]]>
+		</release>
 		<release version="3.2.1" date="2016-02-01" min="2.6" max="2.6.x">
 			<![CDATA[
 - Bugfixes (#69, #70)
