@@ -5,7 +5,7 @@ require_once('class.recipientsource.php');
 class recipientsourcesection extends RecipientSource
 {
     public $emailField = null;
-    public $nameFields = Array();
+    public $nameFields = array();
     public $nameXslt = null;
 
     public $dsParamLIMIT = 10;
