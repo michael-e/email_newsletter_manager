@@ -56,7 +56,7 @@ class recipientgroupmanager
                     $path = self::__getDriverPath($f);
 
                     $can_parse = false;
-                    $type = NULL;
+                    $type = null;
 
                     if (method_exists($classname,'allowEditorToParse')) {
                         $can_parse = call_user_func(array($classname, 'allowEditorToParse'));
@@ -89,7 +89,7 @@ class recipientgroupmanager
 
                         if ($about = self::about($f)) {
                             $about['can_parse'] = false;
-                            $about['type'] = NULL;
+                            $about['type'] = null;
                             $result[$f] = $about;
                         }
                     }
@@ -119,22 +119,22 @@ class recipientgroupmanager
             require_once($path);
         }
 
-        return new $classname(Symphony::Engine(), NULL, false);
+        return new $classname(Symphony::Engine(), null, false);
     }
 
-    public static function save($handle = NULL, $fields)
+    public static function save($handle = null, $fields)
     {
         if (strlen(Lang::createHandle($fields['name'])) == 0) {
             return false;
         }
-        if ($handle == Lang::createHandle($fields['name'], 255, '-') || (($handle == NULL) && (self::__getClassPath(Lang::createHandle($fields['name'], 255, '-')) == false))) {
+        if ($handle == Lang::createHandle($fields['name'], 255, '-') || (($handle == null) && (self::__getClassPath(Lang::createHandle($fields['name'], 255, '-')) == false))) {
             if (self::_writeRecipientSource(Lang::createHandle($fields['name'], 255, '-'), self::_parseTemplate($fields))) {
                 Symphony::ExtensionManager()->notifyMembers(
                     'PostRecipientgroupSaved',
                     '/extension/email_newsletter_manager/',
                     array(
-                        'handle'        => $handle,
-                        'fields'        => $fields
+                        'handle' => $handle,
+                        'fields' => $fields
                     )
                 );
 
@@ -164,7 +164,7 @@ class recipientgroupmanager
         }
     }
 
-    public static function delete($handle = NULL)
+    public static function delete($handle = null)
     {
         Symphony::ExtensionManager()->notifyMembers(
             'PreRecipientgroupDelete',

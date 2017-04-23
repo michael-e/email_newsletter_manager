@@ -28,7 +28,7 @@ class recipientsourcestatic extends RecipientSource
         $return['entries-per-page'] = $this->dsParamLIMIT;
         $return['start'] = (((int) $this->dsParamSTARTPAGE - 1) * (int) $this->dsParamLIMIT) + 1;
         $return['current-page'] = (int) $this->dsParamSTARTPAGE;
-        if ($this->newsletter_id !== NULL) {
+        if ($this->newsletter_id !== null) {
             $newsletter = EmailNewsletterManager::create($this->newsletter_id);
             if (is_a($newsletter, 'EmailNewsletter')) {
                 foreach ($recipients as $recipient) {
@@ -50,7 +50,7 @@ class recipientsourcestatic extends RecipientSource
         parent::grab();
         $this->_createTempTable();
 
-        if ($this->newsletter_id !== NULL) {
+        if ($this->newsletter_id !== null) {
             $where .= ' AND `d`.`email` IS NOT NULL GROUP BY `d`.`email`';
             $joins .= ' LEFT OUTER JOIN tbl_tmp_email_newsletters_sent_'.$this->newsletter_id.' AS `n` ON `d`.`email` = `n`.`email`
                         WHERE `n`.`email` IS NULL';
@@ -73,7 +73,7 @@ class recipientsourcestatic extends RecipientSource
     public function getCount()
     {
         parent::getCount();
-        if ($this->newsletter_id !== NULL) {
+        if ($this->newsletter_id !== null) {
             return -1;
         }
         $this->_createTempTable();
@@ -91,7 +91,7 @@ class recipientsourcestatic extends RecipientSource
             $email = trim(strstr($string, '<'), "<> \t\n\r\0\x0B");
         } else {
             $email = trim($string, " \t\n\r\0\x0B");
-            $name = NULL;
+            $name = null;
         }
         if (strlen($email) == 0) {
             unset($string);
@@ -108,7 +108,7 @@ class recipientsourcestatic extends RecipientSource
 
     protected function _createTempTable()
     {
-        if ($this->_tempTable == NULL) {
+        if ($this->_tempTable == null) {
             $name = 'email_newsletters_static_recipients_' . substr(md5(microtime()), 0, 10);
             if (Symphony::Database()->query('CREATE TEMPORARY TABLE ' . $name . ' (`id` INT UNSIGNED NOT NULL AUTO_INCREMENT, PRIMARY KEY ( `id` ), email varchar(255), name varchar(255),`valid` BOOL NOT NULL) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;')) {
                 if (count($this->recipients) > 0) {

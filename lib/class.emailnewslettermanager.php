@@ -10,13 +10,13 @@ class EmailNewsletterManagerException extends Exception
 
 class EmailNewsletterManager
 {
-    public static function listAll($start_page = 1, $limit = NULL)
+    public static function listAll($start_page = 1, $limit = null)
     {
         if ($start_page < 1) {
             $start_page = 1;
         }
         if ($limit < 1) {
-            $limit_query = NULL;
+            $limit_query = null;
         } else {
             $limit_query = ' LIMIT ' . ((int) $start_page - 1) * (int) $limit . ', ' . (int) $limit;
         }
@@ -25,7 +25,7 @@ class EmailNewsletterManager
         return $newsletters;
     }
 
-    public static function &create($id = NULL) {
+    public static function &create($id = null) {
         $newsletter = Symphony::Database()->fetchRow(0, 'SELECT id from `tbl_email_newsletters` WHERE `id` = "' . $id . '" LIMIT 1');
         if (!empty($newsletter)) {
             return new EmailNewsLetter($id);
@@ -34,7 +34,7 @@ class EmailNewsletterManager
         }
     }
 
-    public static function get($id = NULL)
+    public static function get($id = null)
     {
         return self::create($id);
     }

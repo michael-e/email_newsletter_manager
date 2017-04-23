@@ -41,7 +41,7 @@ Section editor - set up field
      * @param XMLElement $wrapper - parent element wrapping the field
      * @param array      $errors  - array with field errors, $errors['name-of-field-element']
      */
-    public function displaySettingsPanel(&$wrapper, $errors=NULL)
+    public function displaySettingsPanel(&$wrapper, $errors = null)
     {
         // initialize field settings based on class defaults (name, placement)
         parent::displaySettingsPanel($wrapper, $errors);
@@ -65,7 +65,7 @@ Section editor - set up field
                 );
             }
         }
-        $group = new XMLElement('div', NULL, array('class' => 'group'));
+        $group = new XMLElement('div', null, array('class' => 'group'));
         $label = Widget::Label(__('Email Templates'));
         $label->appendChild(Widget::Select('fields['.$this->get('sortorder').'][templates][]', $options, array('multiple'=>'multiple')));
 
@@ -93,7 +93,7 @@ Section editor - set up field
                 );
             }
         }
-        $group = new XMLElement('div', NULL, array('class' => 'group'));
+        $group = new XMLElement('div', null, array('class' => 'group'));
         $label = Widget::Label(__('Newsletter Senders'));
         $label->appendChild(Widget::Select('fields['.$this->get('sortorder').'][senders][]', $options, array('multiple'=>'multiple')));
         if (isset($errors['senders'])) {
@@ -139,7 +139,7 @@ Section editor - set up field
      * @param array   $errors
      * @param boolean $checkForDuplicates
      */
-    public function checkFields(&$errors, $checkForDuplicates=true)
+    public function checkFields(&$errors, $checkForDuplicates = true)
     {
         if (!is_array($errors)) {
             $errors = array();
@@ -218,12 +218,12 @@ Publish: entries table
     /**
      * Append newsletter status to entry table
      */
-    public function prepareTableValue($data, XMLElement $link=NULL)
+    public function prepareTableValue($data, XMLElement $link = null)
     {
         if (!is_array($data) || empty($data)) {
             return;
         }
-        $value = NULL;
+        $value = null;
         if (isset($data['newsletter_id'])) {
             $newsletter = EmailNewsletterManager::get($data['newsletter_id']);;
             $stats = $newsletter->getStats();
@@ -253,7 +253,7 @@ Publish: entries table
         return parent::prepareTableValue(array('value' => $value), $link);
     }
 
-    public function buildSortingSQL(&$joins, &$where, &$sort, $order='ASC')
+    public function buildSortingSQL(&$joins, &$where, &$sort, $order = 'ASC')
     {
         if (in_array(strtolower($order), array('random', 'rand'))) {
             $sort = 'ORDER BY RAND()';
@@ -285,7 +285,7 @@ Publish: edit
      * @param $fieldnamePrefix
      * @param $fieldnamePostfix
      */
-    public function displayPublishPanel(&$wrapper, $data=NULL, $flagWithError=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL)
+    public function displayPublishPanel(&$wrapper, $data = null, $flagWithError = null, $fieldnamePrefix = null, $fieldnamePostfix = null)
     {
         Administration::instance()->Page->addScriptToHead(URL . '/extensions/email_newsletter_manager/assets/email_newsletter_manager.publish.js', 1001);
         Administration::instance()->Page->addStylesheetToHead(URL . '/extensions/email_newsletter_manager/assets/email_newsletter_manager.publish.css', 'screen', 1000);
@@ -293,7 +293,7 @@ Publish: edit
         $this->_field_id = $this->get('id');
         $this->_entry_id = Administration::instance()->Page->_context['entry_id'];
 
-        $status = NULL;
+        $status = null;
 
         // get newsletter properties
         $newsletter_properties = array();
@@ -552,7 +552,7 @@ Publish: edit
                 // build selector for email templates
                 if (count($templates_options) > 1) {
                     $options = array();
-                    $options[] = array(NULL, NULL, __('--- please select ---'));
+                    $options[] = array(null, null, __('--- please select ---'));
                     foreach ($templates_options as $template) {
                         $options[] = array(
                             $template[0],
@@ -577,7 +577,7 @@ Publish: edit
                 // build selector for senders
                 if (count($senders_options) > 1) {
                     $options = array();
-                    $options[] = array(NULL, NULL, __('--- please select ---'));
+                    $options[] = array(null, null, __('--- please select ---'));
                     foreach ($senders_options as $sender) {
                         $options[] = array(
                             $sender[0],
@@ -603,7 +603,7 @@ Publish: edit
                 if (count($recipient_groups_options) > 1) {
                     $p = new XMLElement('p', __('Recipient Groups: '));
                     $gui->appendChild($p);
-                    $p = new XMLElement('p', NULL, array('class' => 'recipient-groups'));
+                    $p = new XMLElement('p', null, array('class' => 'recipient-groups'));
                     foreach ($recipient_groups_options as $recipient_group) {
                         $label = Widget::Label();
                         $input = Widget::Input(
@@ -612,7 +612,7 @@ Publish: edit
                             'checkbox',
                             (!empty($recipient_group[0]) && in_array($recipient_group[0], (array) $newsletter_properties['recipients']))
                             ? array('checked' => 'checked')
-                            : NULL
+                            : null
                         );
                         $label->setValue($input->generate() . $recipient_group[1]);
                         $label->setAttribute('class', 'recipient-group');
@@ -647,11 +647,11 @@ Publish: edit
     /**
      * Prepares field values for database.
      */
-    public function processRawFieldData($data, &$status, &$message = NULL, $simulate = false, $entry_id = NULL)
+    public function processRawFieldData($data, &$status, &$message = null, $simulate = false, $entry_id = null)
     {
         $status = self::__OK__;
         if (empty($data)) {
-            return NULL;
+            return null;
         }
 
         $entry_data = array();
@@ -675,12 +675,12 @@ Publish: edit
         // check if properties are valid (i.e. configured in the section
         // editor); otherwise it would be super-simple to send with
         // unwanted or invalid properties;
-        $template = NULL;
+        $template = null;
         if (in_array($data['template'], explode(',', $this->get('templates')))) {
             $template = $data['template'];
         }
 
-        $sender = NULL;
+        $sender = null;
         if (in_array($data['sender'], explode(',', $this->get('senders')))) {
             $sender = $data['sender'];
         }
@@ -721,7 +721,7 @@ Publish: edit
 Publish: delete
 -------------------------------------------------------------------------*/
 
-    public function entryDataCleanup($entry_id, $data=NULL)
+    public function entryDataCleanup($entry_id, $data = null)
     {
         try {
             $newsletter_id = EmailNewsletterManager::delete($data['newsletter_id']);
@@ -761,7 +761,7 @@ Output
     {
         $newsletter = EmailNewsletterManager::create($data['newsletter_id']);
 
-        return is_object($newsletter->getSender()) ? $newsletter->getSender()->getHandle() : NULL;
+        return is_object($newsletter->getSender()) ? $newsletter->getSender()->getHandle() : null;
     }
 
     /**
@@ -806,7 +806,7 @@ Output
         $about = is_object($newsletter->getSender()) ? $newsletter->getSender()->about() : array();
         General::array_to_xml($sender, $about);
         $sender_name = $about['name'];
-        $sender_handle = is_object($newsletter->getSender()) ? $newsletter->getSender()->getHandle() : NULL;
+        $sender_handle = is_object($newsletter->getSender()) ? $newsletter->getSender()->getHandle() : null;
         $el = new XMLElement('name');
         $el->setAttribute('id', $sender_handle);
         $el->setValue($sender_name);
@@ -858,11 +858,11 @@ Output
 /*-------------------------------------------------------------------------
 Filtering
 -------------------------------------------------------------------------*/
-    public function displayDatasourceFilterPanel(&$wrapper, $data=NULL, $errors=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL)
+    public function displayDatasourceFilterPanel(&$wrapper, $data = null, $errors = null, $fieldnamePrefix = null, $fieldnamePostfix = null)
     {
         $wrapper->appendChild(new XMLElement('h4', $this->get('label') . ' <i>'.$this->Name().'</i>'));
         $label = Widget::Label(__('Newsletter ID'));
-        $label->appendChild(Widget::Input('fields[filter]'.($fieldnamePrefix ? '['.$fieldnamePrefix.']' : '').'['.$this->get('id').']'.($fieldnamePostfix ? '['.$fieldnamePostfix.']' : ''), ($data ? General::sanitize($data) : NULL)));
+        $label->appendChild(Widget::Input('fields[filter]'.($fieldnamePrefix ? '['.$fieldnamePrefix.']' : '').'['.$this->get('id').']'.($fieldnamePostfix ? '['.$fieldnamePostfix.']' : ''), ($data ? General::sanitize($data) : null)));
         $wrapper->appendChild($label);
     }
 
@@ -948,7 +948,7 @@ Helpers
             $recipient_groups[] = $about['name'];
         }
 
-        $info = NULL;
+        $info = null;
         if ($displayTemplate) {
             $info .= sprintf(__('Email Template: %s'), is_object($newsletter->getTemplate())?$newsletter->getTemplate()->about['name']:'none');
         }

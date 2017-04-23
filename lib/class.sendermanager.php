@@ -84,7 +84,7 @@ class sendermanager
 
                         if ($about = self::about($f)) {
                             $about['can_parse'] = false;
-                            $about['type'] = NULL;
+                            $about['type'] = null;
                             $result[$f] = $about;
                         }
                     }
@@ -126,12 +126,12 @@ class sendermanager
 
     }
 
-    public static function save($handle = NULL, $fields)
+    public static function save($handle = null, $fields)
     {
         if (strlen(Lang::createHandle($fields['name'])) == 0) {
             return false;
         }
-        if ($handle == Lang::createHandle($fields['name'], 255, '-') || (($handle == NULL) && (self::__getClassPath(Lang::createHandle($fields['name'], 255, '-')) == false))) {
+        if ($handle == Lang::createHandle($fields['name'], 255, '-') || (($handle == null) && (self::__getClassPath(Lang::createHandle($fields['name'], 255, '-')) == false))) {
             if (self::_writeSender(Lang::createHandle($fields['name'], 255, '-'), self::_parseTemplate($fields))) {
                 Symphony::ExtensionManager()->notifyMembers(
                     'PostSenderSaved',
@@ -168,7 +168,7 @@ class sendermanager
         }
     }
 
-    public static function delete($handle = NULL)
+    public static function delete($handle = null)
     {
         Symphony::ExtensionManager()->notifyMembers(
             'PreSenderDelete',

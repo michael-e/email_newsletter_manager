@@ -16,7 +16,7 @@ set_error_handler("handleError");
 function handleShutdown()
 {
     $error = error_get_last();
-    if (($error !== NULL) && ($error['type'] <= 1)) {
+    if (($error !== null) && ($error['type'] <= 1)) {
         file_put_contents(DOCROOT . '/manifest/newsletter-log.txt', '['.DateTimeObj::get('Y/m/d H:i:s').'] pid: '.getmypid().' - ' . $error['message'] . ' in file: ' . $error['file'] . ' on line ' . $error['line'] . "\r\n", FILE_APPEND);
     }
 }

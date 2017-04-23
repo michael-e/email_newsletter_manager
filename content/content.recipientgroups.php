@@ -80,7 +80,7 @@ class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
                 General::array_to_xml($field_xml,$field->get());
 
                 $filter_html = new XMLElement('filter_html');
-                $field->displayDatasourceFilterPanel($filter_html, NULL, $errors, $section->get('id'));
+                $field->displayDatasourceFilterPanel($filter_html, null, $errors, $section->get('id'));
                 $field_xml->appendChild($filter_html);
 
                 $field_elements = new XMLElement('elements');
@@ -156,7 +156,7 @@ class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
                             $title = new XMLElement('h4', 'System ID');
                             $label = Widget::Label(__('Value'));
                             $label->appendChild(Widget::Input('fields[filter]['.$properties['source'].'][id]', General::sanitize($val)));
-                            $filter_entry = new XMLElement('entry', NULL, array('id'=>'id', 'data-type'=>'id'));
+                            $filter_entry = new XMLElement('entry', null, array('id'=>'id', 'data-type'=>'id'));
                             $filter_entry->appendChild($title);
                             $filter_entry->appendChild($label);
                             $filters->appendChild($filter_entry);
@@ -165,7 +165,7 @@ class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
                             $title = new XMLElement('h4', 'System Date');
                             $label = Widget::Label(__('Value'));
                             $label->appendChild(Widget::Input('fields[filter]['.$properties['source'].'][system:date]', General::sanitize($val)));
-                            $filter_entry = new XMLElement('entry', NULL, array('id'=>'id', 'data-type'=>'system:date'));
+                            $filter_entry = new XMLElement('entry', null, array('id'=>'id', 'data-type'=>'system:date'));
                             $filter_entry->appendChild($title);
                             $filter_entry->appendChild($label);
                             $filters->appendChild($filter_entry);
@@ -183,7 +183,7 @@ class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
                                 if (is_numeric($filter) && in_array($filter, $field_ids)) {
                                     $filter_obj = FieldManager::fetch($filter);
                                     if (is_object($filter_obj)) {
-                                        $filter_entry = new XMLElement('entry', NULL, array('id'=>$filter, 'data-type'=>FieldManager::fetchHandleFromID($filter)));
+                                        $filter_entry = new XMLElement('entry', null, array('id'=>$filter, 'data-type'=>FieldManager::fetchHandleFromID($filter)));
                                         $filter_obj->displayDatasourceFilterPanel($filter_entry, $val, $errors, is_numeric($properties['source'])?$properties['source']:1);
                                         $filters->appendChild($filter_entry);
                                     }
@@ -197,7 +197,7 @@ class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
                                 $title = new XMLElement('h4', $filter_names[$filter]);
                                 $label = Widget::Label(__('Value'));
                                 $label->appendChild(Widget::Input('fields[filter]['.$properties['source'].'][username]', General::sanitize($val)));
-                                $filter_entry = new XMLElement('entry', NULL, array('id'=>'id', 'data-type'=>'username'));
+                                $filter_entry = new XMLElement('entry', null, array('id'=>'id', 'data-type'=>'username'));
                                 $filter_entry->appendChild($title);
                                 $filter_entry->appendChild($label);
                                 $filters->appendChild($filter_entry);

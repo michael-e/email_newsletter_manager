@@ -37,7 +37,7 @@ class recipientsourceauthor extends RecipientSource
             );
         }
 
-        if ($this->newsletter_id !== NULL) {
+        if ($this->newsletter_id !== null) {
             $newsletter = EmailNewsletterManager::create($this->newsletter_id);
             if (is_a($newsletter, 'EmailNewsletter')) {
                 foreach ($return['records'] as $recipient) {

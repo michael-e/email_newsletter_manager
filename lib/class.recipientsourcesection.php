@@ -4,9 +4,9 @@ require_once('class.recipientsource.php');
 
 class recipientsourcesection extends RecipientSource
 {
-    public $emailField = NULL;
+    public $emailField = null;
     public $nameFields = Array();
-    public $nameXslt = NULL;
+    public $nameXslt = null;
 
     public $dsParamLIMIT = 10;
     public $dsParamPAGINATERESULTS = 'yes';
@@ -65,7 +65,7 @@ class recipientsourcesection extends RecipientSource
                 );
             }
         }
-        if ($this->newsletter_id !== NULL) {
+        if ($this->newsletter_id !== null) {
             $newsletter = EmailNewsletterManager::create($this->newsletter_id);
             if (is_a($newsletter, 'EmailNewsletter')) {
                 foreach ($return['records'] as $recipient) {
@@ -97,7 +97,7 @@ class recipientsourcesection extends RecipientSource
         $entries = EntryManager::fetchByPage(
             ($this->dsParamSTARTPAGE > 0 ? $this->dsParamSTARTPAGE : 1),
             $this->getSource(),
-            ($this->dsParamLIMIT >= 0 ? $this->dsParamLIMIT : NULL),
+            ($this->dsParamLIMIT >= 0 ? $this->dsParamLIMIT : null),
             $where_and_joins['where'],
             $where_and_joins['joins'],
             false,
@@ -124,7 +124,7 @@ class recipientsourcesection extends RecipientSource
         parent::getCount();
         // To get the exact count for the newsletter requires a very slow query.
         // This value is not used anywhere, so for performance reasons count will not return anything.
-        if ($this->newsletter_id !== NULL) {
+        if ($this->newsletter_id !== null) {
             return -1;
         }
         $where_and_joins = $this->getWhereJoinsAndGroup(true);
@@ -150,8 +150,8 @@ class recipientsourcesection extends RecipientSource
      */
     public function getWhereJoinsAndGroup($count_only = false)
     {
-        $where = NULL;
-        $joins = NULL;
+        $where = null;
+        $joins = null;
         if (is_array($this->dsParamFILTERS) && !empty($this->dsParamFILTERS)) {
             foreach ($this->dsParamFILTERS as $field_id => $filter) {
 
@@ -204,7 +204,7 @@ class recipientsourcesection extends RecipientSource
 
         $joins .= ' LEFT JOIN tbl_entries_data_'.FieldManager::fetchFieldIDFromElementName($this->emailField, $this->getSource()).' AS `d` ON `e`.`id` = `d`.`entry_id`';
 
-        if ($this->newsletter_id !== NULL) {
+        if ($this->newsletter_id !== null) {
             $joins .= ' LEFT OUTER JOIN tbl_tmp_email_newsletters_sent_'.$this->newsletter_id.' AS `n` ON `d`.`value` = `n`.`email`';
             $where .= ' AND `n`.`email` IS NULL GROUP BY `d`.`value`';
         } elseif ($count_only != true) {

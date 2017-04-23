@@ -12,7 +12,7 @@ class recipientsource extends Datasource
     public $_dependencies = array();
 
     // Properties.
-    protected $_count = NULL;
+    protected $_count = null;
     protected $_param_pool = array();
     protected $_XSLTProc;
     protected $_where;
@@ -83,7 +83,7 @@ class recipientsource extends Datasource
             $profiler = Symphony::Profiler();
             $profiler->seed();
 
-            $pool[$handle] =& DatasourceManager::create($handle, NULL, false);
+            $pool[$handle] =& DatasourceManager::create($handle, null, false);
             $dependencies[$handle] = $pool[$handle]->getDependencies();
         }
 

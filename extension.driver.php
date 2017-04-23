@@ -124,8 +124,8 @@ class extension_email_newsletter_manager extends extension
                 try {
                     $newsletter = EmailNewsletterManager::create($data['newsletter_id']);
                     $array = array(
-                        'template'   => is_object($newsletter->getTemplate()) ? $newsletter->getTemplate()->getHandle() : NULL,
-                        'sender'     => is_object($newsletter->getSender()) ? $newsletter->getSender()->getHandle() : NULL,
+                        'template'   => is_object($newsletter->getTemplate()) ? $newsletter->getTemplate()->getHandle() : null,
+                        'sender'     => is_object($newsletter->getSender()) ? $newsletter->getSender()->getHandle() : null,
                         'recipients' => implode(', ', $newsletter->getRecipientGroups(false, true)),
                     );
                     $news = EmailNewsletterManager::save($array);

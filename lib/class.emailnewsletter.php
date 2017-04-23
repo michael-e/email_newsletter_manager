@@ -224,8 +224,8 @@ class EmailNewsletter
                     $pseudo_root = $this->getPseudoRoot();
                     $template->addParams(
                         array(
-                            'root' => !empty($pseudo_root) ? $pseudo_root : NULL,
-                            'workspace' => !empty($pseudo_root) ? $pseudo_root.'/workspace' : NULL,
+                            'root' => !empty($pseudo_root) ? $pseudo_root : null,
+                            'workspace' => !empty($pseudo_root) ? $pseudo_root.'/workspace' : null,
                         )
                     );
 

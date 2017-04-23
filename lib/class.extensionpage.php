@@ -2,7 +2,7 @@
 
 class extensionpage extends AdministrationPage
 {
-    protected $_useTemplate = NULL;
+    protected $_useTemplate = null;
     public $viewDir = '';
     protected $_XSLTProc;
 
@@ -27,7 +27,7 @@ class extensionpage extends AdministrationPage
 
     public function view()
     {
-        $this->Contents = new XMLElement('div', NULL, array('id' => 'contents'));
+        $this->Contents = new XMLElement('div', null, array('id' => 'contents'));
         $this->Form->setAttribute('style','display:none;');
 
         return parent::view();
@@ -60,18 +60,18 @@ class extensionpage extends AdministrationPage
                 );
                 $html = $this->_XSLTProc->process($this->_XML->generate(), file_get_contents($template), $params);
                 if ($this->_XSLTProc->isErrors()) {
-                    $errstr = NULL;
+                    $errstr = null;
 
                     while (list($key, $val) = $this->_XSLTProc->getError()) {
                         $errstr .= 'Line: ' . $val['line'] . ' - ' . $val['message'] . self::CRLF;
                     }
 
-                    throw new SymphonyErrorPage(trim($errstr), NULL, 'xslt-error', array('proc' => clone $this->_XSLTProc));
+                    throw new SymphonyErrorPage(trim($errstr), null, 'xslt-error', array('proc' => clone $this->_XSLTProc));
                 }
             } else {
                 Administration::instance()->errorPageNotFound();
             }
-            $this->Form = NULL;
+            $this->Form = null;
             $this->Contents->setValue($html);
         }
 
