@@ -34,7 +34,7 @@ class recipientsource extends Datasource
     {
     }
 
-    public function grab(&$param_pool = array())
+    public function execute(&$param_pool = array())
     {
         $this->processDependencies($param_pool);
     }
@@ -92,7 +92,7 @@ class recipientsource extends Datasource
         foreach ($dsOrder as $handle) {
             $ds = $pool[$handle];
             $ds->processParameters($this->_env);
-            $ds->grab($this->_env['env']['pool']);
+            $ds->execute($this->_env['env']['pool']);
             unset($ds);
         }
         $this->processParameters($this->_env);
