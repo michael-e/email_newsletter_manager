@@ -285,6 +285,21 @@ class EmailNewsletter
 
                     $this->_markRecipient($recipient['email'], 'sent');
                 } catch (Exception $e) {
+
+                    /**
+                     * @delegate PostEmailFail
+                     */
+                    Symphony::ExtensionManager()->notifyMembers(
+                        'PostEmailFail',
+                        '/extension/email_newsletter_manager/',
+                        array(
+                            'newsletter'    => $this,
+                            'email'         => $email,
+                            'template'      => $template,
+                            'recipient'     => $recipient
+                        )
+                    );
+
                     file_put_contents(DOCROOT . '/manifest/newsletter-log.txt', '['.DateTimeObj::get('Y/m/d H:i:s').'] newsletter-id: '.$this->getId().' - ' . $e->getMessage() . "\r\n", FILE_APPEND);
                     $this->_markRecipient($recipient['email'], 'failed');
                     continue;
