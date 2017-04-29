@@ -259,7 +259,7 @@ Publish: entries table
             $sort = 'ORDER BY RAND()';
         } else {
             $joins .= "LEFT OUTER JOIN `tbl_entries_data_".$this->get('id')."` AS `ed` ON (`e`.`id` = `ed`.`entry_id`) LEFT JOIN `tbl_email_newsletters` as `nl` on `ed`.`newsletter_id` = `nl`.`id`";
-            $sort = 'ORDER BY `nl`.`status` ' . $order;
+            $sort = sprintf('ORDER BY `nl`.`status` %s', $order);
         }
     }
 
