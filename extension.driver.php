@@ -237,7 +237,7 @@ class extension_email_newsletter_manager extends extension
         }
     }
 
-    public function update($previousVersion)
+    public function update($previousVersion = false)
     {
         return true;
     }

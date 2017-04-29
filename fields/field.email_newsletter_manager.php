@@ -41,7 +41,7 @@ Section editor - set up field
      * @param XMLElement $wrapper - parent element wrapping the field
      * @param array      $errors  - array with field errors, $errors['name-of-field-element']
      */
-    public function displaySettingsPanel(&$wrapper, $errors = null)
+    public function displaySettingsPanel(XMLElement &$wrapper, $errors = null)
     {
         // initialize field settings based on class defaults (name, placement)
         parent::displaySettingsPanel($wrapper, $errors);
@@ -139,7 +139,7 @@ Section editor - set up field
      * @param array   $errors
      * @param boolean $checkForDuplicates
      */
-    public function checkFields(&$errors, $checkForDuplicates = true)
+    public function checkFields(array &$errors, $checkForDuplicates = true)
     {
         if (!is_array($errors)) {
             $errors = array();
@@ -218,7 +218,7 @@ Publish: entries table
     /**
      * Append newsletter status to entry table
      */
-    public function prepareTableValue($data, XMLElement $link = null)
+    public function prepareTableValue($data, XMLElement $link = null, $entry_id = null)
     {
         if (!is_array($data) || empty($data)) {
             return;
@@ -253,7 +253,7 @@ Publish: entries table
         return parent::prepareTableValue(array('value' => $value), $link);
     }
 
-    public function buildSortingSQL(&$joins, &$where, &$sort, $order = 'ASC')
+    public function buildSortingSQL(&$joins, &$where, &$sort, $order = 'ASC', &$select = null)
     {
         if (in_array(strtolower($order), array('random', 'rand'))) {
             $sort = 'ORDER BY RAND()';
@@ -284,8 +284,9 @@ Publish: edit
      * @param $flagWithError
      * @param $fieldnamePrefix
      * @param $fieldnamePostfix
+     * @param $entry_id
      */
-    public function displayPublishPanel(&$wrapper, $data = null, $flagWithError = null, $fieldnamePrefix = null, $fieldnamePostfix = null)
+    public function displayPublishPanel(XMLElement &$wrapper, $data = null, $flagWithError = null, $fieldnamePrefix = null, $fieldnamePostfix = null, $entry_id = null)
     {
         Administration::instance()->Page->addScriptToHead(URL . '/extensions/email_newsletter_manager/assets/email_newsletter_manager.publish.js', 1001);
         Administration::instance()->Page->addStylesheetToHead(URL . '/extensions/email_newsletter_manager/assets/email_newsletter_manager.publish.css', 'screen', 1000);
@@ -757,7 +758,7 @@ Output
      * get param pool value
      * @return: string email newsletter sender ID (i.e. handle)
      */
-    public function getParameterPoolValue($data)
+    public function getParameterPoolValue(array $data, $entry_id = null)
     {
         $newsletter = EmailNewsletterManager::create($data['newsletter_id']);
 
@@ -778,7 +779,7 @@ Output
     /**
      * Append element to datasource output
      */
-    public function appendFormattedElement(&$wrapper, $data, $encode = false)
+    public function appendFormattedElement(XMLElement &$wrapper, $data, $encode = false, $mode = null, $entry_id = null)
     {
         $node = new XMLElement($this->get('element_name'));
 
@@ -858,7 +859,7 @@ Output
 /*-------------------------------------------------------------------------
 Filtering
 -------------------------------------------------------------------------*/
-    public function displayDatasourceFilterPanel(&$wrapper, $data = null, $errors = null, $fieldnamePrefix = null, $fieldnamePostfix = null)
+    public function displayDatasourceFilterPanel(XMLElement &$wrapper, $data = null, $errors = null, $fieldnamePrefix = null, $fieldnamePostfix = null)
     {
         $wrapper->appendChild(new XMLElement('h4', $this->get('label') . ' <i>'.$this->Name().'</i>'));
         $label = Widget::Label(__('Newsletter ID'));

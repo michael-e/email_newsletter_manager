@@ -16,7 +16,8 @@ class recipientsourceauthor extends RecipientSource
      */
     public function getSlice()
     {
-        $authors = $this->execute();
+        $param_pool = array();
+        $authors = $this->execute($param_pool);
         $return['total-entries'] = $this->getCount();
         $pages = ((int) $return['total-entries']/(int) $this->dsParamLIMIT);
         $return['total-pages'] = round($pages);
@@ -49,9 +50,9 @@ class recipientsourceauthor extends RecipientSource
         return $return;
     }
 
-    public function execute()
+    public function execute(array &$param_pool = null)
     {
-        parent::execute();
+        parent::execute($param_pool);
         $author_ids = $this->_getAuthorIds();
         $authors = AuthorManager::fetchByID($author_ids, 'id', $this->dsParamORDER);
 

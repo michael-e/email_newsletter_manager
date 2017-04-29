@@ -26,7 +26,8 @@ class recipientsourcesection extends RecipientSource
      */
     public function getSlice()
     {
-        $entries = $this->execute();
+        $param_pool = array();
+        $entries = $this->execute($param_pool);
         $return['total-entries'] = (string) $entries['total-entries'];
         $return['total-pages'] = (string) $entries['total-pages'];
         $return['remaining-pages'] = (string) $entries['remaining-pages'];
@@ -89,9 +90,9 @@ class recipientsourcesection extends RecipientSource
      * @todo bugtesting and error handling
      * @return array
      */
-    public function execute()
+    public function execute(array &$param_pool = null)
     {
-        parent::execute();
+        parent::execute($param_pool);
         $where_and_joins = $this->getWhereJoinsAndGroup();
 
         $entries = EntryManager::fetchByPage(

@@ -30,11 +30,11 @@ class recipientsource extends Datasource
         $this->processDependencies();
     }
 
-    public function getSlice($page = 1, $count = 10)
+    public function getSlice()
     {
     }
 
-    public function execute(&$param_pool = array())
+    public function execute(array &$param_pool = null)
     {
         $this->processDependencies($param_pool);
     }

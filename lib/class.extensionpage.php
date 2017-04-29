@@ -33,7 +33,7 @@ class extensionpage extends AdministrationPage
         return parent::view();
     }
 
-    public function generate()
+    public function generate($page = null)
     {
         if ($this->_useTemplate !== false) {
             $template = $this->viewDir . '/' . (empty($this->_useTemplate)?$this->_getTemplate($this->_type, $this->_function):$this->_useTemplate . '.xsl');

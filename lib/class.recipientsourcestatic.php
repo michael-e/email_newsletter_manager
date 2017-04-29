@@ -19,7 +19,8 @@ class recipientsourcestatic extends RecipientSource
      */
     public function getSlice()
     {
-        $recipients = $this->execute();
+        $param_pool = array();
+        $recipients = $this->execute($param_pool);
         $return['total-entries'] = $this->getCount();
         $pages = ((int) $return['total-entries']/(int) $this->dsParamLIMIT);
         $return['total-pages'] = (int) ceil($pages);
@@ -45,9 +46,9 @@ class recipientsourcestatic extends RecipientSource
      *
      * @return array
      */
-    public function execute()
+    public function execute(array &$param_pool = null)
     {
-        parent::execute();
+        parent::execute($param_pool);
         $this->_createTempTable();
 
         if ($this->newsletter_id !== null) {
