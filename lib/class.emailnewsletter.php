@@ -275,6 +275,9 @@ class EmailNewsletter
                     if (isset($content['attachments'])) {
                         $email->attachments = $content['attachments'];
                     }
+                    if (isset($content['ignore-attachment-errors'])) {
+                        $email->validate_attachment_errors = !$content['ignore-attachment-errors'];
+                    }
 
                     /**
                      * @delegate PreEmailSend
