@@ -18,6 +18,11 @@
 		</author>
 	</authors>
 	<releases>
+		<release version="3.4.1" date="2017-04-30" min="2.6" max="2.6.x">
+			<![CDATA[
+- Fix incompatible function signature (#73)
+			]]>
+		</release>
 		<release version="3.4.0" date="2017-04-29" min="2.6" max="2.6.x">
 			<![CDATA[
 - PHP7 compatibility
