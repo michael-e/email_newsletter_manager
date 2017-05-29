@@ -704,7 +704,7 @@ Publish: edit
                 $members_extension_status = $members_extension_about['status'];
             }
 
-            if (in_array(EXTENSION_ENABLED, $members_extension_status)) {
+            if (in_array(Extension::EXTENSION_ENABLED, $members_extension_status)) {
                 $Members = Symphony::ExtensionManager()->create('members');
                 $author_id = $Members->getMemberDriver()->getMemberID();
             }
