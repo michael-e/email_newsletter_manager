@@ -697,9 +697,17 @@ Publish: edit
         $author_id = 0;
         if (Symphony::Engine() instanceof Administration) {
             $author_id = Symphony::Author()->get('id');
-        } elseif (Symphony::Engine() instanceof Frontend && (Symphony::ExtensionManager()->fetchStatus('members') == EXTENSION_ENABLED)) {
-            $Members = Symphony::ExtensionManager()->create('members');
-            $author_id = $Members->getMemberDriver()->getMemberID();
+        } elseif (Symphony::Engine() instanceof Frontend) {
+            $members_extension_about = Symphony::ExtensionManager()->about('members');
+            $members_extension_status = array();
+            if (isset($members_extension_about['status'])) {
+                $members_extension_status = $members_extension_about['status'];
+            }
+
+            if (in_array(EXTENSION_ENABLED, $members_extension_status)) {
+                $Members = Symphony::ExtensionManager()->create('members');
+                $author_id = $Members->getMemberDriver()->getMemberID();
+            }
         }
 
         $newsletter = EmailNewsletterManager::save(array(
