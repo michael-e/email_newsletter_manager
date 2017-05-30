@@ -353,17 +353,7 @@ These constraints are regarded a small price for having a combined "Save and Sen
 Please note that successfully sending mass mailings will require your email box to be set up "more than correctly". So please check the following:
 
 * correct MX records
-* SPF (Sender Policy Framework) record
-* optional: reverse DNS entry (PTR/Reverse DNS checks)
-* optional: Domain Keys / DKIM
+* reverse DNS entry pointing to the HELO/EHLO name of the sending server (PTR/Reverse DNS checks)
+* optional: DKIM
 
 It is beyond the scope of this software to explain these measures in detail. Anyway the first two are really important if you don't want your email to be flagged as spam. If you don't know what it is, ask your provider or consult the web (i.e. Google, isn't it?).
-
-Here are some useful links concerning SPF records:
-
-* <http://phpmailer.codeworxtech.com/index.php?pg=tip_spf>
-* <http://old.openspf.org/wizard.html>
-
-Here is a simple example DNS record which worked very well in my tests:
-
-	example.com. IN TXT "v=spf1 a mx"
