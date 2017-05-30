@@ -302,7 +302,7 @@ Never use this extension for SPAM. If you do so, we will hate you.
 
 ## Data Source output
 
-The data source output of the Email Newsletter field contains:
+The default data source output of the Email Newsletter field contains:
 
 * newsletter-id
 * started on (date and time)
@@ -318,6 +318,20 @@ The data source output of the Email Newsletter field contains:
 * email template ("about")
 
 The XML output allows for advanced email customization using XSLT. You may, for example, append custom headers or footers for certain sender IDs.
+
+
+### Faster, reduced output
+
+Unfortunately, the field's default output can cause performance issues. Especially the counts on recipient groups can be rather "expensive", depending on the number (and size) of the groups, of course.
+
+Things will get worse if you attempt to create an index list (e.g. 20 entries) including ENM newsletter information for these entries. In this case, all the needed counts will be performed for any entry.
+
+So in ENM 3.5.0 two new output modes have been added:
+
+* `reduced` — prevents retrieval (and output) of counts on recipient groups, which speeds up the output a lot
+* `minimal` — prevents data retrieval (and output) for all child nodes (i.e. `subject`, `sender`, `recipient-grous`, `template`); this means that only the element node and its attributes will be in the output; this is the fastest option, of course
+
+For a better understanding of these output modes please inspect the XML output (using the Debug Devkit extension).
 
 
 

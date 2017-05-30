@@ -780,7 +780,9 @@ Output
     public function fetchIncludableElements()
     {
         return array(
-            $this->get('element_name')
+            $this->get('element_name'),
+            $this->get('element_name') . ': reduced',
+            $this->get('element_name') . ': minimal'
         );
     }
 
@@ -803,54 +805,63 @@ Output
         $node->setAttribute('total', $properties['total']);
         $node->setAttribute('sent', $properties['sent']);
         $node->setAttribute('failed', $properties['failed']);
-        $node->appendChild(new XMLElement('subject', $newsletter->getTemplate()->subject));
 
-        // load configuration;
-        // use saved (entry) config XML if available (i.e.: if the email newsletter has been sent);
-        // fallback: the field's configuration XML
-
-
-        // sender
-        $sender = new XMLElement('sender');
-        $about = is_object($newsletter->getSender()) ? $newsletter->getSender()->about() : array();
-        General::array_to_xml($sender, $about);
-        $sender_name = $about['name'];
-        $sender_handle = is_object($newsletter->getSender()) ? $newsletter->getSender()->getHandle() : null;
-        $el = new XMLElement('name');
-        $el->setAttribute('id', $sender_handle);
-        $el->setValue($sender_name);
-        $sender->replaceChildAt(0, $el);
-        $node->appendChild($sender);
-
-        // recipients
-        $recipients = new XMLElement('recipient-groups');
-        foreach ($newsletter->getRecipientGroups() as $group) {
-            $rgroup = new XMLElement('group');
-            $about = (array) $group->about();
-            General::array_to_xml($rgroup, $about);
-            $rgroup_name = $about['name'];
-            $rgroup_handle = $group->getHandle();
-            $el = new XMLElement('name');
-            $el->setAttribute('id', $rgroup_handle);
-            $el->setValue($rgroup_name);
-            $rgroup->replaceChildAt(0, $el);
-            $rgroup_count = RecipientgroupManager::create($rgroup_handle)->getCount();
-            $rgroup->setAttribute('count', $rgroup_count);
-            $recipients->appendChild($rgroup);
+        if (!is_null($mode)) {
+            $node->setAttribute('mode', $mode);
         }
-        $node->appendChild($recipients);
 
-        // template
-        $template = new XMLElement('template');
-        $about = (array) $newsletter->getTemplate()->about;
-        General::array_to_xml($template, $about);
-        $template_name = $about['name'];
-        $template_handle = EmailTemplateManager::getHandleFromName($template_name);
-        $el = new XMLElement('name');
-        $el->setAttribute('id', $template_handle);
-        $el->setValue($template_name);
-        $template->replaceChildAt(0, $el);
-        $node->appendChild($template);
+        if ($mode !== 'minimal') {
+            $node->appendChild(new XMLElement('subject', $newsletter->getTemplate()->subject));
+
+            // load configuration;
+            // use saved (entry) config XML if available (i.e.: if the email newsletter has been sent);
+            // fallback: the field's configuration XML
+
+
+            // sender
+            $sender = new XMLElement('sender');
+            $about = is_object($newsletter->getSender()) ? $newsletter->getSender()->about() : array();
+            General::array_to_xml($sender, $about);
+            $sender_name = $about['name'];
+            $sender_handle = is_object($newsletter->getSender()) ? $newsletter->getSender()->getHandle() : null;
+            $el = new XMLElement('name');
+            $el->setAttribute('id', $sender_handle);
+            $el->setValue($sender_name);
+            $sender->replaceChildAt(0, $el);
+            $node->appendChild($sender);
+
+            // recipients
+            $recipients = new XMLElement('recipient-groups');
+            foreach ($newsletter->getRecipientGroups() as $group) {
+                $rgroup = new XMLElement('group');
+                $about = (array) $group->about();
+                General::array_to_xml($rgroup, $about);
+                $rgroup_name = $about['name'];
+                $rgroup_handle = $group->getHandle();
+                $el = new XMLElement('name');
+                $el->setAttribute('id', $rgroup_handle);
+                $el->setValue($rgroup_name);
+                $rgroup->replaceChildAt(0, $el);
+                if ($mode !== 'reduced') {
+                    $rgroup_count = RecipientgroupManager::create($rgroup_handle)->getCount();
+                    $rgroup->setAttribute('count', $rgroup_count);
+                }
+                $recipients->appendChild($rgroup);
+            }
+            $node->appendChild($recipients);
+
+            // template
+            $template = new XMLElement('template');
+            $about = (array) $newsletter->getTemplate()->about;
+            General::array_to_xml($template, $about);
+            $template_name = $about['name'];
+            $template_handle = EmailTemplateManager::getHandleFromName($template_name);
+            $el = new XMLElement('name');
+            $el->setAttribute('id', $template_handle);
+            $el->setValue($template_name);
+            $template->replaceChildAt(0, $el);
+            $node->appendChild($template);
+        }
 
         $wrapper->appendChild($node);
     }
