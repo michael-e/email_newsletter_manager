@@ -75,7 +75,7 @@ class extension_email_newsletter_manager extends extension
     /**
      * Callback function to change a sender handle in each newsletter field.
      *
-     * @param  string $context
+     * @param array $context
      * @return void
      */
     public function senderSaved($context)
@@ -88,7 +88,7 @@ class extension_email_newsletter_manager extends extension
     /**
      * Callback function to change a recipient group handle in each newsletter field
      *
-     * @param  string $context
+     * @param array $context
      * @return void
      */
     public function groupSaved($context)
@@ -103,7 +103,7 @@ class extension_email_newsletter_manager extends extension
     /**
      * Callback function to change a template handle in each newsletter field.
      *
-     * @param  string $context
+     * @param array $context
      * @return void
      */
     public function templateSaved($context)
