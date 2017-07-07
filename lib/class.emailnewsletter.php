@@ -161,6 +161,7 @@ class EmailNewsletter
 
                 if (is_array($about['smtp'])) {
                     $email = Email::create('smtp');
+                    $email->setHeloHostname($about['smtp']['helo_hostname']);
                     $email->setSenderName($about['smtp']['from_name']);
                     $email->setSenderEmailAddress($about['smtp']['from_address']);
                     $email->setHost($about['smtp']['host']);
