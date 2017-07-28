@@ -197,7 +197,7 @@ class recipientgroupmanager
 
                 return true;
             } else {
-                throw new Exception("File " . self::getDriverPath($handle) . " can not be written to. Please check permissions");
+                throw new Exception("File " . self::__getDriverPath($handle) . " can not be written to. Please check permissions");
 
                 return false;
             }
