@@ -35,6 +35,7 @@ class recipientsourcesection extends RecipientSource
         $return['entries-per-page'] = (string) $entries['limit'];
         $return['start'] = (string) $entries['start'];
         $return['current-page'] = (string) $this->dsParamSTARTPAGE;
+        $return['records'] = array();
         $field_ids = array();
         $xsltproc = new XsltProcess();
         foreach ($this->nameFields as $nameField) {
