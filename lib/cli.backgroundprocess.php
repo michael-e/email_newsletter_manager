@@ -17,12 +17,12 @@ function handleShutdown()
 {
     $error = error_get_last();
     if (($error !== null) && ($error['type'] <= 1)) {
-        file_put_contents(DOCROOT . '/manifest/newsletter-log.txt', '['.DateTimeObj::get('Y/m/d H:i:s').'] pid: '.getmypid().' - ' . $error['message'] . ' in file: ' . $error['file'] . ' on line ' . $error['line'] . "\r\n", FILE_APPEND);
+        file_put_contents(DOCROOT . '/manifest/newsletter-log.txt', '['.DateTimeObj::get('Y/m/d H:i:s').'] pid: '.getmypid().' - ' . $error['message'] . ' in file: ' . $error['file'] . ' on line ' . $error['line'] . PHP_EOL, FILE_APPEND);
     }
 }
 function handleError($error_level,$error_message,$error_file,$error_line,$error_context)
 {
-    //echo $error_message . "\r\n";
+    //echo $error_message . PHP_EOL;
 }
 
 $newsletter_id  = $_SERVER['argv'][1];
@@ -74,5 +74,5 @@ try {
         throw new Exception('Newsletter with id: ' . $newsletter_id . ' not found.');
     }
 } catch (Exception $e) {
-    file_put_contents(DOCROOT . '/manifest/newsletter-log.txt', '['.DateTimeObj::get('Y/m/d H:i:s').'] newsletter-id: '.$newsletter_id.' - ' . $e->getMessage() . "\r\n", FILE_APPEND);
+    file_put_contents(DOCROOT . '/manifest/newsletter-log.txt', '['.DateTimeObj::get('Y/m/d H:i:s').'] newsletter-id: '.$newsletter_id.' - ' . $e->getMessage() . PHP_EOL, FILE_APPEND);
 }

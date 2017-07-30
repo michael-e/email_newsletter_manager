@@ -6,8 +6,6 @@ class extensionpage extends AdministrationPage
     public $viewDir = '';
     protected $_XSLTProc;
 
-    const CRLF = "\r\n";
-
     public function __construct($params)
     {
         $this->_XSLTProc = new XsltProcess();
@@ -63,7 +61,7 @@ class extensionpage extends AdministrationPage
                     $errstr = null;
 
                     while (list($key, $val) = $this->_XSLTProc->getError()) {
-                        $errstr .= 'Line: ' . $val['line'] . ' - ' . $val['message'] . self::CRLF;
+                        $errstr .= 'Line: ' . $val['line'] . ' - ' . $val['message'] . PHP_EOL;
                     }
 
                     throw new SymphonyErrorPage(trim($errstr), null, 'xslt-error', array('proc' => clone $this->_XSLTProc));
