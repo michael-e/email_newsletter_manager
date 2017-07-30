@@ -122,12 +122,12 @@ class recipientsourcesection extends RecipientSource
      */
     public function getCount()
     {
-        parent::getCount();
         // To get the exact count for the newsletter requires a very slow query.
         // This value is not used anywhere, so for performance reasons count will not return anything.
         if ($this->newsletter_id !== null) {
             return -1;
         }
+        parent::getCount();
         $where_and_joins = $this->getWhereJoinsAndGroup(true);
         try {
             $count = Symphony::Database()->fetchVar('count',0, sprintf('SELECT SQL_CACHE count(DISTINCT `d`.`value`) as `count` FROM `tbl_entries` AS `e` %s %s', $where_and_joins['joins'], ' WHERE 1 ' . $where_and_joins['where']));
