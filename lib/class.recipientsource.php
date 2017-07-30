@@ -56,15 +56,6 @@ class recipientsource extends Datasource
 
     public function processDependencies(array $params = array())
     {
-        $datasources = $this->getDependencies();
-
-        if (!is_array($datasources) || empty($datasources)) {
-            return;
-        }
-
-        $datasources = array_map(create_function('$a', "return str_replace('\$ds-', '', \$a);"), $datasources);
-        $datasources = array_map(create_function('$a', "return str_replace('-', '_', \$a);"), $datasources);
-
         $env = array(
             'today' => DateTimeObj::get('Y-m-d'),
             'current-time' => DateTimeObj::get('H:i'),
@@ -77,6 +68,18 @@ class recipientsource extends Datasource
 
         $this->_env['param'] = $env;
         $this->_env['env']['pool'] = $params;
+
+        $this->processParameters($this->_env);
+
+        $datasources = $this->getDependencies();
+
+        if (!is_array($datasources) || empty($datasources)) {
+            return;
+        }
+
+        $datasources = array_map(create_function('$a', "return str_replace('\$ds-', '', \$a);"), $datasources);
+        $datasources = array_map(create_function('$a', "return str_replace('-', '_', \$a);"), $datasources);
+
         $dependencies = array();
 
         foreach ($datasources as $handle) {
@@ -95,7 +98,6 @@ class recipientsource extends Datasource
             $ds->execute($this->_env['env']['pool']);
             unset($ds);
         }
-        $this->processParameters($this->_env);
     }
 
     public function __findDatasourceOrder($dependenciesList)
