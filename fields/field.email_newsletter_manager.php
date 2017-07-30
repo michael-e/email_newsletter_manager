@@ -972,13 +972,13 @@ Helpers
         if ($displayTemplate) {
             $info .= sprintf(__('Email Template: %s'), is_object($newsletter->getTemplate())?$newsletter->getTemplate()->about['name']:'none');
         }
-        if ($displayTemplate && $displayRecipientGroups) {
+        if ($displayTemplate && ($displaySender || $displayRecipientGroups)) {
             $info .= '<br />';
         }
         if ($displaySender) {
             $info .= sprintf(__('Sender: %s'), is_object($newsletter->getSender())?$newsletter->getSender()->getName():'none');
         }
-        if ($displayRecipientGroups && $displaySender) {
+        if ($displaySender && $displayRecipientGroups) {
             $info .= '<br />';
         }
         if ($displayRecipientGroups) {
