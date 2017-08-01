@@ -69,35 +69,33 @@ class recipientsource extends Datasource
         $this->_env['param'] = $env;
         $this->_env['env']['pool'] = $params;
 
-        $this->processParameters($this->_env);
-
         $datasources = $this->getDependencies();
 
-        if (!is_array($datasources) || empty($datasources)) {
-            return;
+        if (is_array($datasources) && $datasources) {
+            $datasources = array_map(create_function('$a', "return str_replace('\$ds-', '', \$a);"), $datasources);
+            $datasources = array_map(create_function('$a', "return str_replace('-', '_', \$a);"), $datasources);
+
+            $dependencies = array();
+
+            foreach ($datasources as $handle) {
+                $profiler = Symphony::Profiler();
+                $profiler->seed();
+
+                $pool[$handle] =& DatasourceManager::create($handle, null, false);
+                $dependencies[$handle] = $pool[$handle]->getDependencies();
+            }
+
+            $dsOrder = $this->__findDatasourceOrder($dependencies);
+
+            foreach ($dsOrder as $handle) {
+                $ds = $pool[$handle];
+                $ds->processParameters($this->_env);
+                $ds->execute($this->_env['env']['pool']);
+                unset($ds);
+            }
         }
 
-        $datasources = array_map(create_function('$a', "return str_replace('\$ds-', '', \$a);"), $datasources);
-        $datasources = array_map(create_function('$a', "return str_replace('-', '_', \$a);"), $datasources);
-
-        $dependencies = array();
-
-        foreach ($datasources as $handle) {
-            $profiler = Symphony::Profiler();
-            $profiler->seed();
-
-            $pool[$handle] =& DatasourceManager::create($handle, null, false);
-            $dependencies[$handle] = $pool[$handle]->getDependencies();
-        }
-
-        $dsOrder = $this->__findDatasourceOrder($dependencies);
-
-        foreach ($dsOrder as $handle) {
-            $ds = $pool[$handle];
-            $ds->processParameters($this->_env);
-            $ds->execute($this->_env['env']['pool']);
-            unset($ds);
-        }
+        $this->processParameters($this->_env);
     }
 
     public function __findDatasourceOrder($dependenciesList)
