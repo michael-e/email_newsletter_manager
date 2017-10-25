@@ -61,7 +61,7 @@ Section editor - set up field
                 $options[] = array(
                     $handle,
                     in_array($handle, explode(',', $templates)),
-                    $about['name']
+                    General::sanitize($about['name'])
                 );
             }
         }
@@ -89,7 +89,7 @@ Section editor - set up field
                 $options[] = array(
                     $sender['handle'],
                     in_array($sender['handle'], explode(',', $senders)),
-                    $sender['name']
+                    General::sanitize($sender['name'])
                 );
             }
         }
@@ -116,7 +116,7 @@ Section editor - set up field
                 $options[] = array(
                     $recipient_group['handle'],
                     in_array($recipient_group['handle'], (array) explode(',', $recipient_groups)),
-                    $recipient_group['name']
+                    General::sanitize($recipient_group['name'])
                 );
             }
         }
@@ -558,7 +558,7 @@ Publish: edit
                         $options[] = array(
                             $template[0],
                             $template[0] == $newsletter_properties['template'],
-                            $template[1]
+                            General::sanitize($template[1])
                         );
                     }
                     $gui->appendChild(
@@ -583,7 +583,7 @@ Publish: edit
                         $options[] = array(
                             $sender[0],
                             $sender[0] == $newsletter_properties['sender'],
-                            $sender[1]
+                            General::sanitize($sender[1])
                         );
                     }
                     $gui->appendChild(
@@ -615,7 +615,7 @@ Publish: edit
                             ? array('checked' => 'checked')
                             : null
                         );
-                        $label->setValue($input->generate() . $recipient_group[1]);
+                        $label->setValue($input->generate() . General::sanitize($recipient_group[1]));
                         $label->setAttribute('class', 'recipient-group');
                         $p->appendChild($label);
                     }
