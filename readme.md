@@ -125,10 +125,10 @@ Since this extension will create a Symphony instance in the PHP CLI (i.e. outsid
 <?php
 
 header('Content-Type: text/plain');
-echo shell_exec('php -r "mysqli_connect(\"localhost\");" 2>&1');
+echo shell_exec('php -r "mysqli_connect(\"localhost\", \"root\", \"wrongpassword\");" 2>&1');
 ```
 
-If you see an "Access denied" error, you are fine. This means that the socket is available, and you simply can't connect because you were not passing any credentials.
+If you see an "Access denied" error, you are fine. This means that the socket is available, and you simply can't connect because you were not passing correct credentials.
 
 But if you see s.th. like the following ("2002 error"):
 
