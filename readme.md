@@ -88,7 +88,11 @@ Of course these possibilitie still require a bit of custom code. But the public 
 * It is not possible to use multiple Datasources to build up a recipient group.
 
 
-### Requirement: The PHP CLI
+## Prerequisites
+
+Before installing and using this extension please ensure that your system meets the requirements.
+
+### The PHP CLI
 
 In simple words, the CLI SAPI allows to run PHP scripts from the command line, and __this can be initiated from within PHP scripts__ even on hosting accounts without shell access. The Email Newsletter Manager extension runs the actual (background) mailing processes using the PHP CLI SAPI. Some useful articles on this topic:
 
@@ -96,16 +100,41 @@ In simple words, the CLI SAPI allows to run PHP scripts from the command line, a
 * <http://articles.sitepoint.com/article/php-command-line-2>
 * <http://php.net/manual/en/features.commandline.php>
 
-If you are unsure if the PHP CLI SAPI is installed and you have command line access, type
+If you are unsure if the PHP CLI SAPI is installed and you have command line access, copy the following code to a PHP file on your server and call it in the browser:
 
-	php -v
+```php
+<?php
 
-in your shell. If you don't get a verbose answer, the CLI SAPI is not installed. On Debian, you may install it by typing
+header('Content-Type: text/plain');
+echo shell_exec('php -v');
+```
+
+If you don't get a verbose answer, the CLI SAPI is not installed, and you will not be able to use this extension.
+
+On Debian, you may install the PHP CLI by typing
 
 	apt-get install php5-cli
 
-If you are on a shared hosting account, you should ask your provider but CLI should be installed on most shared hosting accounts.
+If you are on a shared hosting account, you should ask your provider. The CLI should be installed on most shared hosting accounts.
 
+### The local MySQL socket
+
+Since this extension will create a Symphony instance in the PHP CLI (i.e. outside of the web server), the MySQl socket must also be visible/reachable for the PHP CLI. This may not be the case if you are running MAMP on MacOS, for example. Please test if the PHP CLI can connect to the MySQL Socket using the following script on your server:
+
+```php
+<?php
+
+header('Content-Type: text/plain');
+echo shell_exec('php -r "mysqli_connect(\"localhost\");" 2>&1');
+```
+
+If you see an "Access denied" error, you are fine. This means that the socket is available, and you simply can't connect because you were not passing any credentials.
+
+But if you see s.th. like the following ("2002 error"):
+
+	mysqli_connect(): (HY000/2002): No such file or directory
+
+this means that the socket has not been found. Typically the fix is to create symlinks to the socket, depending on your local development environment. Please search the web to find the solution for your setup.
 
 
 ## Installation & Updating
