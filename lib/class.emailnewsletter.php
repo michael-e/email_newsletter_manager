@@ -326,7 +326,7 @@ class EmailNewsletter
                         )
                     );
 
-                    file_put_contents(DOCROOT . '/manifest/newsletter-log.txt', '['.DateTimeObj::get('Y/m/d H:i:s').'] newsletter-id: '.$this->getId().' - ' . $e->getMessage() . PHP_EOL, FILE_APPEND);
+                    file_put_contents(DOCROOT . '/manifest/newsletter-log.txt', '['.DateTimeObj::get('Y/m/d H:i:s').'] newsletter-id: '.$this->getId().' - ' . $recipient['email'] . ' - ' . $e->getMessage() . PHP_EOL, FILE_APPEND);
                     $this->_markRecipient($recipient['email'], 'failed');
                     continue;
                 }
