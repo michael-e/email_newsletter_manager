@@ -55,7 +55,8 @@ class contentExtensionemail_newsletter_managersenders extends ExtensionPage
     public function __viewEdit($new = false)
     {
         $this->setPageType('form');
-        if ($this->_context[2] == 'saved' || $this->_context[3] == 'saved') {
+        if ((isset($this->_context[2]) && $this->_context[2] === 'saved') ||
+            (isset($this->_context[3]) && $this->_context[3] === 'saved')) {
             $this->pageAlert(
                 __(
                     __('Email Sender updated at %1$s. <a href="%2$s" accesskey="c">Create another?</a> <a href="%3$s" accesskey="a">View all Senders</a>'),

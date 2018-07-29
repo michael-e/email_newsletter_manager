@@ -4,7 +4,7 @@ if (!defined('ENMDIR')) define('ENMDIR', EXTENSIONS . "/email_newsletter_manager
 
 require_once(ENMDIR . '/lib/class.emailnewslettermanager.php');
 
-class extension_email_newsletter_manager extends extension
+class extension_email_newsletter_manager extends Extension
 {
     public function fetchNavigation()
     {

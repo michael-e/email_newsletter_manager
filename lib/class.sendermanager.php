@@ -115,7 +115,9 @@ class sendermanager
         }
 
         if (class_exists($classname)) {
-            return new $classname(Symphony::Engine());
+            $ret = new $classname(Symphony::Engine());
+
+            return $ret;
         }
         throw new Exception(
             __(
@@ -206,7 +208,7 @@ class sendermanager
         $handle = self::__getHandleFromFilename(basename($path));
 
         if (is_callable(array($classname, 'about'))) {
-            $about = call_user_func(array($classname, 'about'));
+            $about = call_user_func(array(new $classname, 'about'));
 
             return array_merge($about, array('handle' => $handle));
         }

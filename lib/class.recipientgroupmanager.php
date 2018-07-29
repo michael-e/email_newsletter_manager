@@ -58,12 +58,12 @@ class recipientgroupmanager
                     $can_parse = false;
                     $type = null;
 
-                    if (method_exists($classname,'allowEditorToParse')) {
-                        $can_parse = call_user_func(array($classname, 'allowEditorToParse'));
+                    if (method_exists($classname, 'allowEditorToParse')) {
+                        $can_parse = call_user_func(array(new $classname, 'allowEditorToParse'));
                     }
 
-                    if (method_exists($classname,'getSource')) {
-                        $type = call_user_func(array($classname, 'getSource'));
+                    if (method_exists($classname, 'getSource')) {
+                        $type = call_user_func(array(new $classname, 'getSource'));
                     }
 
                     $about['can_parse'] = $can_parse;
@@ -119,7 +119,9 @@ class recipientgroupmanager
             require_once($path);
         }
 
-        return new $classname(Symphony::Engine(), null, false);
+        $ret = new $classname(Symphony::Engine(), null, false);
+
+        return $ret;
     }
 
     public static function save($handle = null, $fields)
@@ -222,7 +224,7 @@ class recipientgroupmanager
         $handle = self::__getHandleFromFilename(basename($path));
 
         if (is_callable(array($classname, 'about'))) {
-            $about = call_user_func(array($classname, 'about'));
+            $about = call_user_func(array(new $classname, 'about'));
 
             return array_merge($about, array('handle' => $handle));
         }
