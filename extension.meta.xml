@@ -18,6 +18,11 @@
 		</author>
 	</authors>
 	<releases>
+		<release version="3.8.0" date="2018-07-29" min="2.6.0" max="2.7.x">
+			<![CDATA[
+- [#80](https://github.com/michael-e/email_newsletter_manager/issues/80) Add preference for path to PHP executable
+			]]>
+		</release>
 		<release version="3.7.0" date="2018-04-25" min="2.6.0" max="2.7.x">
 			<![CDATA[
 - Also log the recipient address when sending fails
