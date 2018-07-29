@@ -18,50 +18,50 @@
 		</author>
 	</authors>
 	<releases>
-		<release version="3.7.0" date="2018-04-25" min="2.6.0" max="2.7.x" php-min="5.6.0" php-max="7.x.x">
+		<release version="3.7.0" date="2018-04-25" min="2.6.0" max="2.7.x">
 			<![CDATA[
 - Also log the recipient address when sending fails
 - Improve description and add tests for extension prerequisites
 			]]>
 		</release>
-		<release version="3.6.3" date="2017-12-27" min="2.6.0" max="2.7.x" php-min="5.6.0" php-max="7.x.x">
+		<release version="3.6.3" date="2017-12-27" min="2.6.0" max="2.7.x">
 			<![CDATA[
 - Fix typo
 			]]>
 		</release>
-		<release version="3.6.2" date="2017-10-25" min="2.6.0" max="2.7.x" php-min="5.6.0" php-max="7.x.x">
+		<release version="3.6.2" date="2017-10-25" min="2.6.0" max="2.7.x">
 			<![CDATA[
 - Sanitize names for HTML output (prevents invalid HTML in the Symphony backend)
 			]]>
 		</release>
-		<release version="3.6.1" date="2017-08-01" min="2.6.0" max="2.7.x" php-min="5.6.0" php-max="7.x.x">
+		<release version="3.6.1" date="2017-08-01" min="2.6.0" max="2.7.x">
 			<![CDATA[
 - Fix nasty regression
 			]]>
 		</release>
-		<release version="3.6.0" date="2017-07-31" min="2.6.0" max="2.7.x" php-min="5.6.0" php-max="7.x.x">
+		<release version="3.6.0" date="2017-07-31" min="2.6.0" max="2.7.x">
 			<![CDATA[
 - Honor "Ignore attachment errors" option of ETM 7.4.0 (requires Symphony 2.7.0)
 			]]>
 		</release>
-		<release version="3.5.2" date="2017-07-31" min="2.6.0" max="2.6.x" php-min="5.6.0" php-max="7.x.x">
+		<release version="3.5.2" date="2017-07-31" min="2.6.0" max="2.6.x">
 			<![CDATA[
 - Add delegates at start and end of newsletter
 - Bugfix: Make recipient sources process params if no dependencies exist (#76)
 - Several small fixes
 			]]>
 		</release>
-		<release version="3.5.1" date="2017-05-30" min="2.6" max="2.6.x" php-min="5.6.x" php-max="7.x.x">
+		<release version="3.5.1" date="2017-05-30" min="2.6" max="2.6.x">
 			<![CDATA[
 - Bugfix: Use HELO hostname when sending (#75)
 			]]>
 		</release>
-		<release version="3.5.0" date="2017-05-30" min="2.6" max="2.6.x" php-min="5.6.x" php-max="7.x.x">
+		<release version="3.5.0" date="2017-05-30" min="2.6" max="2.6.x">
 			<![CDATA[
 - Add new output modes (reduced/minimal) for faster datasource output
 			]]>
 		</release>
-		<release version="3.4.2" date="2017-05-29" min="2.6" max="2.6.x" php-min="5.6.x" php-max="7.x.x">
+		<release version="3.4.2" date="2017-05-29" min="2.6" max="2.6.x">
 			<![CDATA[
 - Fix retrieval of Member ID as "author ID"
 - Replace deprecated globals with class constants
