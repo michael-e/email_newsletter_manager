@@ -68,7 +68,9 @@ try {
         $sending_settings = $newsletter->getSender()->about();
         if ($newsletter->sendBatch($process_auth) != 'completed') {
             time_sleep_until($start_time + $sending_settings['throttle-time']);
-            EmailBackgroundProcess::spawnProcess($newsletter_id, $process_auth);
+            $config_php_executable = Symphony::Configuration()->get('php_executable', 'email_newsletter_manager');
+            $php_executable = $config_php_executable ? $config_php_executable : 'php';
+            EmailBackgroundProcess::spawnProcess($newsletter_id, $process_auth, $php_executable);
         }
     } else {
         throw new Exception('Newsletter with id: ' . $newsletter_id . ' not found.');

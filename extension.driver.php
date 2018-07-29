@@ -26,37 +26,42 @@ class extension_email_newsletter_manager extends extension
     {
         return array(
             array(
-                'page' => '/backend/',
+                'page'     => '/backend/',
                 'delegate' => 'InitialiseAdminPageHead',
                 'callback' => 'appendStyles'
             ),
             array(
-                'page' => '/publish/edit/',
+                'page'     => '/publish/edit/',
                 'delegate' => 'EntryPreEdit',
                 'callback' => 'stopRestartNewsletter'
             ),
             array(
-                'page' => '/publish/edit/',
+                'page'     => '/publish/edit/',
                 'delegate' => 'EntryPostEdit',
                 'callback' => 'initEmailNewsletter'
             ),
             array(
-                'page' => '/publish/new/',
+                'page'     => '/publish/new/',
                 'delegate' => 'EntryPostCreate',
                 'callback' => 'initEmailNewsletter'
             ),
             array(
-                'page' => '/extension/email_newsletter_manager/',
+                'page'     => '/system/preferences/',
+                'delegate' => 'AddCustomPreferenceFieldsets',
+                'callback' => 'appendPreferences'
+            ),
+            array(
+                'page'     => '/extension/email_newsletter_manager/',
                 'delegate' => 'PostSenderSaved',
                 'callback' => 'senderSaved'
             ),
             array(
-                'page' => '/extension/email_newsletter_manager/',
+                'page'     => '/extension/email_newsletter_manager/',
                 'delegate' => 'PostRecipientgroupSaved',
                 'callback' => 'groupSaved'
             ),
             array(
-                'page' => '/extension/email_template_manager/',
+                'page'     => '/extension/email_template_manager/',
                 'delegate' => 'EmailTemplatePostSave',
                 'callback' => 'templateSaved'
             ),
@@ -248,6 +253,33 @@ class extension_email_newsletter_manager extends extension
         Symphony::Database()->query("DROP TABLE `tbl_email_newsletters`");
 
         return true;
+    }
+
+    public function appendPreferences($context)
+    {
+        $config = Symphony::Configuration()->get('email_newsletter_manager');
+
+        $fieldset = new XMLElement('fieldset');
+        $fieldset->setAttribute('class', 'settings');
+        $fieldset->appendChild(new XMLElement('legend', 'Email Newsletter Manager'));
+
+        $group = new XMLElement('div');
+
+        $label = Widget::Label(__('Path to PHP Executable'));
+        $label->appendChild(new XMLElement('i', __('optional')));
+        $label->appendChild(Widget::Input(
+            'settings[email_newsletter_manager][php_executable]',
+            General::sanitize($config['php_executable']),
+            'text',
+            array(
+                'placeholder' => 'e.g. /usr/bin/php',
+            )
+        ));
+
+        $group->appendChild($label);
+        $fieldset->appendChild($group);
+
+        $context['wrapper']->appendChild($fieldset);
     }
 
     private function _getEntryData($field_id, $entry_id)

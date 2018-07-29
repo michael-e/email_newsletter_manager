@@ -100,7 +100,7 @@ In simple words, the CLI SAPI allows to run PHP scripts from the command line, a
 * <http://articles.sitepoint.com/article/php-command-line-2>
 * <http://php.net/manual/en/features.commandline.php>
 
-If you are unsure if the PHP CLI SAPI is installed and you have command line access, copy the following code to a PHP file on your server and call it in the browser:
+If you are unsure if the PHP CLI SAPI is installed, copy the following code to a PHP file on your server and call it in the browser:
 
 ```php
 <?php
@@ -109,13 +109,18 @@ header('Content-Type: text/plain');
 echo shell_exec('php -v');
 ```
 
-If you don't get a verbose answer, the CLI SAPI is not installed, and you will not be able to use this extension.
-
-On Debian, you may install the PHP CLI by typing
+If you get a verbose answer, you are fine. Otherwise, the CLI SAPI might not be installed at all. On Debian, you may install the PHP CLI by typing:
 
 	apt-get install php5-cli
 
-If you are on a shared hosting account, you should ask your provider. The CLI should be installed on most shared hosting accounts.
+There may, however, be a different issue: Just like the extension itself, the above test script starts a PHP CLI process from Apache assuming that the PHP executable can be run with `php`, so it assumes that the PHP executable is in the `PATH` in this case. This is not always configured, especially on shared hosting.
+
+So if you are on **shared hosting**, you should ask your provider:
+
+* Is the PHP CLI SAPI installed?
+* Do you need to use a full path to the executable when running it from an Apache PHP script (via `shell_exec`)? (For example, one might need to use `/opt/php-5.6/bin/php` instead of just `php`.)
+
+If the full path to the PHP executable is required, you can set this path on Symphony's preferences page.
 
 ### The local MySQL socket
 
@@ -142,6 +147,12 @@ this means that the socket has not been found. Typically the fix is to create sy
 Information about [installing and updating extensions](http://symphony-cms.com/learn/tasks/view/install-an-extension/) can be found in the Symphony documentation at <http://symphony-cms.com/learn/>.
 
 
+## Preferences
+
+The extension adds the following settings to Symphony's preferences page:
+
+* __Path to PHP Excecutable__: If the PHP (CLI SAPI) executable must be run with its full path (e.g. `/opt/php-5.6/bin/php` instead of `php`), this path can be set here. See chapter *Prerequisites > The PHI CLI*.
+
 
 ## Configuration
 
@@ -161,7 +172,7 @@ Newsletter Senders allows defining multiple senders for the newsletter. There ne
 
 *Sender Properties*
 
-* __Name:** Reference name used to select sender before sending the newsletter. Fill with anything providing meaningful description.
+* __Name:__ Reference name used to select sender before sending the newsletter. Fill with anything providing meaningful description.
 
 *Email Gateway*
 

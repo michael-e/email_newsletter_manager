@@ -137,7 +137,9 @@ class EmailNewsletter
             'tbl_email_newsletters',
             'id = ' . $this->getId()
         );
-        EmailBackgroundProcess::spawnProcess($this->getId(), $this->getPAuth());
+        $config_php_executable = Symphony::Configuration()->get('php_executable', 'email_newsletter_manager');
+        $php_executable = $config_php_executable ? $config_php_executable : 'php';
+        EmailBackgroundProcess::spawnProcess($this->getId(), $this->getPAuth(), $php_executable);
     }
 
     public function pause()
