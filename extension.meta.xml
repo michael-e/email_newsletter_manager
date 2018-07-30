@@ -18,6 +18,11 @@
 		</author>
 	</authors>
 	<releases>
+		<release version="3.8.3" date="2018-07-30" min="2.6.0" max="2.7.x">
+			<![CDATA[
+- Fix remaining E_NOTICEs (PHP 7.2), hopefully
+			]]>
+		</release>
 		<release version="3.8.2" date="2018-07-30" min="2.6.0" max="2.7.x">
 			<![CDATA[
 - Further improve code (prevent PHP 7.2 warnings)
