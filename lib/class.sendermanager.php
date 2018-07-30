@@ -166,7 +166,7 @@ class sendermanager
 
             return true;
         } else {
-            throw new Exception('Newsletter Sender ' . $fields['handle'] . ' already exists. Please choose a different name.');
+            throw new Exception('Newsletter Sender ' . $fields['name'] . ' already exists. Please choose a different name.');
         }
     }
 
