@@ -167,17 +167,18 @@ class contentExtensionemail_newsletter_managersenders extends ExtensionPage
     {
         $fields = array_merge($_POST['fields'], $_POST['settings']);
 
-        try {
-            $result = SenderManager::create($this->_context[1]);
-            $fields['additional_headers'] = $result->additional_headers;
-        } catch (Exception $e) {
-        }
-        if (empty($result) && !$new) {
-            redirect(SYMPHONY_URL . '/extension/email_newsletter_manager/senders/');
+        if (!$new) {
+            try {
+                $result = SenderManager::create($this->_context[1]);
+                $fields['additional_headers'] = $result->additional_headers;
+            } catch (Exception $e) {
+            }
+            if (empty($result)) {
+                redirect(SYMPHONY_URL . '/extension/email_newsletter_manager/senders/');
 
-            return false;
+                return false;
+            }
         }
-
         if (isset($_POST['action']['delete'])) {
             if (SenderManager::delete($this->_context[1])) {
                 redirect(SYMPHONY_URL . '/extension/email_newsletter_manager/senders/');
@@ -200,7 +201,8 @@ class contentExtensionemail_newsletter_managersenders extends ExtensionPage
             $errors->appendChild(new XMLElement('name', __('This field must at least contain a number or a letter')));
         } else {
             try {
-                if (SenderManager::save(str_replace('_', '-', $this->_context[1]), $fields)) {
+                $handle = isset($this->_context[1]) ? $this->_context[1] : null;
+                if (SenderManager::save(str_replace('_', '-', $handle), $fields)) {
                     redirect(SYMPHONY_URL . '/extension/email_newsletter_manager/senders/edit/' . Lang::createHandle($fields['name'], 225, '_') . '/saved');
 
                     return true;
@@ -227,7 +229,7 @@ class contentExtensionemail_newsletter_managersenders extends ExtensionPage
 
     public function action()
     {
-        if ($this->_context[2] == 'saved') {
+        if (isset($this->_context[2]) && $this->_context[2] == 'saved') {
             $this->_context[2] = null;
         }
         $fields = new XMLElement('fields');

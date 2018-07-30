@@ -228,10 +228,12 @@ class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
         $fields = $_POST['fields'];
 
         $fields['dependencies'] = array();
-        try {
-            $result = RecipientGroupManager::create($this->_context[1]);
-            $fields['dependencies'] = $result->_dependencies;
-        } catch (Exception $e) {
+        if (!$new) {
+            try {
+                $result = RecipientGroupManager::create($this->_context[1]);
+                $fields['dependencies'] = $result->_dependencies;
+            } catch (Exception $e) {
+            }
         }
         if (isset($_POST['action']['delete'])) {
             if (RecipientgroupManager::delete($this->_context[1])) {
@@ -253,7 +255,8 @@ class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
         $errors = new XMLElement('errors');
         if (!empty($fields['name']) && !empty($fields['name-xslt']) && (General::validateXML($fields['name-xslt'], $error, false) == true)) {
             try {
-                if (RecipientGroupManager::save(str_replace('_', '-', $this->_context[1]), $fields)) {
+                $handle = isset($this->_context[1]) ? $this->_context[1] : null;
+                if (RecipientGroupManager::save(str_replace('_', '-', $handle), $fields)) {
                     redirect(SYMPHONY_URL . '/extension/email_newsletter_manager/recipientgroups/edit/' . Lang::createHandle($fields['name'], 225, '_') . '/saved');
 
                     return true;
@@ -310,7 +313,7 @@ class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
         } catch (Exception $e) {
             Administration::instance()->errorPageNotFound();
         }
-        if ($_GET['pg']) {
+        if (!empty($_GET['pg'])) {
             $source->dsParamSTARTPAGE = (int) $_GET['pg'];
         }
         $source->dsParamLIMIT = 17;
@@ -335,8 +338,8 @@ class contentExtensionemail_newsletter_managerrecipientgroups extends ExtensionP
         $this->appendSubheading(
             $about['name'] . ' ' . __('preview'),
             array(Widget::Anchor(
-                __('Edit %s group', array($layout)), SYMPHONY_URL . '/extension/email_newsletter_manager/recipientgroups/edit/' . $source->getHandle() . '/' . $layout,
-                __('Edit %s group', array($layout)), 'button'
+                __('Edit group'), SYMPHONY_URL . '/extension/email_newsletter_manager/recipientgroups/edit/' . $source->getHandle() . '/',
+                __('Edit group'), 'button'
             ))
         );
     }

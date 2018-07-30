@@ -54,7 +54,7 @@ class recipientsourceauthor extends RecipientSource
     {
         parent::execute($param_pool);
         $author_ids = $this->_getAuthorIds();
-        $authors = AuthorManager::fetchByID($author_ids, 'id', $this->dsParamORDER);
+        $authors = AuthorManager::fetchByID($author_ids);
 
         return (array) $authors;
     }
@@ -87,6 +87,9 @@ class recipientsourceauthor extends RecipientSource
 
     protected function _getWhereAndJoins()
     {
+        $where = '';
+        $joins = '';
+
         $wheres = array();
         if (is_array($this->dsParamFILTERS) && !empty($this->dsParamFILTERS)) {
             foreach ($this->dsParamFILTERS as $field => $value) {

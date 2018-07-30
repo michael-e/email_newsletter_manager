@@ -53,6 +53,9 @@ class recipientsourcestatic extends RecipientSource
         parent::execute($param_pool);
         $this->_createTempTable();
 
+        $where = '';
+        $joins = '';
+
         if ($this->newsletter_id !== null) {
             $where .= ' AND `d`.`email` IS NOT NULL GROUP BY `d`.`email`';
             $joins .= ' LEFT OUTER JOIN tbl_tmp_email_newsletters_sent_'.$this->newsletter_id.' AS `n` ON `d`.`email` = `n`.`email`

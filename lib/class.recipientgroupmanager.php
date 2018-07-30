@@ -58,12 +58,14 @@ class recipientgroupmanager
                     $can_parse = false;
                     $type = null;
 
-                    if (method_exists($classname, 'allowEditorToParse')) {
-                        $can_parse = call_user_func(array(new $classname, 'allowEditorToParse'));
+                    $class = new $classname;
+
+                    if (method_exists($class, 'allowEditorToParse')) {
+                        $can_parse = $class->allowEditorToParse();
                     }
 
-                    if (method_exists($classname, 'getSource')) {
-                        $type = call_user_func(array(new $classname, 'getSource'));
+                    if (method_exists($class, 'getSource')) {
+                        $type = $class->getSource();
                     }
 
                     $about['can_parse'] = $can_parse;
@@ -223,8 +225,10 @@ class recipientgroupmanager
 
         $handle = self::__getHandleFromFilename(basename($path));
 
-        if (is_callable(array($classname, 'about'))) {
-            $about = call_user_func(array(new $classname, 'about'));
+        $class = new $classname;
+
+        if (is_callable(array($class, 'about'))) {
+            $about = $class->about();
 
             return array_merge($about, array('handle' => $handle));
         }

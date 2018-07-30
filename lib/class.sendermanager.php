@@ -58,8 +58,10 @@ class sendermanager
 
                     $can_parse = true;
 
-                    if (method_exists($classname,'allowEditorToParse')) {
-                        $can_parse = call_user_func(array($classname, 'allowEditorToParse'));
+                    $class = new $classname;
+
+                    if (method_exists($class, 'allowEditorToParse')) {
+                        $can_parse = $class->allowEditorToParse();
                     }
 
                     $about['can_parse'] = $can_parse;
@@ -207,8 +209,10 @@ class sendermanager
 
         $handle = self::__getHandleFromFilename(basename($path));
 
-        if (is_callable(array($classname, 'about'))) {
-            $about = call_user_func(array(new $classname, 'about'));
+        $class = new $classname;
+
+        if (is_callable(array($class, 'about'))) {
+            $about = $class->about();
 
             return array_merge($about, array('handle' => $handle));
         }
