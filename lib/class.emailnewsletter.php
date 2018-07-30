@@ -387,6 +387,7 @@ class EmailNewsletter
 
     public function getSender()
     {
+        $sndr = null;
         $sender = Symphony::Database()->fetchCol('sender','SELECT sender from tbl_email_newsletters where id = \'' . $this->getId() .'\'');
         try {
             $sndr = SenderManager::create($sender[0]);
@@ -398,6 +399,7 @@ class EmailNewsletter
 
     public function getTemplate()
     {
+        $tmpl = null;
         $template = Symphony::Database()->fetchCol('template','SELECT template from tbl_email_newsletters where id = \'' . $this->getId() .'\'');
         try {
             $tmpl = EmailTemplateManager::load($template[0]);

@@ -557,7 +557,7 @@ Publish: edit
                     foreach ($templates_options as $template) {
                         $options[] = array(
                             $template[0],
-                            $template[0] == $newsletter_properties['template'],
+                            isset($newsletter_properties['template']) ? ($template[0] == $newsletter_properties['template']) : false,
                             General::sanitize($template[1])
                         );
                     }
@@ -582,7 +582,7 @@ Publish: edit
                     foreach ($senders_options as $sender) {
                         $options[] = array(
                             $sender[0],
-                            $sender[0] == $newsletter_properties['sender'],
+                            isset($newsletter_properties['sender']) ? ($sender[0] == $newsletter_properties['sender']) : false,
                             General::sanitize($sender[1])
                         );
                     }
