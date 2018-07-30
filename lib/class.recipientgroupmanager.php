@@ -155,8 +155,8 @@ class recipientgroupmanager
                 'PostRecipientgroupSaved',
                 '/extension/email_newsletter_manager/',
                 array(
-                    'handle'        => $handle,
-                    'fields'        => $fields
+                    'handle' => $handle,
+                    'fields' => $fields
                 )
             );
 
@@ -172,7 +172,7 @@ class recipientgroupmanager
             'PreRecipientgroupDelete',
             '/extension/email_newsletter_manager/',
             array(
-                'handle'        => $handle
+                'handle' => $handle
             )
         );
         if (@unlink(self::__getDriverPath($handle))) {
@@ -180,7 +180,7 @@ class recipientgroupmanager
                 'PostRecipientgroupDelete',
                 '/extension/email_newsletter_manager/',
                 array(
-                    'handle'        => $handle
+                    'handle' => $handle
                 )
             );
 
@@ -228,7 +228,6 @@ class recipientgroupmanager
 
             return array_merge($about, array('handle' => $handle));
         }
-
     }
 
     protected function _parseTemplate($data)

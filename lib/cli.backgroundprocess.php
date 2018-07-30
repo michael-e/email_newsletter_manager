@@ -25,7 +25,7 @@ function handleError($error_level,$error_message,$error_file,$error_line,$error_
     //echo $error_message . PHP_EOL;
 }
 
-$newsletter_id  = $_SERVER['argv'][1];
+$newsletter_id = $_SERVER['argv'][1];
 $process_auth = $_SERVER['argv'][2];
 $_SERVER['HTTP_HOST'] = $_SERVER['argv'][3];
 

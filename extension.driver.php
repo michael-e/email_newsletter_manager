@@ -209,7 +209,7 @@ class extension_email_newsletter_manager extends Extension
                         `templates` text,
                         `senders` text,
                         `recipient_groups` text,
-                        PRIMARY KEY  (`id`),
+                        PRIMARY KEY (`id`),
                         KEY `field_id` (`field_id`)
                     ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
 

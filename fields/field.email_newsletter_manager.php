@@ -204,7 +204,7 @@ Section editor - set up field
               `entry_id` int(11) unsigned NOT NULL,
               `author_id` int(11) unsigned NOT NULL,
               `newsletter_id` int(11) unsigned NOT NULL,
-              PRIMARY KEY  (`id`),
+              PRIMARY KEY (`id`),
               KEY `entry_id` (`entry_id`)
             ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;"
         );
