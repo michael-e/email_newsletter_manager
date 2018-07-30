@@ -398,13 +398,13 @@ class EmailNewsletter
 
     public function getTemplate()
     {
-        $tmpl = Symphony::Database()->fetchCol('template','SELECT template from tbl_email_newsletters where id = \'' . $this->getId() .'\'');
+        $template = Symphony::Database()->fetchCol('template','SELECT template from tbl_email_newsletters where id = \'' . $this->getId() .'\'');
         try {
-            $template = EmailTemplateManager::load($tmpl[0]);
+            $tmpl = EmailTemplateManager::load($template[0]);
         } catch (Exception $e) {
         }
 
-        return $template;
+        return $tmpl;
     }
 
     protected function _getRecipients($limit = 10)
