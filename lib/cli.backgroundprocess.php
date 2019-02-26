@@ -67,7 +67,10 @@ try {
         $newsletter->setPId(getmypid());
         $sending_settings = $newsletter->getSender()->about();
         if ($newsletter->sendBatch($process_auth) != 'completed') {
-            time_sleep_until($start_time + $sending_settings['throttle-time']);
+            $next_start_time = $start_time + $sending_settings['throttle-time'];
+            if ($next_start_time > microtime(true)) {
+                time_sleep_until($next_start_time);
+            }
             $config_php_executable = Symphony::Configuration()->get('php_executable', 'email_newsletter_manager');
             $php_executable = $config_php_executable ? $config_php_executable : 'php';
             EmailBackgroundProcess::spawnProcess($newsletter_id, $process_auth, $php_executable);
