@@ -69,7 +69,7 @@ try {
         if ($newsletter->sendBatch($process_auth) != 'completed') {
             $next_start_time = $start_time + $sending_settings['throttle-time'];
             if ($next_start_time > microtime(true)) {
-                time_sleep_until($next_start_time);
+                time_sleep_until($next_start_time + 0.001);
             }
             $config_php_executable = Symphony::Configuration()->get('php_executable', 'email_newsletter_manager');
             $php_executable = $config_php_executable ? $config_php_executable : 'php';
